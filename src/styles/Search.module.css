@@ -1,0 +1,355 @@
+.game_Text{
+    color: black;
+    font-size: 42px;
+    display: grid;
+    grid-template-columns: 400px 600px 600px;
+    justify-content: center;
+    gap: 70px;
+    padding: 30px 0px; /* ของเก่า 18px*/
+    margin-top: 30px; /* ของเก่า 19px*/
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+}
+/* .game_Text div {
+  display: flex;
+  justify-content: center;
+} */
+.Text_filter{
+  color: black;
+  margin-bottom: 15px;
+  font-size: 20px;
+ 
+}
+.Text_search{
+  
+  margin-bottom: 10px;
+}
+.B_Search_all{
+    display: grid;
+    grid-template-columns: 400px 600px 600px;
+    justify-content: center;
+    gap: 70px;
+    
+    
+}
+
+.B_B_Search{
+    width: 100%;
+    /* border: 1px solid rgba(22, 22, 22, 0.493); */
+    
+    background-color: rgb(252, 253, 253);
+    color: rgba(0, 0, 0, 0.76);
+}
+.B_Search{
+  width: 100%;
+  border: 1px solid rgba(22, 22, 22, 0.493);
+  padding: 50px;
+  
+  background-color: rgb(252, 253, 253);
+  color: rgba(0, 0, 0, 0.76);
+}
+.box_Search{
+    border: 1px solid black;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+}
+.text_box_Search{
+    margin-left: 15px;
+    color: rgba(0, 0, 0, 0.342);
+}
+.text_plyer_count{
+  padding: 5px;
+  color: rgba(0, 0, 0, 0.76);
+}
+.box_plyer_count{
+    border: 1px solid black;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.text_time{
+  padding: 5px;
+  color: rgba(0, 0, 0, 0.76);
+}
+.box_time{
+    border: 1px solid black;
+    padding: 5px;
+    border-radius: 10px;
+}
+.B_Categories label {
+    display: flex;
+    margin: 5px 0;
+    color: rgba(0, 0, 0, 0.76);
+  }
+  .B_Categories input{
+    margin-right: 5px;
+    margin-left: 5px;
+  }
+
+
+  .sliderValueRow {
+    display: flex;
+    justify-content: space-between;
+    /* margin-bottom: 5px; */
+    color: rgb(0, 0, 0); /* ปรับตามธีมได้เลย */
+    font-size: 14px;
+    margin-left: 5px;
+  }
+  
+  .slider {
+    width: 100%;
+    /* -webkit-appearance: none; */
+    
+  }
+
+  input[type="range"].slider {
+    -webkit-appearance: none;  /* สำหรับ Safari */
+    appearance: none;
+    width: 100%;
+    height: 10px;  /* กำหนดความสูงของแถบ */
+    /* background: #fa0909; สีของแถบ */
+    background: linear-gradient(to right, #57ecbf, #00ffb3, #00d9ff);
+    
+    border-radius: 5px;  /* ทำมุมโค้งให้แถบ */
+    outline: none;  /* เอาขอบออก */
+  }
+
+  input[type="range"].slider::-webkit-slider-thumb {
+    -webkit-appearance: none;  /* สำหรับ Safari */
+    appearance: none;
+    width: 20px;  /* ขนาดของ thumb */
+    height: 20px;
+    border-radius: 50%;  /* ทำให้ thumb เป็นวงกลม */
+    background: #ffffff; /* สีของ thumb */
+    cursor: pointer;
+    border: 1px solid #00a2ff;
+  }
+  
+  
+ 
+  
+  
+  
+
+.B_time{
+    margin-top: 15px;
+}
+.B_plyer_count{
+    margin-top: 15px;
+}
+.B_Categories{
+    margin-top: 15px;
+}
+
+
+
+
+
+
+
+
+
+
+.B_item_all{
+    width: 100%;
+    /* border: 1px solid; */
+    padding: 50px;
+    grid-column: span 2; /* 👈 เพิ่มบรรทัดนี้เพื่อให้กิน 2 คอลัมน์ */
+    
+
+    display: grid;
+    /* grid-template-columns: repeat(3, 1fr); แบ่งเป็น 3 คอลัมน์ */
+    grid-template-columns:400px 400px 400px ;
+    height: auto;
+    justify-content: center; /* จัดให้อยู่กลางจอ */
+    gap: 20px; /* ช่องว่างระหว่างกล่อง */
+    padding: 12px 500px;
+   
+}
+
+.B_item_all div img{
+    width: full;
+    height: 100%;
+  }
+  
+
+.item_game{
+    /* border: solid black; */
+    overflow: hidden ;/* <<< ไม่่ให้เกินออกกรอบ */
+    background-color: rgb(252, 252, 252);
+    color: black;
+    display: flex;
+    flex-direction: column-reverse;
+    border-radius: 8px;
+    
+    transition: transform 0.3s ease, box-shadow 0.5s ease;
+    border: solid hsla(0, 0%, 0%, 0.055) 1px;
+    box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.35);
+  }
+  .item_game:hover{
+    transform: translateY(-8px);
+    box-shadow: 0px 5px 15px 9px rgba(0, 0, 0, 0.35);
+    
+  }
+  .item_game img:hover  {
+    transform: scale(1.04);
+    
+   
+  }
+
+  .item_game img{
+    width: 500px;
+    height:347px;
+    overflow: hidden ;/* <<< ไม่่ให้เกินออกกรอบ */
+    transition: transform 0.5s ease; /* <<< ให้รูปค่อยๆ zoom */
+  }
+  .item_game_text{
+    position: relative;
+    overflow: hidden ;/* <<< ไม่่ให้เกินออกกรอบ */
+    padding: 10px;
+  } 
+  .item_game_tag_B{
+    display: flex;
+    /* margin: 10px 6px; */
+    font-size: 15px;
+    padding: 6px;
+  }
+  .item_game_tag{
+    /* background-color: #CCF6FA; */
+    background: linear-gradient(to right, rgba(87, 236, 223, 0.575), #ccfae3, #ccf6fa);
+    color:#0095FF;
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin: 1px 3px;
+  }
+  .B_item_game_player{
+    display: flex;
+    /* justify-content: flex-end; */
+    /* margin: 6px 10px; */
+    padding: 6px;
+    color: #0303039c;
+    font-size: 14px;
+  }
+  .B_item_game_player img{
+  width: 29px;
+  height: auto;
+  padding: 6px;
+
+  }
+  .item_game_player_1
+  {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* border: 1px;
+    background-color: rgba(104, 102, 102, 0.418);
+    padding: 5px 10px;
+    border-radius: 20px;
+    margin: 1px 3px; */
+    margin-left: 5px;
+    
+  }
+  .item_game_player_2 {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    /* justify-content: center;
+    border: 1px;
+    background-color: rgba(104, 102, 102, 0.418);
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin: 1px 3px; */
+    /* margin-left: ; */
+    
+  }
+
+  .name_game{
+    display: flex;
+    padding:  5px 10px;
+    font-size: 18px;
+    /* font-weight: bold; */
+    margin-left: 5px;
+  }
+
+
+
+
+
+  .Footer{
+    background-color: #333;
+    width: full;
+    /* margin: 100px 0px 0px 0px; */
+    margin-top: 300px;
+  }
+
+.Footer_B1{
+  display: grid;
+  grid-template-columns: 45% 25% 25%;
+  
+  padding: 40px;
+}
+.Footer_B1_S1{
+  text-align: center;
+  font-weight: bold;
+  font-size: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family:"Lilita One", sans-serif ;
+  align-self: center; /* <<< บังคับให้จัดกลางในแนวดิ่ง */
+}
+
+.Footer_B1_S2 {
+  display: flex;
+  font-size: 18px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  align-self: center; /* <<< บังคับให้จัดกลางในแนวดิ่ง */
+}
+.Footer_B1_S2 div{
+  font-weight: bold;
+  padding: 5px;
+}
+.Footer_B1_S2 a{
+  padding: 5px;
+  color: rgba(255, 255, 255, 0.61);
+}
+.Footer_B1_S3 {
+  display: flex;
+  font-size: 18px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  align-self: center; /* <<< บังคับให้จัดกลางในแนวดิ่ง */
+}
+.Footer_B1_S3 a{
+  padding: 5px;
+  color: rgba(255, 255, 255, 0.61);
+}
+.Footer_B1_S3 div{
+  font-weight: bold;
+  padding: 5px;
+}
+.Footer_B2{
+  padding: 10px;
+}
+.Footer_B2_box{
+  background-color: rgba(255, 255, 255, 0.61);
+  margin: 0px 10px;
+  width: full;
+  height: 4px;
+}
+.Footer_B2_text{
+  padding: 10px 5px 0px 10px;
+  margin: 0px 10px;
+  font-size: 18px;
+  display: flex;
+  flex-direction: row-reverse;
+  color: rgba(255, 255, 255, 0.61);
+  
+}
+.Footer_B2_text div {
+  margin:  0px 10px;;
+}

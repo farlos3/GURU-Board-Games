@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
+.navbar { 
+  background-color: #333;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  font-family: "Lilita One", sans-serif;
+  /* font-family: 'Poppins', sans-serif; */
+  border-radius: 10px;
+  position: sticky;
+  /* height: 75px; */
+  top:0;
+   box-shadow: 0 2px 5px rgba(255, 0, 0, 0.1); /*// เพิ่มเงาให้ Navbar */
+  z-index: 1000; /* เพิ่ม z-index เพื่อให้ Navbar อยู่ด้านบน */
+  margin: 0px 5px;
+  margin-top: 5px;
+  align-items: center;
+}
+
+.navLink { 
+  
+  color: #fff;
+  text-decoration: none;
+  /* margin: 0 3rem; */
+  font-size: 17px;
+  width: 170px;
+  text-align:center;
+  
+}
+
+.Link_All{
+  background-color: #555;
+  padding: 5px 60px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.log_sign{
+  display: flex;
+  
+}
+.login{
+  display: flex;
+  align-items: center;
+  text-align:center;
+  background-color: #fff;
+  /* width: 75px; */
+  height: 40px;
+  color: #000000;
+  text-align:center;
+  padding: 5px 13px;
+  border-radius: 8px;
+  font-size: 17px;
+}
+.sign{
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  text-align:center;
+  /* width: 75px; */
+  height: 40px;
+  margin: 0 1rem;
+  color: #000000;
+  text-align:center;
+  padding: 5px 8px;
+  border-radius: 8px;
+  font-size: 17px;
+}
+
+.logo{
+  color: #fff;
+  font-size: 18px;
+  padding: 5px 8px;
+}
+
+

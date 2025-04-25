@@ -1,113 +1,431 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
+import React from 'react';
+import Nav from './components/Navbar';
+import styles from '../styles/index.module.css';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import { useEffect } from 'react';
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Navigation, Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
 
-export default function Home() {
+
+const images = [
+  'Wolf.png',
+  'karthik.jpg',
+  'Wolf.png',
+  'karthik.jpg',
+  'Wolf.png',
+  'olav-ahrens.jpg'
+];
+
+ function index() {
+  useEffect(() => {
+    AOS.init({
+      duration: 1500, // ความเร็วในการ animate (ms)
+      once: true,     // ให้ animate แค่ครั้งแรกที่ scroll มาเจอ
+    });
+  }, []);
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/pages/index.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <>
+    <Nav />
+
+
+      {/* <div className = {styles.recommend_B} >
+        <div className ={styles.recommend_B_B} >
+          <img className ={styles.img_kar} src="RecommendWolf.png" />         
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
+      </div> */}
+      <div className={styles.slider_container}>
+      <Swiper
+        slidesPerView={1.8} // เห็นข้างๆด้วย
+        centeredSlides={true}
+        spaceBetween={5}
+        loop={true}
+        autoplay={{
+          delay: 3000,
+          disableOnInteraction: false,
+        }}
+        navigation={true}
+        pagination={{ clickable: true }}
+        modules={[Autoplay, Navigation, Pagination]}
+        className="mySwiper"
+      >
+        {images.map((img, index) => (
+          <SwiperSlide key={index}>
+            <img src={img}  className={styles.slide_image}  />
+          </SwiperSlide>
+        ))}
+      </Swiper>
+      </div>
+
+
+
+
+      {/* <h1>หน้าแรก</h1>
+      <Link to="/search">ไปที่หน้าค้นหา</Link> */}
+
+
+      <div className ={styles.type_game_B} >
+        <a className ={styles.type_game} > 
+          <img src="marisa.jpg" alt="บอร์ดเกม ครอบครัว" />
+          <div className={styles.overlay}>บอร์ดเกม<br/>ครอบครัว</div>
         </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
+        <a className ={styles.type_game}><img src="Adventure.png" />
+          <div className={styles.overlay}>บอร์ดเกม<br/>ผจญภัย</div>
         </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
+        <a className ={styles.type_game}>
+          <img src="2h-media.jpg" /> 
+          <div className={styles.overlay}>บอร์ดเกม<br/>ปาร์ตี้</div>
         </a>
-      </footer>
-    </div>
+        <a className ={styles.type_game}>
+          <img src="ross.jpg" /> 
+          <div className={styles.overlay}>บอร์ดเกม<br/>วางแผน</div>
+        </a>
+        <a className ={styles.type_game}>
+          <img src="defraud.png" />
+          <div className={styles.overlay}>บอร์ดเกม<br/>แนวโกหก</div>
+           </a>
+        <a className ={styles.type_game}>
+          <img src="olav-ahrens.jpg" />
+          <div className={styles.overlay}>บอร์ดเกม<br/>แนวแก้ปริศนา</div>
+           </a>
+      </div>
+      {/* <div className={styles.recommend_game_B}>
+        <div className={styles.recommend_game}></div>
+        <div className={styles.recommend_game}></div>
+        <div className={styles.recommend_game}></div>
+      </div>
+      <div>
+        <div>Recommended Board Games </div>
+        <div>
+          <div>
+            <img src="nika.jpg" />
+          </div>
+          <div>
+            <img src="nika.jpg" />
+          </div>
+          <div>
+
+          </div>
+        </div>
+      </div> */}
+      <div className ={styles.text_board_game} >  BOARD GAME</div>
+      
+      
+      <div className ={styles.show_game_all}>
+      <a
+            className={styles.item_game}
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+          >
+            <div className={styles.item_game_text}>
+              <div className={styles.name_game}>Werewolf</div>
+              <div className={styles.item_game_tag_B}>
+                <div className={styles.item_game_tag}>Family</div>
+                <div className={styles.item_game_tag}>Party</div>
+                <div className={styles.item_game_tag}>strategy</div>
+              </div>
+
+              <div className={styles.B_item_game_player}>
+                <div className={styles.item_game_player_1}>
+                  <img src="clock-five.png" />
+                  35 min
+                </div>
+                <div className={styles.item_game_player_2}>
+                  <img src="users (1).png" />
+                  3-4 player
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <img src="item_2.png" />{" "}
+            </div>
+          </a>
+          <a
+            className={styles.item_game}
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+          >
+            <div className={styles.item_game_text}>
+              <div className={styles.name_game}>Werewolf</div>
+              <div className={styles.item_game_tag_B}>
+                <div className={styles.item_game_tag}>Family</div>
+                <div className={styles.item_game_tag}>Party</div>
+                <div className={styles.item_game_tag}>strategy</div>
+              </div>
+
+              <div className={styles.B_item_game_player}>
+                <div className={styles.item_game_player_1}>
+                  <img src="clock-five.png" />
+                  35 min
+                </div>
+                <div className={styles.item_game_player_2}>
+                  <img src="users (1).png" />
+                  3-4 player
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <img src="item_2.png" />{" "}
+            </div>
+          </a>
+          <a
+            className={styles.item_game}
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+          >
+            <div className={styles.item_game_text}>
+              <div className={styles.name_game}>Werewolf</div>
+              <div className={styles.item_game_tag_B}>
+                <div className={styles.item_game_tag}>Family</div>
+                <div className={styles.item_game_tag}>Party</div>
+                <div className={styles.item_game_tag}>strategy</div>
+              </div>
+
+              <div className={styles.B_item_game_player}>
+                <div className={styles.item_game_player_1}>
+                  <img src="clock-five.png" />
+                  35 min
+                </div>
+                <div className={styles.item_game_player_2}>
+                  <img src="users (1).png" />
+                  3-4 player
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <img src="item_2.png" />{" "}
+            </div>
+          </a>
+          <a
+            className={styles.item_game}
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+          >
+            <div className={styles.item_game_text}>
+              <div className={styles.name_game}>Werewolf</div>
+              <div className={styles.item_game_tag_B}>
+                <div className={styles.item_game_tag}>Family</div>
+                <div className={styles.item_game_tag}>Party</div>
+                <div className={styles.item_game_tag}>strategy</div>
+              </div>
+
+              <div className={styles.B_item_game_player}>
+                <div className={styles.item_game_player_1}>
+                  <img src="clock-five.png" />
+                  35 min
+                </div>
+                <div className={styles.item_game_player_2}>
+                  <img src="users (1).png" />
+                  3-4 player
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <img src="item_2.png" />{" "}
+            </div>
+          </a>
+          <a
+            className={styles.item_game}
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+          >
+            <div className={styles.item_game_text}>
+              <div className={styles.name_game}>Werewolf</div>
+              <div className={styles.item_game_tag_B}>
+                <div className={styles.item_game_tag}>Family</div>
+                <div className={styles.item_game_tag}>Party</div>
+                <div className={styles.item_game_tag}>strategy</div>
+              </div>
+
+              <div className={styles.B_item_game_player}>
+                <div className={styles.item_game_player_1}>
+                  <img src="clock-five.png" />
+                  35 min
+                </div>
+                <div className={styles.item_game_player_2}>
+                  <img src="users (1).png" />
+                  3-4 player
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <img src="item_2.png" />{" "}
+            </div>
+          </a>
+          <a
+            className={styles.item_game}
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+          >
+            <div className={styles.item_game_text}>
+              <div className={styles.name_game}>Werewolf</div>
+              <div className={styles.item_game_tag_B}>
+                <div className={styles.item_game_tag}>Family</div>
+                <div className={styles.item_game_tag}>Party</div>
+                <div className={styles.item_game_tag}>strategy</div>
+              </div>
+
+              <div className={styles.B_item_game_player}>
+                <div className={styles.item_game_player_1}>
+                  <img src="clock-five.png" />
+                  35 min
+                </div>
+                <div className={styles.item_game_player_2}>
+                  <img src="users (1).png" />
+                  3-4 player
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <img src="item_2.png" />{" "}
+            </div>
+          </a>
+
+        {/* <a className ={styles.item_game} data-aos="fade-up" data-aos-anchor-placement="top-bottom" >
+        <div className ={styles.item_game_text} >
+        Werewolf
+            <div className ={styles.item_game_tag_B}>
+              <div className ={styles.item_game_tag}>Family</div>
+              <div className ={styles.item_game_tag}>Family</div>
+              <div className ={styles.item_game_tag}>Family</div>
+              <div className ={styles.item_game_tag}>Family</div>
+            </div>
+            <div className ={styles.item_game_player}>3-4 player</div>
+          </div>
+
+          <div><img src="item_2.png" /> </div> 
+        </a> */}
+        <a
+            className={styles.item_game}
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+          >
+            <div className={styles.item_game_text}>
+              <div className={styles.name_game}>Werewolf</div>
+              <div className={styles.item_game_tag_B}>
+                <div className={styles.item_game_tag}>Family</div>
+                <div className={styles.item_game_tag}>Party</div>
+                <div className={styles.item_game_tag}>strategy</div>
+              </div>
+
+              <div className={styles.B_item_game_player}>
+                <div className={styles.item_game_player_1}>
+                  <img src="clock-five.png" />
+                  35 min
+                </div>
+                <div className={styles.item_game_player_2}>
+                  <img src="users (1).png" />
+                  3-4 player
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <img src="item_2.png" />{" "}
+            </div>
+          </a>
+
+          <a
+            className={styles.item_game}
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+          >
+            <div className={styles.item_game_text}>
+              <div className={styles.name_game}>Werewolf</div>
+              <div className={styles.item_game_tag_B}>
+                <div className={styles.item_game_tag}>Family</div>
+                <div className={styles.item_game_tag}>Party</div>
+                <div className={styles.item_game_tag}>strategy</div>
+              </div>
+
+              <div className={styles.B_item_game_player}>
+                <div className={styles.item_game_player_1}>
+                  <img src="clock-five.png" />
+                  35 min
+                </div>
+                <div className={styles.item_game_player_2}>
+                  <img src="users (1).png" />
+                  3-4 player
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <img src="item_2.png" />{" "}
+            </div>
+          </a>
+
+          <a
+            className={styles.item_game}
+            data-aos="fade-up"
+            data-aos-anchor-placement="top-bottom"
+          >
+            <div className={styles.item_game_text}>
+              <div className={styles.name_game}>Werewolf</div>
+              <div className={styles.item_game_tag_B}>
+                <div className={styles.item_game_tag}>Family</div>
+                <div className={styles.item_game_tag}>Party</div>
+                <div className={styles.item_game_tag}>strategy</div>
+              </div>
+
+              <div className={styles.B_item_game_player}>
+                <div className={styles.item_game_player_1}>
+                  <img src="clock-five.png" />
+                  35 min
+                </div>
+                <div className={styles.item_game_player_2}>
+                  <img src="users (1).png" />
+                  3-4 player
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <img src="item_2.png" />{" "}
+            </div>
+          </a>
+        
+        
+      
+      </div>
+
+      <div className ={styles.Footer} >
+          <div className ={styles.Footer_B1} >
+            <div className ={styles.Footer_B1_S1} >GURU<br/>BOARD<br/>GAME </div>
+            <div className ={styles.Footer_B1_S2} >
+              <div>GURU BOARD GAME</div>
+              <a>Home</a>
+              <a>Search Game</a>
+              <a>Game</a>
+            </div>
+            <div className ={styles.Footer_B1_S3} >
+              <div> ABOUT US </div>
+              <a>Line</a>
+              <a>Facebook</a>
+              <a>Instagram</a>
+            </div>
+          </div>
+          <div className ={styles.Footer_B2}>
+              <div className ={styles.Footer_B2_box}></div>
+              <div className ={styles.Footer_B2_text}>
+                <div>Gmail : Khawfang@gmail.com</div>
+                <div>Contact : 064-457-7169</div>
+              </div>
+          </div>
+      </div>
+    </>
   );
 }
+
+export default index;

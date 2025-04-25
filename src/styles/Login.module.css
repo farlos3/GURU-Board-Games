@@ -1,0 +1,167 @@
+@import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
+.paint_over{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(142,141,141, 0.3); /* สีดำโปร่งใส */
+    z-index: 1; /* ให้มาอยู่เหนือพื้นหลัง */
+    display: grid;
+    grid-template-columns: 50% 50%;
+    pointer-events: none;
+}
+.B_main{ 
+    background-image: url("/B_Login.jpg");
+    background-size: cover;
+    background-position:center ;
+    min-height: 100vh;
+    position: relative; /* ทำให้ลูก .paint_over อิงตำแหน่งได้ */
+}
+
+.B_text_logo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+.text_logo{
+    position: absolute;
+    z-index: 1;
+    padding: 30px 90px;
+    font-size: 75px;
+    font-family: "Lilita One", sans-serif;
+    /* font-weight:bold ; */
+    
+}
+.text_logo::before{
+    content: "";
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: rgba(175, 172, 172, 0.79);
+    left: 0;
+    top:0;
+    filter: blur(25px);
+    border-radius: 10px;
+    z-index: -1;
+}
+
+
+.B_Fill_info{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    z-index: 2; 
+}
+.Fill_info{
+    color: black;
+    background-color: rgb(255, 255, 255);
+    width: 65%;
+    height: 60%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: 20px;
+    position: relative;
+    z-index: 2;
+}
+.info_user{
+    margin: 10px;
+    border: solid 1px rgba(0, 0, 0, 0.493);
+    width: 70%;
+    height: 60px;
+    padding: 0px 15px;
+    font-size: 18px;
+    border-radius: 5px;
+    position: relative;
+    z-index: 3;
+    pointer-events: auto;
+}
+.info_password{
+    margin: 10px;
+    border: solid 1px rgba(0, 0, 0, 0.493);
+    width: 70%;
+    padding: 0px 15px;
+    height: 60px;
+    font-size: 18px;
+    border-radius: 5px;
+    position: relative;
+    z-index: 3;
+    pointer-events: auto;
+}
+.info_user_text{
+    color: rgba(0, 0, 0, 0.795);
+    display: flex;
+    width: 70%;
+    margin-top: 25px;
+    padding: 0px 10px;
+}
+.info_password_text{
+    color: rgba(0, 0, 0, 0.795);
+    margin-top: 20px;
+    display: flex;
+    width: 70%;
+    padding: 0px 10px;
+}
+.B_button_login{
+    margin: 27px;
+    display: flex;
+    width: 70%;
+    justify-content: flex-end;
+    position: relative;
+    z-index: 2;
+}
+
+.button_login{
+    border: solid 1px;
+    padding: 5px 30px;
+    color: white;
+    background-color: black;
+    border-radius: 10px;
+    font-size: 25px;
+    font-weight: bold;
+    position: relative;
+    z-index: 10;
+    cursor: pointer;
+    pointer-events: auto;
+}
+.Text{
+    font-weight: bold;
+    font-size: 45px;
+    padding-top: 5px;
+    /* margin-top: -10px; */
+}
+.B_Register{
+    display: flex;
+    width: 70%;
+    /* font-size: 18px; */
+    color: rgba(0, 0, 0, 0.329);
+    padding: 5px 15px;
+    pointer-events: auto;
+    position: relative;
+    z-index: 4;
+}
+
+.Register:hover {
+    color: rgba(0, 0, 0, 0.8);
+    text-decoration: underline;
+    cursor: pointer;
+    transform: scale(1.02); /* ขยายขนาดนิดหน่อย */
+    transition: all 0.2s ease-in-out;
+    pointer-events: auto;
+    
+}
+
+.button_login:hover {
+    background-color: #333333; /* ทำให้สีดำจางลงนิดนึง */
+    color: #ffffff; /* สีตัวอักษรขาวเหมือนเดิม */
+    transform: scale(1.05); /* ขยายเล็กน้อย */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* เงาแบบนุ่ม */
+    transition: all 0.3s ease;
+}
