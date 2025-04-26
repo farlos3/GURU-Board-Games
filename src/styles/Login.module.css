@@ -71,7 +71,7 @@
     position: relative;
     z-index: 2;
 }
-.info_user{
+/* .info_user{
     margin: 10px;
     border: solid 1px rgba(0, 0, 0, 0.493);
     width: 70%;
@@ -82,24 +82,72 @@
     position: relative;
     z-index: 3;
     pointer-events: auto;
-}
+} */
 .info_password{
-    margin: 10px;
-    border: solid 1px rgba(0, 0, 0, 0.493);
-    width: 70%;
-    padding: 0px 15px;
-    height: 60px;
+   /* margin:10px; */
+    /* border: solid 1px rgba(0, 0, 0, 0.493); */
+    width: 100%; /*70% */
+    /* height: 60px; */
+    /* padding: 0px 100px; */
+    padding-right: 140px;
     font-size: 18px;
     border-radius: 5px;
     position: relative;
     z-index: 3;
     pointer-events: auto;
+    padding-left: 10px;
+}
+
+.inputWithIcon {
+    margin:10px;
+    display: flex;
+    align-items: center;
+    border: solid 1px rgba(0, 0, 0, 0.39);
+    border-radius: 5px;
+    height: 60px;
+    padding: 0 15px;
+    width: 100%;
+    background: white;
+  }
+  
+  .icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    flex-shrink: 0;
+  }
+  .info_user:focus,
+.info_password:focus,
+.info_Cpassword:focus,
+.info_email:focus {
+  outline: none;
+  /* border: 0px solid black; หรือจะใช้สีอื่นที่ต้องการ */
+  box-shadow: none;
+}
+.inputWithIcon:has(input:focus){
+    border: 1px solid black; /* หรือจะใช้สีอื่นที่ต้องการ */
+}
+  
+.info_user{
+    /* margin:10px; */
+    /* border: solid 1px rgba(0, 0, 0, 0.493); */
+     width: 100%; /*70% */
+    /* height: 60px; */
+    /* padding: 0px 100px; */
+    padding-right: 140px;
+    font-size: 18px;
+    border-radius: 5px;
+    position: relative;
+    z-index: 3;
+    pointer-events: auto;
+    padding-left: 10px;
+    
 }
 .info_user_text{
     color: rgba(0, 0, 0, 0.795);
     display: flex;
     width: 70%;
-    margin-top: 25px;
+    margin-top: 15px;
     padding: 0px 10px;
 }
 .info_password_text{
@@ -110,17 +158,19 @@
     padding: 0px 10px;
 }
 .B_button_login{
-    margin: 27px;
+    margin: 30px;
+    margin-top: 40px;
     display: flex;
     width: 70%;
-    justify-content: flex-end;
+    /* justify-content: flex-end; */
+    justify-content: center;
     position: relative;
     z-index: 2;
 }
 
 .button_login{
     border: solid 1px;
-    padding: 5px 30px;
+    padding: 10px 185px;
     color: white;
     background-color: black;
     border-radius: 10px;
@@ -130,6 +180,8 @@
     z-index: 10;
     cursor: pointer;
     pointer-events: auto;
+    /* margin-left: 22px; */
+    margin-left: 96px;
 }
 .Text{
     font-weight: bold;
@@ -139,9 +191,11 @@
 }
 .B_Register{
     display: flex;
+    justify-content: center;
+    margin-left: 25px;
     width: 70%;
     /* font-size: 18px; */
-    color: rgba(0, 0, 0, 0.329);
+    /* color: rgba(0, 0, 0, 0.329); */
     padding: 5px 15px;
     pointer-events: auto;
     position: relative;
@@ -149,7 +203,7 @@
 }
 
 .Register:hover {
-    color: rgba(0, 0, 0, 0.8);
+    /* color: rgba(104, 22, 22, 0.8); */
     text-decoration: underline;
     cursor: pointer;
     transform: scale(1.02); /* ขยายขนาดนิดหน่อย */
@@ -164,4 +218,8 @@
     transform: scale(1.05); /* ขยายเล็กน้อย */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* เงาแบบนุ่ม */
     transition: all 0.3s ease;
+}
+
+.form{
+    width: 70%;
 }

@@ -11,9 +11,13 @@ function Navbar() {
       <div  className={styles.logo} >GURU BOARD GAME</div>
 
       <div className={styles.Link_All}>
-        <a href="#" className={styles.navLink} >HOME</a>
+        <Link href="/"> 
+        <div className={styles.navLink} >HOME</div>
+        </Link>
         <a href="#" className={styles.navLink} >GAME POPULAR</a>
-        <a href="#"className={styles.navLink} >SEARCH GAME</a>
+        <Link href="/Search">
+          <div className={styles.navLink} >SEARCH GAME</div>
+        </Link>
       </div>
       
       <div  className={styles.log_sign}>
