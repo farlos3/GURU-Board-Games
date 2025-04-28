@@ -1,8 +1,26 @@
 @import "tailwindcss";
 
+/* global.css */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --primary-color: #0095FF;
+  --light-bg: #EFEFEF;
+  --dark-bg: #333;
+  --text-dark: #000;
+  --text-light: #fff;
+  --text-muted: rgba(0, 0, 0, 0.45);
+  --gradient-bg: linear-gradient(to right, rgba(87, 236, 223, 0.575), #ccfae3, #ccf6fa);
+  --border-radius-sm: 5px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 20px;
+  --shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.35);
+  --shadow-hover: 0px 5px 15px 9px rgba(0, 0, 0, 0.35);
+  --transition: 0.3s ease;
 }
 
 @theme inline {
