@@ -62,7 +62,9 @@
     color: black;
     background-color: rgb(255, 255, 255);
     width: 65%;
-    height: 60%;
+    max-width: 650px;
+    max-height: 600px;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -161,16 +163,17 @@
     margin: 30px;
     margin-top: 40px;
     display: flex;
-    width: 70%;
+    width: 100%;
     /* justify-content: flex-end; */
-    justify-content: center;
+    /* justify-content: center; */
     position: relative;
     z-index: 2;
 }
 
 .button_login{
     border: solid 1px;
-    padding: 10px 185px;
+    padding: 10px 30px;
+    width: 100%;
     color: white;
     background-color: black;
     border-radius: 10px;
@@ -181,7 +184,9 @@
     cursor: pointer;
     pointer-events: auto;
     /* margin-left: 22px; */
-    margin-left: 96px;
+    /* margin-left: 96px; */
+ 
+    margin-left: -20px;
 }
 .Text{
     font-weight: bold;
@@ -192,6 +197,7 @@
 .B_Register{
     display: flex;
     justify-content: center;
+    
     margin-left: 25px;
     width: 70%;
     /* font-size: 18px; */
@@ -222,4 +228,6 @@
 
 .form{
     width: 70%;
+    max-width: 500px;
+    /* height: 60%; */
 }

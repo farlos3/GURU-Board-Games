@@ -62,7 +62,9 @@
     color: black;
     background-color: rgb(255, 255, 255);
     width: 65%;
-    height: 85%;
+    max-width: 650px;
+    height: 100%;
+    max-height: 850px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -149,9 +151,9 @@
 .B_button_login{
     margin: 30px;
     display: flex;
-    width: 70%;
+    width: 100%;
     /* justify-content: flex-end; */
-    justify-content: center;
+    /* justify-content: center; */
     position: relative;
     z-index: 2;
     margin-bottom: 45px;
@@ -159,8 +161,9 @@
 
 .button_login{
     border: solid 1px;
-    padding: 10px 167px;
-    margin-left: 96px;
+    padding: 10px 30px;
+    width: 100%;
+    /* margin-left: 96px; */
     color: white;
     background-color: black;
     border-radius: 10px;
@@ -170,6 +173,7 @@
     z-index: 10;
     cursor: pointer;
     pointer-events: auto;
+    margin-left: -18px;
 }
 .Text{
     font-weight: bold;

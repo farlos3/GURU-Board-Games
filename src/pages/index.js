@@ -11,6 +11,7 @@ import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
+import Link from 'next/link';
 
 
 const images = [
@@ -117,7 +118,8 @@ const images = [
       
       
       <div className ={styles.show_game_all}>
-      <a
+       <Link href="/game">
+          <div
             className={styles.item_game}
             data-aos="fade-up"
             data-aos-anchor-placement="top-bottom"
@@ -145,7 +147,8 @@ const images = [
             <div>
               <img src="item_2.png" />{" "}
             </div>
-          </a>
+          </div>
+        </Link>
           <a
             className={styles.item_game}
             data-aos="fade-up"
