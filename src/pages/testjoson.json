@@ -1,0 +1,46 @@
+[
+  {
+    "name": "Werewolf",
+    "image": "item_2.png",
+    "tags": ["Family", "Party", "Strategy"],
+    "duration": "35 min",
+    "players": "3-4 players"
+  },
+  {
+    "name": "Codenames",
+    "image": "item_2.png",
+    "tags": ["Puzzle", "Strategy"],
+    "duration": "20 min",
+    "players": "2-8 players"
+  },
+  {
+    "name": "Dixit",
+    "image": "item_2.png",
+    "tags": ["Family", "Creative"],
+    "duration": "30 min",
+    "players": "3-6 players"
+  },
+  {
+    "name": "Werewolf",
+    "image": "item_2.png",
+    "tags": ["Family", "Party", "Strategy"],
+    "duration": "35 min",
+    "players": "3-4 players"
+  },
+  {
+    "name": "Codenames",
+    "image": "item_2.png",
+    "tags": ["Puzzle", "Strategy"],
+    "duration": "20 min",
+    "players": "2-8 players"
+  },
+  {
+    "name": "Dixit",
+    "image": "item_2.png",
+    "tags": ["Family", "Creative"],
+    "duration": "30 min",
+    "players": "3-6 players"
+  }
+  
+]
+

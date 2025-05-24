@@ -53,6 +53,15 @@
   align-items: center;
   margin-bottom: 20px;
 }
+.input_Search {
+  border: none;
+  outline: none;
+  font-size: 16px;
+  margin-left: 10px;
+  flex: 1; /* ถ้าต้องการให้ input ยืดเต็มพื้นที่ */
+  background: transparent;
+}
+
 
 .box_Search img {
   width: 20px;
@@ -232,83 +241,82 @@
 }
 
 /* Footer */
-.Footer {
-  background-color: #333;
-  width: 100%;
-  margin-top: 80px;
-  color: white;
-}
+ .Footer{
+    background-color: #333;
+    width: full;
+    margin: 100px 0px 0px 0px;
+    
+  }
 
-.Footer_B1 {
+.Footer_B1{
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 20px;
+  grid-template-columns: 45% 25% 25%;
+  
+  padding: 40px;
 }
-
-.Footer_B1_S1 {
+.Footer_B1_S1{
   text-align: center;
   font-weight: bold;
   font-size: 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: "Lilita One", sans-serif;
-  align-self: center;
+  font-family:"Lilita One", sans-serif ;
+  align-self: center; /* <<< บังคับให้จัดกลางในแนวดิ่ง */
 }
 
-.Footer_B1_S2,
-.Footer_B1_S3 {
+.Footer_B1_S2 {
   display: flex;
-  font-size: 16px;
+  font-size: 18px;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  align-self: center;
+  align-self: center; /* <<< บังคับให้จัดกลางในแนวดิ่ง */
 }
-
-.Footer_B1_S2 div,
-.Footer_B1_S3 div {
+.Footer_B1_S2 div{
   font-weight: bold;
   padding: 5px;
-  margin-bottom: 10px;
 }
-
-.Footer_B1_S2 a,
-.Footer_B1_S3 a {
+.Footer_B1_S2 a{
   padding: 5px;
   color: rgba(255, 255, 255, 0.61);
-  text-decoration: none;
-  transition: color 0.3s ease;
 }
-
-.Footer_B1_S2 a:hover,
-.Footer_B1_S3 a:hover {
-  color: white;
-}
-
-.Footer_B2 {
-  padding: 10px 20px 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.Footer_B2_box {
-  background-color: rgba(255, 255, 255, 0.61);
-  height: 1px;
-  margin-bottom: 15px;
-}
-
-.Footer_B2_text {
+.Footer_B1_S3 {
   display: flex;
-  justify-content: flex-end;
-  color: rgba(255, 255, 255, 0.61);
-  font-size: 14px;
+  font-size: 18px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  align-self: center; /* <<< บังคับให้จัดกลางในแนวดิ่ง */
 }
-
+.Footer_B1_S3 a{
+  padding: 5px;
+  color: rgba(255, 255, 255, 0.61);
+}
+.Footer_B1_S3 div{
+  font-weight: bold;
+  padding: 5px;
+}
+.Footer_B2{
+  padding: 10px;
+}
+.Footer_B2_box{
+  background-color: rgba(255, 255, 255, 0.61);
+  margin: 0px 10px;
+  width: full;
+  height: 4px;
+}
+.Footer_B2_text{
+  padding: 10px 5px 0px 10px;
+  margin: 0px 10px;
+  font-size: 18px;
+  display: flex;
+  flex-direction: row-reverse;
+  color: rgba(255, 255, 255, 0.61);
+  
+}
 .Footer_B2_text div {
-  margin: 0 15px;
+  margin:  0px 10px;;
 }
 
 /* Responsive adjustments */

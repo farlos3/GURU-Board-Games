@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Nav from './components/Navbar';
 import styles from '../styles/index.module.css';
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-import { useEffect } from 'react';
+
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
@@ -12,7 +12,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import Link from 'next/link';
-
+import games from '../pages/testjoson.json';
 
 const images = [
   'Wolf.png',
@@ -24,11 +24,19 @@ const images = [
 ];
 
  function index() {
+  
   useEffect(() => {
     AOS.init({
       duration: 1500, // ความเร็วในการ animate (ms)
       once: true,     // ให้ animate แค่ครั้งแรกที่ scroll มาเจอ
     });
+
+     // Fetch JSON data
+    // fetch('../pages/testjoson.json')
+    //   .then((res) => res.json())
+    //   .then((data) => setGames(data));
+
+
   }, []);
   return (
     <>
@@ -62,7 +70,7 @@ const images = [
         ))}
       </Swiper>
       </div>
-
+        
 
 
 
@@ -118,290 +126,38 @@ const images = [
       
       
       <div className ={styles.show_game_all}>
-       <Link href="/game">
-          <div
-            className={styles.item_game}
-            data-aos="fade-up"
-            data-aos-anchor-placement="top-bottom"
-          >
+       {games.map((game, idx) => (
+          <Link key={idx} href="/game" className={styles.item_game} data-aos="fade-up">
             <div className={styles.item_game_text}>
-              <div className={styles.name_game}>Werewolf</div>
+              <div className={styles.name_game}>{game.name}</div>
               <div className={styles.item_game_tag_B}>
-                <div className={styles.item_game_tag}>Family</div>
-                <div className={styles.item_game_tag}>Party</div>
-                <div className={styles.item_game_tag}>strategy</div>
+                {game.tags.map((tag, tagIndex) => (
+                  <div key={tagIndex} className={styles.item_game_tag}>
+                    {tag}
+                  </div>
+                ))}
               </div>
-
               <div className={styles.B_item_game_player}>
                 <div className={styles.item_game_player_1}>
                   <img src="clock-five.png" />
-                  35 min
+                  {game.duration}
                 </div>
                 <div className={styles.item_game_player_2}>
                   <img src="users (1).png" />
-                  3-4 player
+                  {game.players}
                 </div>
               </div>
             </div>
-
             <div>
-              <img src="item_2.png" />{" "}
+              <img src={game.image} />
             </div>
-          </div>
-        </Link>
-          <a
-            className={styles.item_game}
-            data-aos="fade-up"
-            data-aos-anchor-placement="top-bottom"
-          >
-            <div className={styles.item_game_text}>
-              <div className={styles.name_game}>Werewolf</div>
-              <div className={styles.item_game_tag_B}>
-                <div className={styles.item_game_tag}>Family</div>
-                <div className={styles.item_game_tag}>Party</div>
-                <div className={styles.item_game_tag}>strategy</div>
-              </div>
-
-              <div className={styles.B_item_game_player}>
-                <div className={styles.item_game_player_1}>
-                  <img src="clock-five.png" />
-                  35 min
-                </div>
-                <div className={styles.item_game_player_2}>
-                  <img src="users (1).png" />
-                  3-4 player
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <img src="item_2.png" />{" "}
-            </div>
-          </a>
-          <a
-            className={styles.item_game}
-            data-aos="fade-up"
-            data-aos-anchor-placement="top-bottom"
-          >
-            <div className={styles.item_game_text}>
-              <div className={styles.name_game}>Werewolf</div>
-              <div className={styles.item_game_tag_B}>
-                <div className={styles.item_game_tag}>Family</div>
-                <div className={styles.item_game_tag}>Party</div>
-                <div className={styles.item_game_tag}>strategy</div>
-              </div>
-
-              <div className={styles.B_item_game_player}>
-                <div className={styles.item_game_player_1}>
-                  <img src="clock-five.png" />
-                  35 min
-                </div>
-                <div className={styles.item_game_player_2}>
-                  <img src="users (1).png" />
-                  3-4 player
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <img src="item_2.png" />{" "}
-            </div>
-          </a>
-          <a
-            className={styles.item_game}
-            data-aos="fade-up"
-            data-aos-anchor-placement="top-bottom"
-          >
-            <div className={styles.item_game_text}>
-              <div className={styles.name_game}>Werewolf</div>
-              <div className={styles.item_game_tag_B}>
-                <div className={styles.item_game_tag}>Family</div>
-                <div className={styles.item_game_tag}>Party</div>
-                <div className={styles.item_game_tag}>strategy</div>
-              </div>
-
-              <div className={styles.B_item_game_player}>
-                <div className={styles.item_game_player_1}>
-                  <img src="clock-five.png" />
-                  35 min
-                </div>
-                <div className={styles.item_game_player_2}>
-                  <img src="users (1).png" />
-                  3-4 player
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <img src="item_2.png" />{" "}
-            </div>
-          </a>
-          <a
-            className={styles.item_game}
-            data-aos="fade-up"
-            data-aos-anchor-placement="top-bottom"
-          >
-            <div className={styles.item_game_text}>
-              <div className={styles.name_game}>Werewolf</div>
-              <div className={styles.item_game_tag_B}>
-                <div className={styles.item_game_tag}>Family</div>
-                <div className={styles.item_game_tag}>Party</div>
-                <div className={styles.item_game_tag}>strategy</div>
-              </div>
-
-              <div className={styles.B_item_game_player}>
-                <div className={styles.item_game_player_1}>
-                  <img src="clock-five.png" />
-                  35 min
-                </div>
-                <div className={styles.item_game_player_2}>
-                  <img src="users (1).png" />
-                  3-4 player
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <img src="item_2.png" />{" "}
-            </div>
-          </a>
-          <a
-            className={styles.item_game}
-            data-aos="fade-up"
-            data-aos-anchor-placement="top-bottom"
-          >
-            <div className={styles.item_game_text}>
-              <div className={styles.name_game}>Werewolf</div>
-              <div className={styles.item_game_tag_B}>
-                <div className={styles.item_game_tag}>Family</div>
-                <div className={styles.item_game_tag}>Party</div>
-                <div className={styles.item_game_tag}>strategy</div>
-              </div>
-
-              <div className={styles.B_item_game_player}>
-                <div className={styles.item_game_player_1}>
-                  <img src="clock-five.png" />
-                  35 min
-                </div>
-                <div className={styles.item_game_player_2}>
-                  <img src="users (1).png" />
-                  3-4 player
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <img src="item_2.png" />{" "}
-            </div>
-          </a>
-
-        {/* <a className ={styles.item_game} data-aos="fade-up" data-aos-anchor-placement="top-bottom" >
-        <div className ={styles.item_game_text} >
-        Werewolf
-            <div className ={styles.item_game_tag_B}>
-              <div className ={styles.item_game_tag}>Family</div>
-              <div className ={styles.item_game_tag}>Family</div>
-              <div className ={styles.item_game_tag}>Family</div>
-              <div className ={styles.item_game_tag}>Family</div>
-            </div>
-            <div className ={styles.item_game_player}>3-4 player</div>
-          </div>
-
-          <div><img src="item_2.png" /> </div> 
-        </a> */}
-        <a
-            className={styles.item_game}
-            data-aos="fade-up"
-            data-aos-anchor-placement="top-bottom"
-          >
-            <div className={styles.item_game_text}>
-              <div className={styles.name_game}>Werewolf</div>
-              <div className={styles.item_game_tag_B}>
-                <div className={styles.item_game_tag}>Family</div>
-                <div className={styles.item_game_tag}>Party</div>
-                <div className={styles.item_game_tag}>strategy</div>
-              </div>
-
-              <div className={styles.B_item_game_player}>
-                <div className={styles.item_game_player_1}>
-                  <img src="clock-five.png" />
-                  35 min
-                </div>
-                <div className={styles.item_game_player_2}>
-                  <img src="users (1).png" />
-                  3-4 player
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <img src="item_2.png" />{" "}
-            </div>
-          </a>
-
-          <a
-            className={styles.item_game}
-            data-aos="fade-up"
-            data-aos-anchor-placement="top-bottom"
-          >
-            <div className={styles.item_game_text}>
-              <div className={styles.name_game}>Werewolf</div>
-              <div className={styles.item_game_tag_B}>
-                <div className={styles.item_game_tag}>Family</div>
-                <div className={styles.item_game_tag}>Party</div>
-                <div className={styles.item_game_tag}>strategy</div>
-              </div>
-
-              <div className={styles.B_item_game_player}>
-                <div className={styles.item_game_player_1}>
-                  <img src="clock-five.png" />
-                  35 min
-                </div>
-                <div className={styles.item_game_player_2}>
-                  <img src="users (1).png" />
-                  3-4 player
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <img src="item_2.png" />{" "}
-            </div>
-          </a>
-
-          <a
-            className={styles.item_game}
-            data-aos="fade-up"
-            data-aos-anchor-placement="top-bottom"
-          >
-            <div className={styles.item_game_text}>
-              <div className={styles.name_game}>Werewolf</div>
-              <div className={styles.item_game_tag_B}>
-                <div className={styles.item_game_tag}>Family</div>
-                <div className={styles.item_game_tag}>Party</div>
-                <div className={styles.item_game_tag}>strategy</div>
-              </div>
-
-              <div className={styles.B_item_game_player}>
-                <div className={styles.item_game_player_1}>
-                  <img src="clock-five.png" />
-                  35 min
-                </div>
-                <div className={styles.item_game_player_2}>
-                  <img src="users (1).png" />
-                  3-4 player
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <img src="item_2.png" />{" "}
-            </div>
-          </a>
+          </Link>
+        ))}
+      </div>
         
         
       
-      </div>
+     
 
       <div className ={styles.Footer} >
           <div className ={styles.Footer_B1} >

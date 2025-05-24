@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  /* min-height: 100vh; */
 }
 
 @media (min-width: 992px) {
@@ -13,6 +14,7 @@
 
 .B_PhotoGame img {
   margin: 20px;
+  text-align: center;
   max-width: 100%;
   height: auto;
   border-radius: var(--border-radius-md);
@@ -27,14 +29,16 @@
 
 .B_PhotoGame {
   width: 100%;
+  max-width: 1000px;
 }
 
 .B_details {
   color: var(--text-dark);
   width: 100%;
+  /* max-width: 1000px; */
   margin-top: 30px;
-  padding: 0 20px;
-  border: solid red 1px; 
+  padding: 0 30px;
+  /* border: solid red 1px;  */
 }
 
 @media (min-width: 992px) {
@@ -47,6 +51,7 @@
   margin-top: 10px;
   width: 100%;
   max-width: 800px;
+  font-size: 23px;
   color: #333232c9;
 }
 
@@ -82,18 +87,21 @@
   padding: 10px 25px;
   background-color: #00000009;
   width: 100%;
+  font-size: 18px;
   border-radius: var(--border-radius-sm);
 }
 
 .B_player div, .B_play_time div {
   color: var(--text-muted);
-  font-size: 15px;
+  font-size: 18px;
   padding-bottom: 3px;
 }
 
 /* Categories Section */
 .B_Categories {
   margin-top: 30px;
+  font-size: 20px;
+  /* font-weight: bolder; */
   width: 100%;
   max-width: 800px;
 }
@@ -107,7 +115,7 @@
 .item_game_tag_B_Categories {
   display: flex;
   flex-wrap: wrap;
-  font-size: 15px;
+  font-size: 18px;
   padding: 6px 0;
 }
 
@@ -117,6 +125,7 @@
   padding: 5px 12px;
   border-radius: var(--border-radius-lg);
   margin: 5px 12px 5px 0;
+  
 }
 
 /* Similar Games Section */
@@ -125,7 +134,7 @@
   color: var(--text-dark);
   background-color: var(--light-bg);
   padding: 40px 0 70px;
-  margin-top: 70px;
+  margin-top: 60px;
 }
 
 .text_Similar_games {
@@ -226,15 +235,15 @@
 
 .B_item_game_player {
   display: flex;
-  padding: 6px;
+  padding: 7px;
   color: #0303039c;
   font-size: 14px;
 }
 
 .B_item_game_player img {
-  width: 29px;
-  height: auto;
-  padding: 6px;
+  width: 30px;
+  height: 30px; /*รูปแก้ตรงนี้*/
+  padding: 5px;
 }
 
 .item_game_player_1 {
