@@ -12,7 +12,7 @@
 .B_Search_all {
   display: grid;
   grid-template-columns: 1fr 3fr;
-  max-width: 1200px;
+  max-width: 1500px;
   gap: 30px;
   margin: 0 auto;
   padding: 0 20px;
@@ -140,7 +140,7 @@
 /* Game items grid */
 .B_item_all {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 20px;
   padding: 0;
   width: 100%;
