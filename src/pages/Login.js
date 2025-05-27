@@ -17,7 +17,6 @@ function Login() {
         <div className={styles.B_Fill_info}>
           <div className={styles.Fill_info}>
             <div className={styles.Text}>LOGIN</div>
-            <br />
             <form action="/" method="get" className={styles.form}>
               <div className={styles.info_user_text}>Email</div>
               {/* <input  className={styles.info_user} />  */}
@@ -31,8 +30,6 @@ function Login() {
                     name="email"
                     placeholder="you@gmail.com"
                     required
-                    pattern=".*@gmail\.com"
-                    title='โปรดใส่ "@gmail.com" ในที่อยู่อีเมล เช่น "example@gmail.com"'
                   />
                 </div>
               </div>
