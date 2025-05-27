@@ -123,7 +123,7 @@ export default function OTP() {
 
       if (res.ok) {
         setCanResend(false);
-        setCountdown(60);
+        setCountdown(300);
         setOtp(["", "", "", "", "", ""]);
         inputRefs.current[0]?.focus();
       } else {
