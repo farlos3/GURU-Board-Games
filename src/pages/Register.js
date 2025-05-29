@@ -9,8 +9,8 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState(""); // ✅ เพิ่ม error state
-  const [isLoading, setIsLoading] = useState(false); // ✅ เพิ่ม loading state
+  const [error, setError] = useState(""); 
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
 

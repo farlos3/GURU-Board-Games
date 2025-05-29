@@ -1,11 +1,26 @@
 "use client";
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from '../../styles/Navbar.module.css';
 import Link from 'next/link';
 
 
 function Navbar() {
-  
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token'); // assuming the token is stored as 'token'
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+  };
+
   return (
     <nav className={styles.navbar}>
       <div  className={styles.logo} >GURU BOARD GAME</div>
@@ -21,12 +36,25 @@ function Navbar() {
       </div>
       
       <div  className={styles.log_sign}>
-        <Link href="/Login">
-          <div className={styles.login} >Login</div>
-        </Link>
-        <Link href="/Register">
-          <div className={styles.sign} >Sign up</div>
-        </Link>
+        {isLoggedIn ? (
+          <>
+            <Link href="/profile">
+              <div className={styles.navLink}>Profile</div>
+            </Link>
+            <button onClick={handleLogout} className={styles.navLink} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit' }}>
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <Link href="/Login">
+              <div className={styles.login} >Login</div>
+            </Link>
+            <Link href="/Register">
+              <div className={styles.sign} >Sign up</div>
+            </Link>
+          </>
+        )}
         </div>
     </nav>
   )
