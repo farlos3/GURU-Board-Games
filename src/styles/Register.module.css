@@ -1,22 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
+
 .paint_over{
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(142,141,141, 0.3); /* สีดำโปร่งใส */
-    z-index: 1; /* ให้มาอยู่เหนือพื้นหลัง */
+    background-color: rgba(142,141,141, 0.3);
+    z-index: 1;
     display: grid;
     grid-template-columns: 50% 50%;
     pointer-events: none;
 }
+
 .B_main{ 
     background-image: url("/B_Login.jpg");
     background-size: cover;
-    background-position:center ;
+    background-position: center;
     min-height: 100vh;
-    position: relative; /* ทำให้ลูก .paint_over อิงตำแหน่งได้ */
+    position: relative;
 }
 
 .B_text_logo{
@@ -27,15 +29,15 @@
     position: relative;
     z-index: 2;
 }
+
 .text_logo{
     position: absolute;
     z-index: 1;
     padding: 30px 90px;
-    font-size: 75px;
+    font-size: clamp(45px, 8vw, 75px); /* Responsive font size */
     font-family: "Lilita One", sans-serif;
-    /* font-weight:bold ; */
-    
 }
+
 .text_logo::before{
     content: "";
     width: 100%;
@@ -43,12 +45,11 @@
     position: absolute;
     background-color: rgba(175, 172, 172, 0.79);
     left: 0;
-    top:0;
+    top: 0;
     filter: blur(25px);
     border-radius: 10px;
     z-index: -1;
 }
-
 
 .B_Fill_info{
     display: flex;
@@ -57,103 +58,91 @@
     text-align: center;
     position: relative;
     z-index: 2; 
+    padding: 20px;
 }
+
 .Fill_info{
     color: black;
     background-color: rgb(255, 255, 255);
-    width: 65%;
-    max-width: 650px;
-    height: 100%;
+    width: min(65%, 650px); /* More flexible width */
+    min-height: 500px;
     max-height: 850px;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    font-size: 20px;
+    font-size: clamp(16px, 2.5vw, 20px); /* Responsive font size */
     position: relative;
     z-index: 2;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 20px;
 }
+
 .inputWithIcon {
-    margin:10px;
+    margin: 10px 0;
     display: flex;
     align-items: center;
     border: solid 1px rgba(0, 0, 0, 0.493);
     border-radius: 5px;
-    height: 60px;
+    height: clamp(50px, 8vw, 60px); /* Responsive height */
     padding: 0 15px;
     width: 100%;
     background: white;
-  }
-  
-  .icon {
-    width: 20px;
-    height: 20px;
-    margin-right: 5px;
+    box-sizing: border-box;
+}
+
+.icon {
+    width: clamp(16px, 3vw, 20px); /* Responsive icon size */
+    height: clamp(16px, 3vw, 20px);
+    margin-right: 8px;
     flex-shrink: 0;
-  }
-  .info_user:focus,
+}
+
+.info_user:focus,
 .info_password:focus,
 .info_Cpassword:focus,
 .info_email:focus {
-  outline: none;
-  border: 0px solid black; /* หรือจะใช้สีอื่นที่ต้องการ */
-  box-shadow: none;
+    outline: none;
+    border: 0px solid black;
+    box-shadow: none;
 }
+
 .inputWithIcon:has(input:focus){
-    border: 1px solid black; /* หรือจะใช้สีอื่นที่ต้องการ */
+    border: 1px solid black;
 }
-  
-.info_user{
-    /* margin:10px; */
-    /* border: solid 1px rgba(0, 0, 0, 0.493); */
-     width: 100%; /*70% */
-    /* height: 60px; */
-    /* padding: 0px 100px; */
-    padding-right: 150px;
-    font-size: 18px;
+
+.info_user,
+.info_password,
+.info_Cpassword,
+.info_email {
+    width: 100%;
+    font-size: clamp(14px, 2.2vw, 18px); /* Responsive font size */
+    border: none;
     border-radius: 5px;
     position: relative;
     z-index: 3;
     pointer-events: auto;
-    padding-left: 10px;
-    
+    padding: 10px;
+    background: transparent;
 }
 
-
-.info_password,.info_Cpassword,.info_email {
-    /* margin: 10px; */
-    /* border: solid 1px rgba(0, 0, 0, 0.493); */
-    width: 100%; /*70% */
-    /* padding: 0px 15px;  */
-    /* height: 60px; */
-    font-size: 18px;
-    border-radius: 5px;
-    position: relative;
-    z-index: 3;
-    pointer-events: auto;
-    padding-left: 10px;
-    padding-right: 150px;
-}
-.info_user_text{
+.info_user_text,
+.info_password_text,
+.info_email_text,
+.info_Cpassword_text {
     color: rgba(0, 0, 0, 0.795);
-    display: flex;
-    width: 70%;
-    margin-top: 15px;
-    padding: 0px 10px;
-}
-.info_password_text,.info_email_text,.info_Cpassword_text {
-    color: rgba(0, 0, 0, 0.795);
-    margin-top: 20px;
-    display: flex;
-    width: 70%;
-    padding: 0px 10px;
-}
-.B_button_login{
-    margin: 30px;
     display: flex;
     width: 100%;
-    /* justify-content: flex-end; */
-    /* justify-content: center; */
+    margin-top: 15px;
+    padding: 0px 10px;
+    font-size: clamp(14px, 2vw, 16px);
+}
+
+.B_button_login{
+    margin: 30px 0;
+    display: flex;
+    width: 100%;
     position: relative;
     z-index: 2;
     margin-bottom: 45px;
@@ -161,67 +150,307 @@
 
 .button_login{
     border: solid 1px;
-    padding: 10px 30px;
+    padding: clamp(8px, 2vw, 12px) clamp(20px, 4vw, 30px); /* Responsive padding */
     width: 100%;
-    /* margin-left: 96px; */
     color: white;
     background-color: black;
     border-radius: 10px;
-    font-size: 25px;
+    font-size: clamp(18px, 3.5vw, 25px); /* Responsive font size */
     font-weight: bold;
     position: relative;
     z-index: 10;
     cursor: pointer;
     pointer-events: auto;
-    margin-left: -18px;
+    transition: all 0.3s ease;
 }
+
 .Text{
     font-weight: bold;
-    font-size: 45px;
-    /* padding-top: 5px; */
+    font-size: clamp(28px, 6vw, 45px); /* Responsive font size */
     margin-top: 20px;
+    text-align: center;
 }
 
-
 .button_login:hover {
-    background-color: #333333; /* ทำให้สีดำจางลงนิดนึง */
-    color: #ffffff; /* สีตัวอักษรขาวเหมือนเดิม */
-    transform: scale(1.05); /* ขยายเล็กน้อย */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* เงาแบบนุ่ม */
+    background-color: #333333;
+    color: #ffffff;
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
 }
 
 .B_Register{
     display: flex;
     justify-content: center;
-    
-    margin-left: 25px;
     margin-top: -12px;
     width: 100%;
-    /* font-size: 18px; */
-    /* color: rgba(0, 0, 0, 0.329); */
     padding: 5px 15px;
     pointer-events: auto;
     position: relative;
     z-index: 4;
 }
+
 .Register_text{
     display: flex;
     color: rgba(0, 0, 0, 0.329);
+    font-size: clamp(14px, 2vw, 16px);
+    text-align: center;
+    flex-wrap: wrap;
+    justify-content: center;
 }
+
 .Register_sign_in{
     color: rgb(0, 0, 0);
     padding-left: 10px;
+    transition: all 0.2s ease-in-out;
 }
+
 .Register_sign_in:hover {
-    /* color: rgba(104, 22, 22, 0.8); */
     text-decoration: underline;
     cursor: pointer;
-    transform: scale(1.02); /* ขยายขนาดนิดหน่อย */
-    transition: all 0.2s ease-in-out;
+    transform: scale(1.02);
     pointer-events: auto;
+}
+
+.form{
+    width: 100%;
+    max-width: 500px;
+}
+
+/* Large Desktop */
+@media (min-width: 1400px) {
+    .Fill_info {
+        width: 70%;
+        max-width: 700px;
+    }
+    
+    .text_logo {
+        font-size: 85px;
+        padding: 40px 100px;
+    }
     
 }
-.form{
-    width: 70%;
+
+/* Desktop */
+@media (max-width: 1200px) {
+    .paint_over {
+        grid-template-columns: 1fr;
+    }   
+    .text_logo br {
+   display: none;
+ }
+    
+    .Fill_info {
+        width: 70%;
+    }
 }
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .text_logo {
+        padding: 20px 60px;
+    }
+    .text_logo br {
+   display: none;
+ }
+
+    .Fill_info {
+        width: 80%;
+        margin: 20px;
+    }
+
+    .B_Fill_info {
+        padding: 15px;
+    }
+
+    .inputWithIcon {
+        margin: 8px 0;
+    }
+
+    .B_button_login {
+        margin: 25px 0;
+        margin-bottom: 35px;
+    }
+}
+
+/* Mobile Large */
+@media (max-width: 768px) {
+    .B_main {
+        background-attachment: scroll; /* Better performance on mobile */
+    }
+    
+   
+
+    .Fill_info {
+        width: 90%;
+        margin: 10px;
+        padding: 15px;
+        min-height: auto;
+    }
+
+    .text_logo {
+        padding: 15px 40px;
+    }
+    .text_logo br {
+   display: none;
+ }
+
+    .form {
+        width: 100%;
+    }
+
+    .info_user_text,
+    .info_password_text,
+    .info_email_text,
+    .info_Cpassword_text {
+        width: 100%;
+        margin-top: 10px;
+        padding: 0px 5px;
+    }
+
+    .inputWithIcon {
+        padding: 0 10px;
+        margin: 6px 0;
+    }
+
+    .B_button_login {
+        margin: 20px 0;
+        margin-bottom: 30px;
+    }
+
+    .Register_text {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .Register_sign_in {
+        padding-left: 0;
+        padding-top: 5px;
+    }
+}
+
+/* Mobile Medium */
+@media (max-width: 480px) {
+    .B_Fill_info {
+        padding: 10px 10px;
+    }
+
+    .Fill_info {
+        width: 95%;
+        padding: 12px;
+        margin: 5px;
+    }
+
+    .text_logo {
+        padding: 5px 0px;
+        font-size: 40px;
+    }
+
+    .text_logo::before {
+        border-radius: 8px;
+        filter: blur(15px);
+    }
+    .text_logo br {
+  display: none;
+}
+
+    .inputWithIcon {
+        padding: 0 8px;
+        margin: 5px 0;
+    }
+
+    .icon {
+        margin-right: 5px;
+    }
+
+    .info_user,
+    .info_password,
+    .info_Cpassword,
+    .info_email {
+        padding: 8px;
+    }
+
+    .B_button_login {
+        margin: 15px 0;
+        margin-bottom: 25px;
+    }
+
+    .button_login:hover {
+        transform: scale(1.02); /* Less dramatic hover effect on mobile */
+    }
+    .form {
+        width: 90%;
+    }
+}
+
+/* Mobile Small */
+/* @media (max-width: 360px) {
+    .Fill_info {
+        width: 98%;
+        padding: 10px;
+    }
+
+    .text_logo {
+        padding: 8px 20px;
+    }
+    .text_logo br {
+  display: none;
+}
+
+    .inputWithIcon {
+        padding: 0 6px;
+    }
+
+    .Register_text {
+        font-size: 14px;
+    }
+} */
+
+/* Landscape orientation adjustments */
+@media (orientation: landscape) and (max-height: 600px) {
+    .B_main {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+    }
+    
+    .Fill_info {
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    
+    .text_logo {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        transform: none;
+    }
+    
+    .B_text_logo {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        width: auto;
+        height: auto;
+    }
+}
+
+/* High DPI displays */
+/* @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .text_logo::before {
+        filter: blur(20px);
+    }
+} */
+
+/* Reduced motion preferences */
+/* @media (prefers-reduced-motion: reduce) {
+    .button_login,
+    .Register_sign_in {
+        transition: none;
+    }
+    
+    .button_login:hover,
+    .Register_sign_in:hover {
+        transform: none;
+    }
+} */

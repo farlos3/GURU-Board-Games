@@ -1,7 +1,22 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import styles from "../styles/Login.module.css";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const router = useRouter();
+
+  const handleLogin = async (e) => {
+  e.preventDefault();
+
+  const fakeToken = "example_token_123";
+  localStorage.setItem("token", fakeToken);
+  router.push("/");
+};
+
   return (
     <div className={styles.B_main}>
       <div className={styles.paint_over}>
@@ -17,14 +32,12 @@ function Login() {
         <div className={styles.B_Fill_info}>
           <div className={styles.Fill_info}>
             <div className={styles.Text}>LOGIN</div>
-            <br />
-            <form action="/" method="get" className={styles.form}>
-              <div className={styles.info_user_text}>Email</div>
-              {/* <input  className={styles.info_user} />  */}
 
+            <form onSubmit={handleLogin} className={styles.form}>
+              <div className={styles.info_user_text}>Email</div>
               <div className={styles.inputContainer}>
                 <div className={styles.inputWithIcon}>
-                  <img className={styles.icon} src="envelope (2).png" />
+                  <img className={styles.icon} src="/envelope (2).png" />
                   <input
                     className={styles.info_user}
                     type="email"
@@ -33,6 +46,8 @@ function Login() {
                     required
                     pattern=".*@gmail\.com"
                     title='โปรดใส่ "@gmail.com" ในที่อยู่อีเมล เช่น "example@gmail.com"'
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
               </div>
@@ -40,12 +55,14 @@ function Login() {
               <div className={styles.info_password_text}>Password</div>
               <div className={styles.inputContainer}>
                 <div className={styles.inputWithIcon}>
-                  <img className={styles.icon} src="lock.png" />
+                  <img className={styles.icon} src="/lock.png" />
                   <input
                     className={styles.info_password}
                     type="password"
                     placeholder="Password"
                     required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
               </div>
@@ -57,10 +74,9 @@ function Login() {
               </div>
             </form>
 
-            <div></div>
             <div className={styles.B_Register}>
               <Link href="/Register">
-                <div className={styles.Register}> Create Account</div>
+                <div className={styles.Register}>Create Account</div>
               </Link>
             </div>
           </div>

@@ -1,0 +1,150 @@
+/* Favorites Page Styles */
+.favoritesPage {
+  padding: 40px 60px;
+  position: relative;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 40px;
+  color: #333;
+}
+
+.favoritesContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 20px;
+}
+
+/* Board Game Card Styles - Your Original CSS */
+.item_game {
+  width: 100%;
+  overflow: hidden;
+  background-color: rgb(252, 252, 252);
+  color: black;
+  display: flex;
+  flex-direction: column-reverse;
+  border-radius: 8px;
+  transition: transform 0.3s ease, box-shadow 0.5s ease;
+  border: solid hsla(0, 0%, 0%, 0.055) 1px;
+  box-shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.35);
+  text-decoration: none;
+}
+
+.item_game:hover {
+  transform: translateY(-8px);
+  box-shadow: 0px 5px 15px 9px rgba(0, 0, 0, 0.15);
+}
+
+.item_game:hover img {
+  transform: scale(1.04);
+}
+
+.item_game img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16/11;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.item_game_text {
+  position: relative;
+  overflow: hidden;
+  padding: 15px;
+}
+
+.name_game {
+  display: flex;
+  padding: 0 0 10px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.item_game_tag_B {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.item_game_tag {
+  background: linear-gradient(to right, rgba(87, 236, 223, 0.575), #ccfae3, #ccf6fa);
+  color: #0095FF;
+  padding: 5px 12px;
+  border-radius: 20px;
+  margin: 2px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.B_item_game_player {
+  display: flex;
+  padding: 5px 0;
+  color: #0303039c;
+  font-size: 14px;
+}
+
+.B_item_game_player img {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  margin-right: 5px;
+}
+
+.item_game_player_1 {
+  display: flex;
+  align-items: center;
+}
+
+.item_game_player_2 {
+  display: flex;
+  align-items: center;
+  margin-left: 15px;
+}
+
+/* Additional Styles */
+.emptyState {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.emptyStateIcon {
+  margin-bottom: 16px;
+}
+
+.addFavoriteButton {
+  background-color: #7c3aed;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 16px;
+}
+
+.addFavoriteButton:hover {
+  background-color: #6d28d9;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .favoritesContainer {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .favoritesContainer {
+    grid-template-columns: 1fr;
+  }
+  
+  .favoritesPage {
+    padding: 20px 30px;
+  }
+}
