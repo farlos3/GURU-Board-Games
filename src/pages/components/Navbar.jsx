@@ -1,8 +1,9 @@
 "use client";
 import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from '../../styles/Navbar.module.css';
 import Link from 'next/link';
-
+import { useRouter } from 'next/navigation';
 
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -23,15 +24,15 @@ function Navbar() {
 
   return (
     <nav className={styles.navbar}>
-      <div  className={styles.logo} >GURU BOARD GAME</div>
+      <div className={styles.logo}>GURU BOARD GAME</div>
 
       <div className={styles.Link_All}>
-        <Link href="/"> 
-        <div className={styles.navLink} >HOME</div>
+        <Link href="/">
+          <div className={styles.navLink}>HOME</div>
         </Link>
-        <a href="#" className={styles.navLink} >GAME POPULAR</a>
+        {/* <a href="#" className={styles.navLink}>GAME POPULAR</a> */}
         <Link href="/Search">
-          <div className={styles.navLink} >SEARCH GAME</div>
+          <div className={styles.navLink}>SEARCH GAME</div>
         </Link>
       </div>
       
@@ -57,7 +58,7 @@ function Navbar() {
         )}
         </div>
     </nav>
-  )
+  );
 }
 
-export default Navbar
+export default Navbar;

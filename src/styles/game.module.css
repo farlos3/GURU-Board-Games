@@ -1,9 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
+
+/* ===== CSS Variables ===== */
+/* :root {
+  --primary-color: #0095FF;
+  --text-dark: #333;
+  --text-light: #fff;
+  --text-muted: #666;
+  --light-bg: #f8f9fa;
+  --dark-bg: #333;
+  --gradient-bg: linear-gradient(to right, rgba(87, 236, 223, 0.575), #ccfae3, #ccf6fa);
+  --border-radius-sm: 8px;
+  --border-radius-md: 12px;
+  --border-radius-lg: 20px;
+  --shadow: 0px 3px 5px 0px rgba(0, 0, 0, 0.35);
+  --shadow-hover: 0px 5px 15px 9px rgba(0, 0, 0, 0.35);
+  --transition: 0.3s ease;
+} */
+
 /* Game Photo Section */
 .B_PhotoGame_details {
   display: flex;
   flex-direction: column;
   width: 100%;
-  /* min-height: 100vh; */
 }
 
 @media (min-width: 992px) {
@@ -35,10 +53,8 @@
 .B_details {
   color: var(--text-dark);
   width: 100%;
-  /* max-width: 1000px; */
   margin-top: 30px;
   padding: 0 30px;
-  /* border: solid red 1px;  */
 }
 
 @media (min-width: 992px) {
@@ -63,6 +79,232 @@
 @media (min-width: 768px) {
   .B_details h1 {
     font-size: 45px;
+  }
+}
+
+/* ===== Enhanced Button Styles ===== */
+.rating_buttons {
+  display: flex;
+  gap: 12px;
+  margin: 12px 0;
+  padding: 0 6px;
+}
+
+.heart_button, .favorite_button {
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
+  border: 2px solid #e9ecef;
+  padding: 10px 16px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+}
+
+.heart_button::before, .favorite_button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  transition: left 0.6s ease;
+}
+
+.heart_button:hover::before, .favorite_button:hover::before {
+  left: 100%;
+}
+
+.heart_button:hover, .favorite_button:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  border-color: #007bff;
+}
+
+.heart_button:active, .favorite_button:active {
+  transform: translateY(-1px) scale(0.98);
+  transition: all 0.1s ease;
+}
+
+/* Heart Button States */
+.heart_button {
+  color: #6c757d;
+}
+
+.heart_active {
+  background: linear-gradient(135deg, #ff6b9d, #ff8fa3);
+  border-color: #ff6b9d;
+  color: white;
+  animation: heartPulse 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes heartPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* Instagram-style Favorite Button */
+.favorite_button {
+  color: #262626;
+}
+
+.bookmark_icon {
+  width: 18px;
+  height: 18px;
+  transition: all 0.3s ease;
+}
+
+.favorite_active {
+  background: linear-gradient(135deg, #405DE6, #5851DB);
+  border-color: #405DE6;
+  color: white;
+  animation: bookmarkSave 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.favorite_active .bookmark_icon {
+  fill: currentColor;
+  transform: scale(1.1);
+}
+
+@keyframes bookmarkSave {
+  0% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.1) rotate(-5deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* ===== Enhanced Star Rating System (Half Star Support) ===== */
+.stars {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 12px 6px;
+  padding: 8px 0;
+}
+
+.starContainer {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.starContainer:hover {
+  transform: scale(1.1);
+}
+
+.starWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.star {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 32px;
+  line-height: 1;
+  user-select: none;
+  transition: all 0.2s ease;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.starBackground {
+  color: #e0e0e0;
+  z-index: 1;
+}
+
+.starForeground {
+  color: #ffc107;
+  z-index: 2;
+  filter: drop-shadow(0 0 8px rgba(255, 193, 7, 0.4));
+  transition: clip-path 0.2s ease;
+}
+
+.starHoverIndicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 2px;
+  background: #ffc107;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+
+.starContainer:hover .starHoverIndicator {
+  opacity: 1;
+  width: 8px;
+  height: 8px;
+  box-shadow: 0 0 10px rgba(255, 193, 7, 0.8);
+}
+
+.starContainer:hover .starForeground {
+  filter: drop-shadow(0 0 12px rgba(255, 193, 7, 0.6));
+}
+
+.ratingText {
+  margin-left: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  padding: 4px 8px;
+  border-radius: 12px;
+  border: 1px solid #dee2e6;
+}
+
+/* Star Pulse Animation */
+@keyframes starGlow {
+  0% { 
+    filter: drop-shadow(0 0 8px rgba(255, 193, 7, 0.4));
+    transform: scale(1);
+  }
+  50% { 
+    filter: drop-shadow(0 0 16px rgba(255, 193, 7, 0.8));
+    transform: scale(1.05);
+  }
+  100% { 
+    filter: drop-shadow(0 0 8px rgba(255, 193, 7, 0.4));
+    transform: scale(1);
+  }
+}
+
+.starContainer:active .starForeground {
+  animation: starGlow 0.3s ease;
+}
+
+/* Ripple Effect */
+.heart_button:active::after, .favorite_button:active::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.6);
+  transform: translate(-50%, -50%);
+  animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+  to {
+    width: 120px;
+    height: 120px;
+    opacity: 0;
   }
 }
 
@@ -101,7 +343,6 @@
 .B_Categories {
   margin-top: 30px;
   font-size: 20px;
-  /* font-weight: bolder; */
   width: 100%;
   max-width: 800px;
 }
@@ -125,7 +366,6 @@
   padding: 5px 12px;
   border-radius: var(--border-radius-lg);
   margin: 5px 12px 5px 0;
-  
 }
 
 /* Similar Games Section */
@@ -358,3 +598,6 @@
 .Footer_B2_text div {
   margin: 0 10px;
 }
+
+
+

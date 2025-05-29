@@ -1,4 +1,31 @@
 [
+  
+  {
+    "name": "Werewolf",
+    "image": "item_2.png",
+    "tags": ["Family", "Party", "Strategy"],
+    "duration": "35 min",
+    "players": "3-4 players",
+    "description": "qwdqdqdqwdqwdqwdqwdqwdwqdwqdwqdwqdwqdqwdwqdqwdqwdwqdqwdq",
+    "rating": 3.5
+  },
+  {
+    "name": "Codenames",
+    "image": "marisa.jpg",
+    "tags": ["Puzzle", "Strategy"],
+    "duration": "20 min",
+    "players": "2-8 players",
+    "rating": 3.5
+    
+  },
+  {
+    "name": "Dixit",
+    "image": "defraud.png",
+    "tags": ["Family", "Creative"],
+    "duration": "30 min",
+    "players": "3-6 players",
+    "rating": 3.5
+  },
   {
     "name": "Werewolf",
     "image": "item_2.png",
@@ -21,18 +48,39 @@
     "players": "3-6 players"
   },
   {
-    "name": "Werewolf",
+    "name": "Dixit",
     "image": "item_2.png",
-    "tags": ["Family", "Party", "Strategy"],
-    "duration": "35 min",
-    "players": "3-4 players"
+    "tags": ["Family", "Creative"],
+    "duration": "30 min",
+    "players": "3-6 players"
   },
   {
-    "name": "Codenames",
+    "name": "Dixit",
     "image": "item_2.png",
-    "tags": ["Puzzle", "Strategy"],
-    "duration": "20 min",
-    "players": "2-8 players"
+    "tags": ["Family", "Creative"],
+    "duration": "30 min",
+    "players": "3-6 players"
+  },
+  {
+    "name": "Dixit",
+    "image": "item_2.png",
+    "tags": ["Family", "Creative"],
+    "duration": "30 min",
+    "players": "3-6 players"
+  },
+  {
+    "name": "Dixit",
+    "image": "item_2.png",
+    "tags": ["Family", "Creative"],
+    "duration": "30 min",
+    "players": "3-6 players"
+  },
+  {
+    "name": "Dixit",
+    "image": "item_2.png",
+    "tags": ["Family", "Creative"],
+    "duration": "30 min",
+    "players": "3-6 players"
   },
   {
     "name": "Dixit",
@@ -41,6 +89,7 @@
     "duration": "30 min",
     "players": "3-6 players"
   }
+  
   
 ]
 

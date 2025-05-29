@@ -140,6 +140,7 @@ export default function Login() {
             <div className={styles.B_Register}>
               <Link href="/Register">
                 <div className={styles.Register}>Create Account</div>
+                <div className={styles.Register}>Create Account</div>
               </Link>
             </div>
           </div>

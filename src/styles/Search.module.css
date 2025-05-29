@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
+
 /* Main layout */
 .game_Text {
   color: black;
@@ -53,15 +55,15 @@
   align-items: center;
   margin-bottom: 20px;
 }
+
 .input_Search {
   border: none;
   outline: none;
   font-size: 16px;
   margin-left: 10px;
-  flex: 1; /* ถ้าต้องการให้ input ยืดเต็มพื้นที่ */
+  flex: 1;
   background: transparent;
 }
-
 
 .box_Search img {
   width: 20px;
@@ -239,6 +241,200 @@
   align-items: center;
   margin-left: 15px;
 }
+
+/* Enhanced Button Styles */
+.rating_buttons {
+  display: flex;
+  gap: 12px;
+  margin: 12px 0;
+  padding: 0 6px;
+}
+
+.heart_button, .favorite_button {
+  background: linear-gradient(135deg, #ffffff, #f8f9fa);
+  border: 2px solid #e9ecef;
+  padding: 8px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 36px;
+}
+
+.heart_button::before, .favorite_button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  transition: left 0.6s ease;
+}
+
+.heart_button:hover::before, .favorite_button:hover::before {
+  left: 100%;
+}
+
+.heart_button:hover, .favorite_button:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  border-color: #007bff;
+}
+
+.heart_button:active, .favorite_button:active {
+  transform: translateY(-1px) scale(0.98);
+  transition: all 0.1s ease;
+}
+
+/* Heart Button States */
+.heart_button {
+  color: #6c757d;
+}
+
+.heart_active {
+  background: linear-gradient(135deg, #ff6b9d, #ff8fa3);
+  border-color: #ff6b9d;
+  color: white;
+  animation: heartPulse 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes heartPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* Favorite Button */
+.favorite_button {
+  color: #262626;
+}
+
+.bookmark_icon {
+  width: 16px;
+  height: 16px;
+  transition: all 0.3s ease;
+}
+
+.favorite_active {
+  background: linear-gradient(135deg, #405DE6, #5851DB);
+  border-color: #405DE6;
+  color: white;
+  animation: bookmarkSave 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.favorite_active .bookmark_icon {
+  fill: currentColor;
+  transform: scale(1.1);
+}
+
+@keyframes bookmarkSave {
+  0% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.1) rotate(-5deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* Enhanced Star Rating System */
+.stars {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin: 10px 6px;
+  padding: 6px 0;
+}
+
+.starContainer {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.starContainer:hover {
+  transform: scale(1.1);
+}
+
+.starWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.star {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 24px;
+  line-height: 1;
+  user-select: none;
+  transition: all 0.2s ease;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.starBackground {
+  color: #e0e0e0;
+  z-index: 1;
+}
+
+.starForeground {
+  color: #ffc107;
+  z-index: 2;
+  filter: drop-shadow(0 0 6px rgba(255, 193, 7, 0.4));
+  transition: clip-path 0.2s ease;
+}
+
+.starHoverIndicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 2px;
+  background: #ffc107;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+
+.starContainer:hover .starHoverIndicator {
+  opacity: 1;
+  width: 6px;
+  height: 6px;
+  box-shadow: 0 0 8px rgba(255, 193, 7, 0.8);
+}
+
+.starContainer:hover .starForeground {
+  filter: drop-shadow(0 0 10px rgba(255, 193, 7, 0.6));
+}
+
+/* No results message */
+.no_results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.no_results h3 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.no_results p {
+  font-size: 16px;
+  color: #666;
+}
+
+
 
 /* Footer */
  .Footer{
