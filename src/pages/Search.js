@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Nav from "./components/Navbar";
+import Link from 'next/link';
 import styles from "../styles/Search.module.css";
 import gamesData from "/src/pages/testjoson.json"; // Import JSON data
 
@@ -11,26 +12,76 @@ function Search() {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [filteredGames, setFilteredGames] = useState([]);
   
+  // เพิ่ม state สำหรับ pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const gamesPerPage = 9;
+  
   // State สำหรับเก็บข้อมูล favorites, hearts และ ratings ของแต่ละเกม (แยกอิสระ)
   const [gameStates, setGameStates] = useState({});
   const [hoverRating, setHoverRating] = useState({}); // แยกเฉพาะ gameId
+
+  // ฟังก์ชันสำหรับโหลดข้อมูลจาก localStorage
+  const loadGameStatesFromStorage = () => {
+    try {
+      const savedStates = localStorage.getItem('gameStates');
+      if (savedStates) {
+        return JSON.parse(savedStates);
+      }
+    } catch (error) {
+      console.error('Error loading game states from localStorage:', error);
+    }
+    return {};
+  };
+
+  // ฟังก์ชันสำหรับบันทึกข้อมูลลง localStorage
+  const saveGameStatesToStorage = (states) => {
+    try {
+      localStorage.setItem('gameStates', JSON.stringify(states));
+      // Dispatch custom event เพื่อให้หน้าอื่นๆ รู้ว่าข้อมูลเปลี่ยน
+      window.dispatchEvent(new CustomEvent('gameStatesChanged', { detail: states }));
+    } catch (error) {
+      console.error('Error saving game states to localStorage:', error);
+    }
+  };
 
   // โหลดข้อมูลเกมจาก JSON
   useEffect(() => {
     setGames(gamesData);
     setFilteredGames(gamesData);
     
+    // โหลดข้อมูลจาก localStorage
+    const savedStates = loadGameStatesFromStorage();
+    
     // Initialize game states - แต่ละเกมจะมี state แยกจากกัน
     const initialStates = {};
-    gamesData.forEach((game) => {
-      initialStates[game.id] = {
-        isFavorite: false,
-        isLiked: false,
-        userRating: 0,
+    gamesData.forEach((game, index) => {
+      initialStates[index] = {
+        isFavorite: savedStates[index]?.isFavorite || false,
+        isLiked: savedStates[index]?.isLiked || false,
+        userRating: savedStates[index]?.userRating || 0,
         hoverRating: null // เพิ่ม hoverRating เฉพาะแต่ละการ์ด
       };
     });
     setGameStates(initialStates);
+  }, []);
+
+  // บันทึกข้อมูลลง localStorage ทุกครั้งที่ gameStates เปลี่ยน
+  useEffect(() => {
+    if (Object.keys(gameStates).length > 0) {
+      saveGameStatesToStorage(gameStates);
+    }
+  }, [gameStates]);
+
+  // Listen for changes from other pages
+  useEffect(() => {
+    const handleGameStatesChange = (event) => {
+      setGameStates(event.detail);
+    };
+
+    window.addEventListener('gameStatesChanged', handleGameStatesChange);
+    return () => {
+      window.removeEventListener('gameStatesChanged', handleGameStatesChange);
+    };
   }, []);
 
   // ฟังก์ชันการกรองเกม
@@ -58,7 +109,33 @@ function Search() {
     });
     
     setFilteredGames(filtered);
+    setCurrentPage(1); // รีเซ็ตกลับไปหน้าแรกเมื่อกรองข้อมูลใหม่
   }, [searchQuery, selectedCategories, playerCount, playTime, games]);
+
+  // คำนวณข้อมูลสำหรับ pagination
+  const totalPages = Math.ceil(filteredGames.length / gamesPerPage);
+  const startIndex = (currentPage - 1) * gamesPerPage;
+  const endIndex = startIndex + gamesPerPage;
+  const currentGames = filteredGames.slice(startIndex, endIndex);
+
+  // ฟังก์ชันเปลี่ยนหน้า
+  const goToPage = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    // เลื่อนกลับไปด้านบนเมื่อเปลี่ยนหน้า
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      goToPage(currentPage - 1);
+    }
+  };
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      goToPage(currentPage + 1);
+    }
+  };
 
   // ฟังก์ชันจัดการ checkbox category
   const handleCategoryChange = (category) => {
@@ -70,63 +147,63 @@ function Search() {
   };
 
   // ฟังก์ชันสำหรับเปลี่ยนสถานะ favorite (แยกเฉพาะ gameId)
-  const toggleFavorite = (gameId, e) => {
+  const toggleFavorite = (gameIndex, e) => {
     e.preventDefault();
     e.stopPropagation();
     
     setGameStates(prev => ({
       ...prev,
-      [gameId]: {
-        ...prev[gameId],
-        isFavorite: !prev[gameId]?.isFavorite
+      [gameIndex]: {
+        ...prev[gameIndex],
+        isFavorite: !prev[gameIndex]?.isFavorite
       }
     }));
   };
 
   // ฟังก์ชันสำหรับเปลี่ยนสถานะ heart (แยกเฉพาะ gameId)
-  const toggleHeart = (gameId, e) => {
+  const toggleHeart = (gameIndex, e) => {
     e.preventDefault();
     e.stopPropagation();
     
     setGameStates(prev => ({
       ...prev,
-      [gameId]: {
-        ...prev[gameId],
-        isLiked: !prev[gameId]?.isLiked
+      [gameIndex]: {
+        ...prev[gameIndex],
+        isLiked: !prev[gameIndex]?.isLiked
       }
     }));
   };
 
   // ฟังก์ชันสำหรับให้คะแนนดาว (แยกเฉพาะ gameId)
-  const handleStarClick = (gameId, rating, e) => {
+  const handleStarClick = (gameIndex, rating, e) => {
     e.preventDefault();
     e.stopPropagation();
     
     setGameStates(prev => ({
       ...prev,
-      [gameId]: {
-        ...prev[gameId],
+      [gameIndex]: {
+        ...prev[gameIndex],
         userRating: rating
       }
     }));
   };
 
   // ฟังก์ชันสำหรับ hover effect บนดาว (แยกเฉพาะ gameId)
-  const handleStarHover = (gameId, rating) => {
+  const handleStarHover = (gameIndex, rating) => {
     setGameStates(prev => ({
       ...prev,
-      [gameId]: {
-        ...prev[gameId],
+      [gameIndex]: {
+        ...prev[gameIndex],
         hoverRating: rating
       }
     }));
   };
 
-  const handleStarLeave = (gameId) => {
+  const handleStarLeave = (gameIndex) => {
     setGameStates(prev => ({
       ...prev,
-      [gameId]: {
-        ...prev[gameId],
+      [gameIndex]: {
+        ...prev[gameIndex],
         hoverRating: null
       }
     }));
@@ -147,8 +224,8 @@ function Search() {
   };
 
   // ฟังก์ชันสำหรับแสดงดาว (ใช้ hoverRating ของแต่ละ gameId แยกจากกัน)
-  const renderStars = (gameId) => {
-    const gameState = gameStates[gameId] || {};
+  const renderStars = (gameIndex) => {
+    const gameState = gameStates[gameIndex] || {};
     const currentRating = gameState.hoverRating !== null && gameState.hoverRating !== undefined 
       ? gameState.hoverRating 
       : (gameState.userRating || 0);
@@ -161,14 +238,14 @@ function Search() {
         <div 
           key={star} 
           className={styles.starContainer}
-          onMouseLeave={() => handleStarLeave(gameId)}
+          onMouseLeave={() => handleStarLeave(gameIndex)}
           onMouseMove={(e) => {
             const rating = getStarRating(e, star);
-            handleStarHover(gameId, rating);
+            handleStarHover(gameIndex, rating);
           }}
           onClick={(e) => {
             const rating = getStarRating(e, star);
-            handleStarClick(gameId, rating, e);
+            handleStarClick(gameIndex, rating, e);
           }}
         >
           <div className={styles.starWrapper}>
@@ -276,82 +353,129 @@ function Search() {
           </div>
         </div>
 
-        <div className={styles.B_item_all}>
-          {filteredGames.map((game) => {
-            // ดึง state ของเกมนี้โดยเฉพาะ
-            const currentGameState = gameStates[game.id] || {};
-            
-            return (
-              <div
-                key={game.id}
-                className={styles.item_game}
-                data-aos="fade-up"
-                data-aos-anchor-placement="top-bottom"
-              >
-                <div className={styles.item_game_text}>
-                  <div className={styles.name_game}>{game.name}</div>
+        <div className={styles.B_games_section}>
+          {/* แสดงข้อมูลจำนวนเกมและหน้าปัจจุบัน */}
+          <div className={styles.games_info}>
+            <p>แสดง {startIndex + 1}-{Math.min(endIndex, filteredGames.length)} จาก {filteredGames.length} เกม (หน้า {currentPage} จาก {totalPages})</p>
+          </div>
 
-                  <div className={styles.rating_buttons}>
-                    <button 
-                      className={`${styles.heart_button} ${currentGameState.isLiked ? styles.heart_active : ''}`}
-                      onClick={(e) => toggleHeart(game.id, e)}
-                      title={currentGameState.isLiked ? "Unlike" : "Like"}
-                    >
-                      {currentGameState.isLiked ? "💖" : "🤍"}
-                    </button>
-                    
-                    <button 
-                      className={`${styles.favorite_button} ${currentGameState.isFavorite ? styles.favorite_active : ''}`}
-                      onClick={(e) => toggleFavorite(game.id, e)}
-                      title={currentGameState.isFavorite ? "Remove from favorites" : "Add to favorites"}
-                    >
-                      <svg 
-                        className={styles.bookmark_icon} 
-                        viewBox="0 0 24 24" 
-                        fill={currentGameState.isFavorite ? "currentColor" : "none"}
-                        stroke="currentColor"
-                      >
-                        <path d="M19 21L12 16L5 21V5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21Z" strokeWidth="2"/>
-                      </svg>
-                      {currentGameState.isFavorite ? "Saved" : "Save"}
-                    </button>
-                  </div>
+          <div className={styles.B_item_all}>
+            {currentGames.map((game, index) => {
+              // คำนวณ gameIndex ที่แท้จริงในข้อมูลทั้งหมด
+              const actualGameIndex = startIndex + index;
+              const currentGameState = gameStates[actualGameIndex] || {};
+              
+              return (
+                <Link key={actualGameIndex} href={`/game/${actualGameIndex}`}>
+                  <div
+                    className={styles.item_game}
+                    data-aos="fade-up"
+                    data-aos-anchor-placement="top-bottom"
+                  >
+                    <div className={styles.item_game_text}>
+                      <div className={styles.name_game}>{game.name}</div>
 
-                  <div className={styles.stars}>
-                    {renderStars(game.id)}
-                  </div>
-
-                  <div className={styles.item_game_tag_B}>
-                    {game.tags.map((tag, tagIndex) => (
-                      <div key={tagIndex} className={styles.item_game_tag}>
-                        {tag}
+                      <div className={styles.rating_buttons}>
+                        <button 
+                          className={`${styles.heart_button} ${currentGameState.isLiked ? styles.heart_active : ''}`}
+                          onClick={(e) => toggleHeart(actualGameIndex, e)}
+                          title={currentGameState.isLiked ? "Unlike" : "Like"}
+                        >
+                          {currentGameState.isLiked ? "💖" : "🤍"}
+                        </button>
+                        
+                        <button 
+                          className={`${styles.favorite_button} ${currentGameState.isFavorite ? styles.favorite_active : ''}`}
+                          onClick={(e) => toggleFavorite(actualGameIndex, e)}
+                          title={currentGameState.isFavorite ? "Remove from favorites" : "Add to favorites"}
+                        >
+                          <svg 
+                            className={styles.bookmark_icon} 
+                            viewBox="0 0 24 24" 
+                            fill={currentGameState.isFavorite ? "currentColor" : "none"}
+                            stroke="currentColor"
+                          >
+                            <path d="M19 21L12 16L5 21V5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21Z" strokeWidth="2"/>
+                          </svg>
+                          {currentGameState.isFavorite ? "Saved" : "Save"}
+                        </button>
                       </div>
-                    ))}
-                  </div>
 
-                  <div className={styles.B_item_game_player}>
-                    <div className={styles.item_game_player_1}>
-                      <img src="clock-five.png" alt="time" />
-                      {game.duration}
+                      <div className={styles.stars}>
+                        {renderStars(actualGameIndex)}
+                      </div>
+
+                      <div className={styles.item_game_tag_B}>
+                        {game.tags.map((tag, tagIndex) => (
+                          <div key={tagIndex} className={styles.item_game_tag}>
+                            {tag}
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className={styles.B_item_game_player}>
+                        <div className={styles.item_game_player_1}>
+                          <img src="clock-five.png" alt="time" />
+                          {game.duration}
+                        </div>
+                        <div className={styles.item_game_player_2}>
+                          <img src="users (1).png" alt="players" />
+                          {game.players}
+                        </div>
+                      </div>
                     </div>
-                    <div className={styles.item_game_player_2}>
-                      <img src="users (1).png" alt="players" />
-                      {game.players}
+
+                    <div>
+                      <img src={game.image} alt={game.name} />
                     </div>
                   </div>
-                </div>
-
-                <div>
-                  <img src={game.image} alt={game.name} />
-                </div>
+                </Link>
+              );
+            })}
+            
+            {filteredGames.length === 0 && (
+              <div className={styles.no_results}>
+                <h3>ไม่พบเกมที่ตรงกับเงื่อนไขการค้นหา</h3>
+                <p>ลองปรับเปลี่ยนเงื่อนไขการค้นหาหรือใช้คำค้นหาอื่น</p>
               </div>
-            );
-          })}
-          
-          {filteredGames.length === 0 && (
-            <div className={styles.no_results}>
-              <h3>ไม่พบเกมที่ตรงกับเงื่อนไขการค้นหา</h3>
-              <p>ลองปรับเปลี่ยนเงื่อนไขการค้นหาหรือใช้คำค้นหาอื่น</p>
+            )}
+          </div>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className={styles.pagination}>
+              <button 
+                className={`${styles.pagination_btn} ${styles.pagination_prev}`}
+                onClick={goToPreviousPage}
+                disabled={currentPage === 1}
+              >
+                ← ก่อนหน้า
+              </button>
+              
+              <div className={styles.pagination_numbers}>
+                {Array.from({ length: totalPages }, (_, index) => {
+                  const pageNumber = index + 1;
+                  return (
+                    <button
+                      key={pageNumber}
+                      className={`${styles.pagination_btn} ${styles.pagination_number} ${
+                        currentPage === pageNumber ? styles.pagination_active : ''
+                      }`}
+                      onClick={() => goToPage(pageNumber)}
+                    >
+                      {pageNumber}
+                    </button>
+                  );
+                })}
+              </div>
+              
+              <button 
+                className={`${styles.pagination_btn} ${styles.pagination_next}`}
+                onClick={goToNextPage}
+                disabled={currentPage === totalPages}
+              >
+                ถัดไป →
+              </button>
             </div>
           )}
         </div>
