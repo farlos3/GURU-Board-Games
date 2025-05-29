@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Home, Heart, User, LogOut } from 'lucide-react';
 import FavoritesPage from './components/favorite';
 import PersonalInfoPage from './components/Personallinfo';
+import { useRouter } from 'next/router';
 
 const App = () => {
   // เปลี่ยนจาก 'home' เป็น 'personal' เพื่อให้เริ่มต้นที่หน้า Personal Info
   const [currentPage, setCurrentPage] = useState('personal');
   const [favorites, setFavorites] = useState([]);
+  const router = useRouter();
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   // Default board games data
   const defaultBoardGames = [
@@ -52,10 +55,18 @@ const App = () => {
 
   // Handle logout
   const handleLogout = () => {
-    if (window.confirm('Are you sure you want to logout?')) {
-      alert('Logged out successfully!');
-      // In a real app, you would handle logout logic here
-    }
+    setShowLogoutConfirm(true);
+  };
+
+  const confirmLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setShowLogoutConfirm(false);
+    router.push('/Login');
+  };
+
+  const cancelLogout = () => {
+    setShowLogoutConfirm(false);
   };
 
   // Menu items configuration
@@ -186,6 +197,67 @@ const App = () => {
         )}
         {currentPage === 'personal' && <PersonalInfoPage />}
       </div>
+
+      {/* Custom Logout Confirmation Pop-up */}
+      {showLogoutConfirm && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000,
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '24px',
+            borderRadius: '8px',
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+            textAlign: 'center',
+            maxWidth: '400px',
+            width: '90%',
+          }}>
+            <h3 style={{ marginBottom: '16px', fontSize: '20px', color: '#333' }}>Confirm Logout</h3>
+            <p style={{ marginBottom: '24px', color: '#666' }}>Are you sure you want to log out?</p>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
+              <button
+                style={{
+                  padding: '10px 20px',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  backgroundColor: '#dc2626',
+                  color: 'white',
+                }}
+                onClick={confirmLogout}
+              >
+                Confirm Logout
+              </button>
+              <button
+                style={{
+                  padding: '10px 20px',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  backgroundColor: '#6b7280',
+                  color: 'white',
+                }}
+                onClick={cancelLogout}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
