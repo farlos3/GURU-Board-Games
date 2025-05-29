@@ -97,7 +97,10 @@ export default function OTP() {
         // OTP verified successfully
         if (type === 'register') {
           // หลังจาก verify register OTP สำเร็จ ให้ไปหน้า Login
-          router.push("/Login");
+          if (data.token) {
+            localStorage.setItem('token', data.token);
+          }
+          router.push("/");
         } else {
           // หลังจาก verify login OTP สำเร็จ ให้ไปหน้า dashboard หรือ home
           // สามารถเก็บ token ถ้ามี

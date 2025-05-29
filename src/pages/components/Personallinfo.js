@@ -1,54 +1,118 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { User } from 'lucide-react';
+import { useRouter } from 'next/router';
 
 const PersonalInfoPage = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
-    name: 'Natthapol permkamon',
-    email: 'fang@gmail.com',
-    password: '••••••••••••••••',
-    confirmPassword: '••••••••••••••••'
+    name: '',
+    email: '',
+    username: '',
   });
   const [editData, setEditData] = useState({
-    password: '',
-    confirmPassword: ''
   });
   const [headerColor, setHeaderColor] = useState('#4ecdc4');
   const [profileImage, setProfileImage] = useState(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deletePassword, setDeletePassword] = useState('');
+
+  const router = useRouter();
+
+  // Define fetchUserProfile outside of useEffect
+  const fetchUserProfile = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/profile`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setProfileData(prev => ({
+        ...prev,
+        name: data.fullName || data.name || '',
+        email: data.email || '',
+        username: data.username || '',
+        avatarUrl: data.avatarUrl || null,
+      }));
+
+    } catch (error) {
+      console.error('Error fetching profile data:', error);
+    }
+  };
+
+  useEffect(() => {
+    // Check for token on mount and redirect if not found
+    const token = localStorage.getItem('token');
+    if (!token) {
+      router.push('/Login');
+    }
+
+    // Call fetchUserProfile here to load data on mount
+    fetchUserProfile();
+  }, []);
 
   const handleEdit = () => {
     setIsEditing(true);
     setEditData({
-      password: '',
-      confirmPassword: ''
     });
   };
 
-  const handleSave = () => {
-    if (editData.password !== editData.confirmPassword) {
-      alert('Password and Confirm Password must match!');
-      return;
-    }
-    
-    if (editData.password.trim() === '') {
-      alert('Password cannot be empty!');
+  const handleSave = async () => {
+    const updateData = {
+      username: profileData.username,
+      email: profileData.email,
+      fullName: profileData.name,
+      avatarUrl: profileImage || profileData.avatarUrl,
+    };
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('No token found for update.');
+      alert('You need to be logged in to update your profile.');
       return;
     }
 
-    setProfileData(prev => ({
-      ...prev,
-      password: '•'.repeat(editData.password.length),
-      confirmPassword: '•'.repeat(editData.confirmPassword.length)
-    }));
-    setIsEditing(false);
-    alert('Password updated successfully!');
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/user/update`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updateData)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`HTTP error! status: ${response.status}, Message: ${errorData.message || response.statusText}`);
+      }
+
+      // Call fetchUserProfile here to refresh data after saving
+      await fetchUserProfile();
+      setIsEditing(false);
+      // alert('Profile updated successfully!');
+
+    } catch (error) {
+      console.error('Error updating profile data:', error);
+      alert(`Failed to update profile. ${error.message}`);
+    }
   };
 
   const handleCancel = () => {
     setIsEditing(false);
     setEditData({
-      password: '',
-      confirmPassword: ''
     });
   };
 
@@ -68,6 +132,53 @@ const PersonalInfoPage = () => {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const handleDeleteAccount = () => {
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = async () => {
+    setShowDeleteConfirm(false);
+    setDeletePassword('');
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('You need to be logged in to delete your account.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/user/delete`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: profileData.username,
+          email: profileData.email,
+          password: deletePassword,
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to delete account');
+      }
+
+      localStorage.removeItem('token');
+      window.location.href = '/Login';
+
+    } catch (error) {
+      console.error('Error deleting account:', error);
+      alert(`Failed to delete account: ${error.message}`);
+    }
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteConfirm(false);
+    setDeletePassword('');
   };
 
   return (
@@ -121,9 +232,9 @@ const PersonalInfoPage = () => {
             }}
             onClick={() => document.getElementById('fileInput').click()}
           >
-            {profileImage ? (
+            {profileImage || profileData.avatarUrl ? (
               <img 
-                src={profileImage} 
+                src={profileImage || profileData.avatarUrl} 
                 alt="Profile" 
                 style={{
                   width: '100%',
@@ -146,11 +257,32 @@ const PersonalInfoPage = () => {
         </div>
         <div style={{
           textAlign: 'center',
-          padding: '40px',
-          fontSize: '18px',
-          fontWeight: '500',
+          padding: '20px 40px 40px 40px',
+          fontSize: '24px',
+          fontWeight: 'bold',
           color: '#333'
-        }}>{profileData.name}</div>
+        }}>
+           {isEditing ? (
+             <input 
+               type="text"
+               value={profileData.name}
+               onChange={(e) => setProfileData(prev => ({...prev, name: e.target.value}))}
+               style={{
+                 textAlign: 'center',
+                 fontSize: '24px',
+                 fontWeight: 'bold',
+                 color: '#333',
+                 border: '2px solid #e5e5e5',
+                 borderRadius: '8px',
+                 padding: '8px',
+                 width: '100%',
+                 boxSizing: 'border-box'
+               }}
+             />
+           ) : (
+             profileData.name
+           )}
+        </div>
       </div>
 
       {/* Form Card */}
@@ -167,11 +299,40 @@ const PersonalInfoPage = () => {
             fontSize: '16px',
             fontWeight: '500',
             color: '#333'
+          }}>Username</label>
+          <input
+            type="text"
+            value={profileData.username}
+            disabled={true}
+            style={{
+              width: '100%',
+              padding: '12px 16px',
+              border: '2px solid #e5e5e5',
+              color: "rgb(0, 0, 0)",
+              borderRadius: '8px',
+              fontSize: '16px',
+              outline: 'none',
+              transition: 'border-color 0.2s',
+              boxSizing: 'border-box',
+              backgroundColor: '#f9f9f9',
+              cursor: 'not-allowed'
+            }}
+            readOnly
+          />
+        </div>
+            
+        <div style={{ marginBottom: '24px' }}>
+          <label style={{
+            display: 'block',
+            marginBottom: '8px',
+            fontSize: '16px',
+            fontWeight: '500',
+            color: '#333'
           }}>Email</label>
           <input
             type="email"
             value={profileData.email}
-            disabled={isEditing}
+            disabled={true}
             style={{
               width: '100%',
               padding: '12px 16px',
@@ -182,67 +343,10 @@ const PersonalInfoPage = () => {
               outline: 'none',
               transition: 'border-color 0.2s',
               boxSizing: 'border-box',
-              backgroundColor: isEditing ? '#f9f9f9' : 'white',
-              cursor: isEditing ? 'not-allowed' : 'default'
+              backgroundColor: '#f9f9f9',
+              cursor: 'not-allowed'
             }}
-          />
-        </div>
-
-        <div style={{ marginBottom: '24px' }}>
-          <label style={{
-            display: 'block',
-            marginBottom: '8px',
-            fontSize: '16px',
-            fontWeight: '500',
-            color: '#333'
-          }}>Password</label>
-          <input
-            type="password"
-            value={isEditing ? editData.password : profileData.password}
-            disabled={!isEditing}
-            style={{
-              width: '100%',
-              padding: '12px 16px',
-              border: '2px solid #e5e5e5',
-              color: "rgb(0, 0, 0)",
-              borderRadius: '8px',
-              fontSize: '16px',
-              outline: 'none',
-              transition: 'border-color 0.2s',
-              boxSizing: 'border-box',
-              backgroundColor: !isEditing ? '#f9f9f9' : 'white',
-              cursor: !isEditing ? 'not-allowed' : 'default'
-            }}
-            onChange={(e) => setEditData(prev => ({...prev, password: e.target.value}))}
-          />
-        </div>
-
-        <div style={{ marginBottom: '24px' }}>
-          <label style={{
-            display: 'block',
-            marginBottom: '8px',
-            fontSize: '16px',
-            fontWeight: '500',
-            color: '#333'
-          }}>Confirm Password</label>
-          <input
-            type="password"
-            value={isEditing ? editData.confirmPassword : profileData.confirmPassword}
-            disabled={!isEditing}
-            style={{
-              width: '100%',
-              padding: '12px 16px',
-              border: '2px solid #e5e5e5',
-              borderRadius: '8px',
-              fontSize: '16px',
-              color: "rgb(0, 0, 0)",
-              outline: 'none',
-              transition: 'border-color 0.2s',
-              boxSizing: 'border-box',
-              backgroundColor: !isEditing ? '#f9f9f9' : 'white',
-              cursor: !isEditing ? 'not-allowed' : 'default'
-            }}
-            onChange={(e) => setEditData(prev => ({...prev, confirmPassword: e.target.value}))}
+            readOnly
           />
         </div>
 
@@ -319,17 +423,95 @@ const PersonalInfoPage = () => {
       </div>
 
       {/* Remove account link */}
-      <div style={{
-        position: 'absolute',
-        bottom: '-20px',
-        right: '60px',
-        color: '#888',
-        cursor: 'pointer',
-        textDecoration: 'underline',
-        fontSize: '14px'
-      }}>
-        Remove account
+      <div 
+        style={{
+          position: 'absolute',
+          bottom: '-20px',
+          right: '60px',
+          color: '#888',
+          cursor: 'pointer',
+          textDecoration: 'underline',
+          fontSize: '14px'
+        }}
+        onClick={handleDeleteAccount}
+      >
+        Delete account
       </div>
+
+      {/* Custom Delete Confirmation Pop-up */}
+      {showDeleteConfirm && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000,
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            padding: '24px',
+            borderRadius: '8px',
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+            textAlign: 'center',
+            maxWidth: '400px',
+            width: '90%',
+          }}>
+            <h3 style={{ marginBottom: '16px', fontSize: '20px', color: '#333' }}>Confirm Account Deletion</h3>
+            <p style={{ marginBottom: '16px', color: '#666' }}>Please enter your password to confirm account deletion.</p>
+            <input
+               type="password"
+               placeholder="Enter your password"
+               value={deletePassword}
+               onChange={(e) => setDeletePassword(e.target.value)}
+               style={{
+                 width: '100%',
+                 padding: '10px',
+                 marginBottom: '24px',
+                 border: '1px solid #ccc',
+                 borderRadius: '4px',
+                 boxSizing: 'border-box',
+               }}
+            />
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
+              <button
+                style={{
+                  padding: '10px 20px',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  backgroundColor: '#ef4444',
+                  color: 'white',
+                }}
+                onClick={confirmDelete}
+              >
+                Confirm Delete
+              </button>
+              <button
+                style={{
+                  padding: '10px 20px',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  backgroundColor: '#6b7280',
+                  color: 'white',
+                }}
+                onClick={cancelDelete}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

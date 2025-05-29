@@ -47,11 +47,14 @@ export default function Register() {
       if (res.ok) {
         // ✅ Registration สำเร็จ - ไปหน้า OTP
         console.log("Registration successful, redirecting to OTP...");
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+        }
         router.push({
           pathname: "/OTP",
           query: { 
-            email: email, // ใช้ email จาก state
-            type: 'register' // ✅ เพิ่ม type parameter
+            email: email, 
+            type: 'register'
           }
         });
       } else {
@@ -62,7 +65,7 @@ export default function Register() {
       console.error("Registration error:", error);
       setError("Something went wrong. Please try again.");
     } finally {
-      setIsLoading(false); // ✅ จบ loading
+      setIsLoading(false);
     }
   };
 

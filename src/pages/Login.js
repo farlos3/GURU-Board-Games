@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "../styles/Login.module.css";
 import Link from "next/link";
 import { useRouter } from 'next/router';
@@ -9,6 +9,15 @@ export default function Login() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    // Check if token exists in localStorage on component mount
+    const token = localStorage.getItem('token');
+    if (token) {
+      // If token exists, redirect to homepage
+      router.push('/');
+    }
+  }, [router]); // Add router to dependency array
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -139,7 +148,6 @@ export default function Login() {
 
             <div className={styles.B_Register}>
               <Link href="/Register">
-                <div className={styles.Register}>Create Account</div>
                 <div className={styles.Register}>Create Account</div>
               </Link>
             </div>

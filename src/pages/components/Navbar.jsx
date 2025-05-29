@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from 'react';
+
 import React, { useEffect, useState } from 'react';
 import styles from '../../styles/Navbar.module.css';
 import Link from 'next/link';
@@ -39,7 +39,7 @@ function Navbar() {
       <div  className={styles.log_sign}>
         {isLoggedIn ? (
           <>
-            <Link href="/profile">
+            <Link href="/profile_user">
               <div className={styles.navLink}>Profile</div>
             </Link>
             <button onClick={handleLogout} className={styles.navLink} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit' }}>
