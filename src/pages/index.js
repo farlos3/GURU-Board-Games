@@ -12,6 +12,8 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import Link from "next/link";
 import games from "../pages/testjoson.json";
+import LoginPopup from './components/LoginPopup';
+import { getUserGameStates, toggleGameLike, toggleGameFavorite, getGameLikeStatus, getGameFavoriteStatus } from '../utils/gameStates';
 
 const images = [
   "Wolf.png",
@@ -25,6 +27,8 @@ const images = [
 function GameCard() {
   const [gameStates, setGameStates] = useState({});
   const [hoverRating, setHoverRating] = useState({});
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const [loginMessage, setLoginMessage] = useState('');
   
   // ใช้ useRef เพื่อ track การเปลี่ยนแปลงและป้องกัน multiple logs
   const isInitialLoad = useRef(true);
@@ -33,7 +37,16 @@ function GameCard() {
   // ฟังก์ชันสำหรับโหลดข้อมูลจาก localStorage
   const loadGameStatesFromStorage = () => {
     try {
+      const token = localStorage.getItem('token');
       const savedStates = localStorage.getItem('gameStates');
+      
+      // ถ้าไม่มี token (ไม่ได้ login) ให้ล้างค่า states ทั้งหมด
+      if (!token) {
+        localStorage.removeItem('gameStates');
+        localStorage.removeItem('favoriteGames');
+        return {};
+      }
+      
       if (savedStates) {
         return JSON.parse(savedStates);
       }
@@ -75,7 +88,8 @@ function GameCard() {
     
     if (!token && (updates.isFavorite !== undefined || updates.isLiked !== undefined)) {
       const action = updates.isFavorite !== undefined ? 'add favorites' : 'like games';
-      alert(`Please log in to ${action}`);
+      setLoginMessage(`Please log in to ${action}`);
+      setShowLoginPopup(true);
       return;
     }
 
@@ -157,9 +171,8 @@ function GameCard() {
     games.forEach((game, index) => {
       const gameId = game.id || `game_${index}`;
       initialStates[gameId] = {
-        isFavorite: savedStates[gameId]?.isFavorite || false,
-        isLiked: savedStates[gameId]?.isLiked || false,
-        userRating: savedStates[gameId]?.userRating || 0
+        isFavorite: getGameFavoriteStatus(gameId),
+        isLiked: getGameLikeStatus(gameId)
       };
     });
     
@@ -171,45 +184,57 @@ function GameCard() {
   }, []);
 
   // Function to toggle favorite status
-  const toggleFavorite = (gameId, e) => {
+  const handleToggleFavorite = (gameId, e) => {
     e.preventDefault();
     e.stopPropagation();
     
-    // ป้องกัน double click
+    // Prevent double click
     if (e.detail > 1) return;
     
-    const currentState = gameStates[gameId];
-    const newFavoriteStatus = !currentState?.isFavorite;
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setLoginMessage('Please log in to add favorites');
+      setShowLoginPopup(true);
+      return;
+    }
     
-    updateGameState(gameId, {
-      isFavorite: newFavoriteStatus,
-      // เพิ่มข้อมูลสำหรับการ sync กับ backend
-      favoriteData: {
-        isFavorite: newFavoriteStatus,
-        timestamp: new Date().toISOString()
-      }
-    });
+    const newStates = toggleGameFavorite(gameId);
+    if (newStates) {
+      setGameStates(prev => ({
+        ...prev,
+        [gameId]: {
+          ...prev[gameId],
+          isFavorite: !prev[gameId]?.isFavorite
+        }
+      }));
+    }
   };
 
-  // ฟังก์ชันสำหรับเปลี่ยนสถานะ heart
-  const toggleHeart = (gameId, e) => {
+  // Function to toggle like status
+  const handleToggleLike = (gameId, e) => {
     e.preventDefault();
     e.stopPropagation();
     
-    // ป้องกัน double click
+    // Prevent double click
     if (e.detail > 1) return;
     
-    const currentState = gameStates[gameId];
-    const newLikeStatus = !currentState?.isLiked;
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setLoginMessage('Please log in to like games');
+      setShowLoginPopup(true);
+      return;
+    }
     
-    updateGameState(gameId, {
-      isLiked: newLikeStatus,
-      // เพิ่มข้อมูลสำหรับการ sync กับ backend
-      likeData: {
-        isLiked: newLikeStatus,
-        timestamp: new Date().toISOString()
-      }
-    });
+    const newStates = toggleGameLike(gameId);
+    if (newStates) {
+      setGameStates(prev => ({
+        ...prev,
+        [gameId]: {
+          ...prev[gameId],
+          isLiked: !prev[gameId]?.isLiked
+        }
+      }));
+    }
   };
 
   // ฟังก์ชันสำหรับให้คะแนนดาว (รองรับครึ่งดาว)
@@ -420,7 +445,7 @@ function GameCard() {
                 <div className={styles.rating_buttons}>
                   <button 
                     className={`${styles.heart_button} ${gameStates[gameId]?.isLiked ? styles.heart_active : ''}`}
-                    onClick={(e) => toggleHeart(gameId, e)}
+                    onClick={(e) => handleToggleLike(gameId, e)}
                     title={gameStates[gameId]?.isLiked ? "Unlike" : "Like"}
                   >
                     {gameStates[gameId]?.isLiked ? "💖" : "🤍"}
@@ -428,7 +453,7 @@ function GameCard() {
                   
                   <button 
                     className={`${styles.favorite_button} ${gameStates[gameId]?.isFavorite ? styles.favorite_active : ''}`}
-                    onClick={(e) => toggleFavorite(gameId, e)}
+                    onClick={(e) => handleToggleFavorite(gameId, e)}
                     title={gameStates[gameId]?.isFavorite ? "Remove from favorites" : "Add to favorites"}
                   >
                     <svg 
@@ -506,6 +531,11 @@ function GameCard() {
           </div>
         </div>
       </div>
+      <LoginPopup 
+        isOpen={showLoginPopup}
+        onClose={() => setShowLoginPopup(false)}
+        message={loginMessage}
+      />
     </>
   );
 }

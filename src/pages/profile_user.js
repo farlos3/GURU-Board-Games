@@ -44,7 +44,7 @@ const App = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setShowLogoutConfirm(false);
-    router.push('/Login');
+    window.location.href = '/Login';
   };
 
   const cancelLogout = () => {

@@ -19,7 +19,9 @@ function Navbar() {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     setIsLoggedIn(false);
+    window.location.reload(); // Refresh the current page
   };
 
   return (

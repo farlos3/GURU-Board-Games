@@ -46,6 +46,14 @@ export const initActivityTracking = () => {
     console.log('🔑 Session ID:', localStorage.getItem('sessionId'));
   }
   
+  // Check if the backend API URL is configured
+  if (!process.env.NEXT_PUBLIC_API_URL) {
+    console.error('❌ NEXT_PUBLIC_API_URL environment variable is not set. Activity tracking disabled.');
+    console.error('Please set NEXT_PUBLIC_API_URL to your Go Backend URL.');
+  } else {
+    console.log('📡 Activity tracking enabled. Sending to:', process.env.NEXT_PUBLIC_API_URL);
+  }
+
   console.log('✅ Activity tracking initialized.');
 };
 
@@ -54,6 +62,13 @@ const sendActivityImmediately = async (type, data) => {
   const token = localStorage.getItem('token');
   const userId = getUserId();
   const sessionId = generateSessionId();
+  
+  const backendUrl = process.env.NEXT_PUBLIC_API_URL;
+  
+  if (!backendUrl) {
+    // Error message already shown during initialization
+    return;
+  }
 
   if (!token || !userId) {
     console.log('⚠️ User not logged in or invalid token, activity not sent immediately:', { type, data });
@@ -69,7 +84,7 @@ const sendActivityImmediately = async (type, data) => {
   };
 
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/activities`, {
+    const response = await fetch(`${backendUrl}/user/activities`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -80,22 +95,22 @@ const sendActivityImmediately = async (type, data) => {
     });
 
     if (!response.ok) {
-      console.error('❌ Failed to send activity immediately:', { 
+      console.error('❌ Failed to send activity immediately:', {
         status: response.status,
         type,
-        userId 
+        userId
       });
       // For immediate sends, we typically don't retry automatically unless critical.
       // Logging the error is usually sufficient.
-      throw new Error('Failed to send activity immediately');
+      // throw new Error('Failed to send activity immediately'); // Removed throw to prevent uncaught promise warning
     }
 
     console.log('✅ Activity sent immediately successfully:', { type, userId });
   } catch (error) {
-    console.error('❌ Error sending activity immediately:', { 
+    console.error('❌ Error sending activity immediately:', {
       error,
       type,
-      userId 
+      userId
     });
   }
 };
@@ -103,8 +118,10 @@ const sendActivityImmediately = async (type, data) => {
 // Debounce and send activity after a delay
 const debounceSendActivity = (key, delay, type, data) => {
   const userId = getUserId();
-  if (!userId) {
-     console.log('⚠️ User not logged in, activity not debounced:', { type, data });
+  const backendUrl = process.env.NEXT_PUBLIC_API_URL;
+
+  if (!backendUrl || !userId) {
+     // Error message shown during initialization or user not logged in
      return;
   }
 
@@ -126,7 +143,9 @@ const debounceSendActivity = (key, delay, type, data) => {
 // Track game view duration (Send Both START and END Only on Exit)
 export const trackGameView = (gameId) => {
   const userId = getUserId();
-  if (!userId) return { stop: () => {} }; // Don't track if not logged in
+  const backendUrl = process.env.NEXT_PUBLIC_API_URL;
+
+  if (!backendUrl || !userId) return { stop: () => {} }; // Don't track if not logged in or URL not set
 
   const startTimestamp = new Date().toISOString();
 
@@ -134,20 +153,22 @@ export const trackGameView = (gameId) => {
   return {
     stop: () => {
       const userId = getUserId(); // Re-check userId on stop
-      if (!userId) {
-        console.log('⚠️ User not logged in on exit, view data not sent.');
-        return; // Don't send if user logged out
+      const backendUrl = process.env.NEXT_PUBLIC_API_URL;
+
+       if (!backendUrl || !userId) {
+        console.log('⚠️ User not logged in or URL not set on exit, view data not sent.');
+        return; // Don't send if user logged out or URL not set
       }
-      
+
       const endTimestamp = new Date().toISOString();
       const duration = Math.floor((new Date(endTimestamp) - new Date(startTimestamp)) / 1000);
-      
-      console.log('⏱️ Game view ended - Sending both START and END:', { 
-        gameId, 
-        userId, 
+
+      console.log('⏱️ Game view ended - Sending both START and END:', {
+        gameId,
+        userId,
         startTimestamp,
         endTimestamp,
-        duration: `${duration}s` 
+        duration: `${duration}s`
       });
 
       // Send VIEW_GAME_START when exiting the page (with original start time)
@@ -159,7 +180,7 @@ export const trackGameView = (gameId) => {
       // Send VIEW_GAME_END when exiting the page
       sendActivityImmediately(ActivityType.VIEW_GAME_END, {
         gameId,
-        startTimestamp, // Include startTimestamp in END event for easier matching in backend
+        startTimestamp,
         endTimestamp,
         duration
       });
@@ -172,6 +193,7 @@ const LIKE_FAV_RATING_DELAY = 10000; // 10 seconds
 const SEARCH_FILTER_DELAY = 5000; // 5 seconds
 
 export const trackGameLike = (gameId, isLiked) => {
+  console.log(`👍 Tracking LIKE_GAME for game ${gameId}: ${isLiked}`);
   // Use gameId as key for debounce to track per-game actions
   const key = `gameAction_${gameId}`;
   // Debounce sending the LIKE_GAME activity for this game.
@@ -182,11 +204,13 @@ export const trackGameLike = (gameId, isLiked) => {
 };
 
 export const trackGameFavorite = (gameId, isFavorite) => {
+  console.log(`⭐ Tracking FAVORITE_GAME for game ${gameId}: ${isFavorite}`);
   const key = `gameAction_${gameId}`;
   debounceSendActivity(key, LIKE_FAV_RATING_DELAY, ActivityType.FAVORITE_GAME, { gameId, isFavorite });
 };
 
 export const trackGameRating = (gameId, rating) => {
+  console.log(`🌟 Tracking RATE_GAME for game ${gameId}: ${rating}`);
   const key = `gameAction_${gameId}`;
   debounceSendActivity(key, LIKE_FAV_RATING_DELAY, ActivityType.RATE_GAME, { gameId, rating });
 };

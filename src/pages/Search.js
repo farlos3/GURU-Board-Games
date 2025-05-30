@@ -1,8 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Nav from "./components/Navbar";
 import styles from "../styles/Search.module.css";
 import gamesData from "/src/pages/testjoson.json"; // Import JSON data
 import { trackGameSearch, trackGameFilter } from '../utils/userActivity';
+import LoginPopup from './components/LoginPopup';
+
+// Debounce function
+const debounce = (func, wait) => {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+};
 
 function Search() {
   const [games, setGames] = useState([]);
@@ -15,6 +29,8 @@ function Search() {
   // State สำหรับเก็บข้อมูล favorites, hearts และ ratings ของแต่ละเกม (แยกอิสระ)
   const [gameStates, setGameStates] = useState({});
   const [hoverRating, setHoverRating] = useState({}); // แยกเฉพาะ gameId
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const [loginMessage, setLoginMessage] = useState('');
 
   // โหลดข้อมูลเกมจาก JSON
   useEffect(() => {
@@ -33,8 +49,40 @@ function Search() {
     }
   }, []);
 
-  // ฟังก์ชันการกรองเกม
+  // สร้าง debounced functions สำหรับ search และ filter
+  const debouncedSearch = useCallback(
+    debounce((query) => {
+      if (query) {
+        trackGameSearch(query);
+      }
+    }, 1000),
+    []
+  );
+
+  const debouncedFilter = useCallback(
+    debounce((filters) => {
+      trackGameFilter(filters);
+    }, 1000),
+    []
+  );
+
+  // Update search query handling with debounce
   useEffect(() => {
+    debouncedSearch(searchQuery);
+  }, [searchQuery, debouncedSearch]);
+
+  // Update filter handling with debounce
+  useEffect(() => {
+    const filters = {
+      categories: selectedCategories,
+      playerCount,
+      playTime
+    };
+    debouncedFilter(filters);
+  }, [selectedCategories, playerCount, playTime, debouncedFilter]);
+
+  // ฟังก์ชันการกรองเกม (แยกออกมาเพื่อให้เรียกใช้ได้โดยตรง)
+  const filterGames = useCallback(() => {
     let filtered = games.filter(game => {
       // กรองตามชื่อเกม
       const matchesSearch = game.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -45,12 +93,12 @@ function Search() {
           game.tags.some(tag => tag.toLowerCase() === category.toLowerCase())
         );
       
-      // กรองตามจำนวนผู้เล่น (สมมติว่า players เป็น "2-4 players")
+      // กรองตามจำนวนผู้เล่น
       const playerRange = game.players.match(/(\d+)-(\d+)/);
       const matchesPlayerCount = !playerRange || 
         (parseInt(playerRange[1]) <= playerCount && playerCount <= parseInt(playerRange[2]));
       
-      // กรองตามเวลาเล่น (สมมติว่า duration เป็น "45 min")
+      // กรองตามเวลาเล่น
       const gameTime = parseInt(game.duration.match(/\d+/)?.[0] || 0);
       const matchesPlayTime = gameTime <= playTime;
       
@@ -58,24 +106,20 @@ function Search() {
     });
     
     setFilteredGames(filtered);
-  }, [searchQuery, selectedCategories, playerCount, playTime, games]);
+  }, [games, searchQuery, selectedCategories, playerCount, playTime]);
 
-  // Update search query handling
-  useEffect(() => {
-    if (searchQuery) {
-      trackGameSearch(searchQuery);
-    }
-  }, [searchQuery]);
+  // ใช้ debounce สำหรับการ filter เกม
+  const debouncedFilterGames = useCallback(
+    debounce(() => {
+      filterGames();
+    }, 300),
+    [filterGames]
+  );
 
-  // Update filter handling
+  // เรียกใช้ debounced filter เมื่อมีการเปลี่ยนแปลง filter
   useEffect(() => {
-    const filters = {
-      categories: selectedCategories,
-      playerCount,
-      playTime
-    };
-    trackGameFilter(filters);
-  }, [selectedCategories, playerCount, playTime]);
+    debouncedFilterGames();
+  }, [searchQuery, selectedCategories, playerCount, playTime, debouncedFilterGames]);
 
   // ฟังก์ชันจัดการ checkbox category
   const handleCategoryChange = (category) => {
@@ -93,7 +137,8 @@ function Search() {
     
     const token = localStorage.getItem('token');
     if (!token) {
-      alert('Please log in to add favorites');
+      setLoginMessage('Please log in to add favorites');
+      setShowLoginPopup(true);
       return;
     }
     
@@ -124,7 +169,8 @@ function Search() {
     
     const token = localStorage.getItem('token');
     if (!token) {
-      alert('Please log in to like games');
+      setLoginMessage('Please log in to like games');
+      setShowLoginPopup(true);
       return;
     }
     
@@ -266,6 +312,28 @@ function Search() {
   const getAllCategories = () => {
     const allTags = games.flatMap(game => game.tags);
     return [...new Set(allTags)];
+  };
+
+  // ฟังก์ชันสำหรับโหลดข้อมูลจาก localStorage
+  const loadGameStatesFromStorage = () => {
+    try {
+      const token = localStorage.getItem('token');
+      const savedStates = localStorage.getItem('gameStates');
+      
+      // ถ้าไม่มี token (ไม่ได้ login) ให้ล้างค่า states ทั้งหมด
+      if (!token) {
+        localStorage.removeItem('gameStates');
+        localStorage.removeItem('favoriteGames');
+        return {};
+      }
+      
+      if (savedStates) {
+        return JSON.parse(savedStates);
+      }
+    } catch (error) {
+      console.error('Error loading game states from localStorage:', error);
+    }
+    return {};
   };
 
   return (
@@ -454,6 +522,11 @@ function Search() {
           </div>
         </div>
       </div>
+      <LoginPopup 
+        isOpen={showLoginPopup}
+        onClose={() => setShowLoginPopup(false)}
+        message={loginMessage}
+      />
     </>
   );
 }

@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import games from '../testjoson.json';
 import { trackGameView, trackGameLike, trackGameFavorite, trackGameRating } from '../../utils/userActivity';
+import { getUserGameStates, toggleGameLike, toggleGameFavorite, getGameLikeStatus, getGameFavoriteStatus } from '../../utils/gameStates';
+import LoginPopup from '../components/LoginPopup';
 
 function GameDetail() {
   const router = useRouter();
@@ -15,11 +17,22 @@ function GameDetail() {
   // State สำหรับเก็บข้อมูล favorites, hearts และ ratings ของแต่ละเกม
   const [gameStates, setGameStates] = useState({});
   const [hoverRating, setHoverRating] = useState({});
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
+  const [loginMessage, setLoginMessage] = useState('');
 
   // ฟังก์ชันสำหรับโหลดข้อมูลจาก localStorage
   const loadGameStatesFromStorage = () => {
     try {
+      const token = localStorage.getItem('token');
       const savedStates = localStorage.getItem('gameStates');
+      
+      // ถ้าไม่มี token (ไม่ได้ login) ให้ล้างค่า states ทั้งหมด
+      if (!token) {
+        localStorage.removeItem('gameStates');
+        localStorage.removeItem('favoriteGames');
+        return {};
+      }
+      
       if (savedStates) {
         return JSON.parse(savedStates);
       }
@@ -62,18 +75,16 @@ function GameDetail() {
       
       // เกมปัจจุบัน
       initialStates[id] = {
-        isFavorite: savedStates[id]?.isFavorite || false,
-        isLiked: savedStates[id]?.isLiked || false,
-        userRating: savedStates[id]?.userRating || 0
+        isFavorite: getGameFavoriteStatus(id),
+        isLiked: getGameLikeStatus(id)
       };
 
       // เกมที่คล้ายกัน
       similar.forEach((game) => {
         const gameIndex = games.findIndex(g => g.name === game.name);
         initialStates[gameIndex] = {
-          isFavorite: savedStates[gameIndex]?.isFavorite || false,
-          isLiked: savedStates[gameIndex]?.isLiked || false,
-          userRating: savedStates[gameIndex]?.userRating || 0
+          isFavorite: getGameFavoriteStatus(gameIndex),
+          isLiked: getGameLikeStatus(gameIndex)
         };
       });
       
@@ -94,57 +105,51 @@ function GameDetail() {
   }, [gameStates]);
 
   // ฟังก์ชันสำหรับเปลี่ยนสถานะ favorite
-  const toggleFavorite = (gameId, e) => {
+  const handleToggleFavorite = (gameId, e) => {
     e.preventDefault();
     e.stopPropagation();
     
     const token = localStorage.getItem('token');
     if (!token) {
-      alert('Please log in to add favorites');
+      setLoginMessage('Please log in to add favorites');
+      setShowLoginPopup(true);
       return;
     }
     
-    setGameStates(prev => {
-      const newState = {
+    const newStates = toggleGameFavorite(gameId);
+    if (newStates) {
+      setGameStates(prev => ({
         ...prev,
         [gameId]: {
           ...prev[gameId],
           isFavorite: !prev[gameId]?.isFavorite
         }
-      };
-      
-      // Track the favorite action
-      trackGameFavorite(gameId, newState[gameId].isFavorite);
-      
-      return newState;
-    });
+      }));
+    }
   };
 
   // ฟังก์ชันสำหรับเปลี่ยนสถานะ heart
-  const toggleHeart = (gameId, e) => {
+  const handleToggleLike = (gameId, e) => {
     e.preventDefault();
     e.stopPropagation();
     
     const token = localStorage.getItem('token');
     if (!token) {
-      alert('Please log in to like games');
+      setLoginMessage('Please log in to like games');
+      setShowLoginPopup(true);
       return;
     }
     
-    setGameStates(prev => {
-      const newState = {
+    const newStates = toggleGameLike(gameId);
+    if (newStates) {
+      setGameStates(prev => ({
         ...prev,
         [gameId]: {
           ...prev[gameId],
           isLiked: !prev[gameId]?.isLiked
         }
-      };
-      
-      // Track the like action
-      trackGameLike(gameId, newState[gameId].isLiked);
-      
-      return newState;
-    });
+      }));
+    }
   };
 
   // ฟังก์ชันสำหรับให้คะแนนดาว (รองรับครึ่งดาว)
@@ -154,7 +159,8 @@ function GameDetail() {
     
     const token = localStorage.getItem('token');
     if (!token) {
-      alert('Please log in to rate games');
+      setLoginMessage('Please log in to rate games');
+      setShowLoginPopup(true);
       return;
     }
     
@@ -281,7 +287,7 @@ function GameDetail() {
               <div className={styles.rating_buttons}>
                 <button 
                   className={`${styles.heart_button} ${gameStates[id]?.isLiked ? styles.heart_active : ''}`}
-                  onClick={(e) => toggleHeart(id, e)}
+                  onClick={(e) => handleToggleLike(id, e)}
                   title={gameStates[id]?.isLiked ? "Unlike" : "Like"}
                 >
                   {gameStates[id]?.isLiked ? "💖" : "🤍"}
@@ -289,7 +295,7 @@ function GameDetail() {
                 
                 <button 
                   className={`${styles.favorite_button} ${gameStates[id]?.isFavorite ? styles.favorite_active : ''}`}
-                  onClick={(e) => toggleFavorite(id, e)}
+                  onClick={(e) => handleToggleFavorite(id, e)}
                   title={gameStates[id]?.isFavorite ? "Remove from favorites" : "Add to favorites"}
                 >
                   <svg 
@@ -357,7 +363,7 @@ function GameDetail() {
                       <div className={styles.rating_buttons}>
                         <button 
                           className={`${styles.heart_button} ${gameStates[gameIndex]?.isLiked ? styles.heart_active : ''}`}
-                          onClick={(e) => toggleHeart(gameIndex, e)}
+                          onClick={(e) => handleToggleLike(gameIndex, e)}
                           title={gameStates[gameIndex]?.isLiked ? "Unlike" : "Like"}
                         >
                           {gameStates[gameIndex]?.isLiked ? "💖" : "🤍"}
@@ -365,7 +371,7 @@ function GameDetail() {
                         
                         <button 
                           className={`${styles.favorite_button} ${gameStates[gameIndex]?.isFavorite ? styles.favorite_active : ''}`}
-                          onClick={(e) => toggleFavorite(gameIndex, e)}
+                          onClick={(e) => handleToggleFavorite(gameIndex, e)}
                           title={gameStates[gameIndex]?.isFavorite ? "Remove from favorites" : "Add to favorites"}
                         >
                           <svg 
@@ -445,6 +451,11 @@ function GameDetail() {
           </div>
         </div>
       </div>
+      <LoginPopup 
+        isOpen={showLoginPopup}
+        onClose={() => setShowLoginPopup(false)}
+        message={loginMessage}
+      />
     </>
   );
 }

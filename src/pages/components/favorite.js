@@ -8,6 +8,15 @@ const FavoritesPage = () => {
   // ✅ ถ้าคุณยังใช้ localStorage:
   const loadFavoritesFromStorage = () => {
     try {
+      const token = localStorage.getItem('token');
+      
+      // ถ้าไม่มี token (ไม่ได้ login) ให้ล้างค่า favorites ทั้งหมด
+      if (!token) {
+        localStorage.removeItem('gameStates');
+        localStorage.removeItem('favoriteGames');
+        return [];
+      }
+      
       const favoriteGames = localStorage.getItem('favoriteGames');
       if (favoriteGames) {
         return JSON.parse(favoriteGames);
