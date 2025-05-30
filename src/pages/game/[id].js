@@ -4,6 +4,7 @@ import styles from "../../styles/game.module.css";
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import games from '../testjoson.json';
+import { trackGameView, trackGameLike, trackGameFavorite, trackGameRating } from '../../utils/userActivity';
 
 function GameDetail() {
   const router = useRouter();
@@ -42,18 +43,21 @@ function GameDetail() {
       const game = games[id];
       setCurrentGame(game);
       
+      // Start tracking game view
+      const viewTracker = trackGameView(id);
+      
       // หาเกมที่คล้ายกัน (เกมที่มี tag เหมือนกัน แต่ไม่ใช่เกมปัจจุบัน)
       const similar = games.filter((g, index) => 
         index != id && 
         g.tags.some(tag => game.tags.includes(tag))
-      ).slice(0, 4); // เอาแค่ 4 เกมแรก
+      ).slice(0, 4);
       
       setSimilarGames(similar);
 
       // โหลดข้อมูลจาก localStorage
       const savedStates = loadGameStatesFromStorage();
       
-      // Initialize game states สำหรับเกมปัจจุบันและเกมที่คล้ายกัน
+      // Initialize game states
       const initialStates = {};
       
       // เกมปัจจุบัน
@@ -74,6 +78,11 @@ function GameDetail() {
       });
       
       setGameStates(initialStates);
+
+      // Cleanup function to stop tracking when component unmounts
+      return () => {
+        viewTracker.stop();
+      };
     }
   }, [id]);
 
@@ -85,45 +94,84 @@ function GameDetail() {
   }, [gameStates]);
 
   // ฟังก์ชันสำหรับเปลี่ยนสถานะ favorite
-  const toggleFavorite = (gameIndex, e) => {
+  const toggleFavorite = (gameId, e) => {
     e.preventDefault();
     e.stopPropagation();
     
-    setGameStates(prev => ({
-      ...prev,
-      [gameIndex]: {
-        ...prev[gameIndex],
-        isFavorite: !prev[gameIndex]?.isFavorite
-      }
-    }));
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('Please log in to add favorites');
+      return;
+    }
+    
+    setGameStates(prev => {
+      const newState = {
+        ...prev,
+        [gameId]: {
+          ...prev[gameId],
+          isFavorite: !prev[gameId]?.isFavorite
+        }
+      };
+      
+      // Track the favorite action
+      trackGameFavorite(gameId, newState[gameId].isFavorite);
+      
+      return newState;
+    });
   };
 
   // ฟังก์ชันสำหรับเปลี่ยนสถานะ heart
-  const toggleHeart = (gameIndex, e) => {
+  const toggleHeart = (gameId, e) => {
     e.preventDefault();
     e.stopPropagation();
     
-    setGameStates(prev => ({
-      ...prev,
-      [gameIndex]: {
-        ...prev[gameIndex],
-        isLiked: !prev[gameIndex]?.isLiked
-      }
-    }));
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('Please log in to like games');
+      return;
+    }
+    
+    setGameStates(prev => {
+      const newState = {
+        ...prev,
+        [gameId]: {
+          ...prev[gameId],
+          isLiked: !prev[gameId]?.isLiked
+        }
+      };
+      
+      // Track the like action
+      trackGameLike(gameId, newState[gameId].isLiked);
+      
+      return newState;
+    });
   };
 
   // ฟังก์ชันสำหรับให้คะแนนดาว (รองรับครึ่งดาว)
-  const handleStarClick = (gameIndex, rating, e) => {
+  const handleStarClick = (gameId, rating, e) => {
     e.preventDefault();
     e.stopPropagation();
     
-    setGameStates(prev => ({
-      ...prev,
-      [gameIndex]: {
-        ...prev[gameIndex],
-        userRating: rating
-      }
-    }));
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('Please log in to rate games');
+      return;
+    }
+    
+    setGameStates(prev => {
+      const newState = {
+        ...prev,
+        [gameId]: {
+          ...prev[gameId],
+          userRating: rating
+        }
+      };
+      
+      // Track the rating action
+      trackGameRating(gameId, rating);
+      
+      return newState;
+    });
   };
 
   // ฟังก์ชันสำหรับ hover effect บนดาว

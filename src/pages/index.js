@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Nav from "./components/Navbar";
 import styles from "/src/styles/index.module.css";
 
@@ -25,6 +25,10 @@ const images = [
 function GameCard() {
   const [gameStates, setGameStates] = useState({});
   const [hoverRating, setHoverRating] = useState({});
+  
+  // ใช้ useRef เพื่อ track การเปลี่ยนแปลงและป้องกัน multiple logs
+  const isInitialLoad = useRef(true);
+  const saveTimeoutRef = useRef(null);
 
   // ฟังก์ชันสำหรับโหลดข้อมูลจาก localStorage
   const loadGameStatesFromStorage = () => {
@@ -56,12 +60,65 @@ function GameCard() {
         return newStates[gameId]?.isFavorite;
       }).map((game, index) => ({
         ...game,
-        id: game.id || `game_${index}` // ให้แน่ใจว่ามี ID
+        id: game.id || `game_${index}`
       }));
       localStorage.setItem('favoriteGames', JSON.stringify(favoriteGames));
     } catch (error) {
       console.error('Error updating favorites list:', error);
     }
+  };
+
+  // ฟังก์ชัน unified สำหรับอัพเดต game state
+  const updateGameState = (gameId, updates) => {
+    const token = localStorage.getItem('token');
+    if (!token && (updates.isFavorite !== undefined || updates.isLiked !== undefined)) {
+      const action = updates.isFavorite !== undefined ? 'add favorites' : 'like games';
+      alert(`Please log in to ${action}`);
+      return;
+    }
+
+    setGameStates(prev => {
+      // Check if there's actually a change
+      const currentState = prev[gameId] || {};
+      let hasChanges = false;
+      
+      for (const key in updates) {
+        if (currentState[key] !== updates[key]) {
+          hasChanges = true;
+          break;
+        }
+      }
+      
+      // If no changes, don't update
+      if (!hasChanges) {
+        return prev;
+      }
+      
+      const newStates = {
+        ...prev,
+        [gameId]: {
+          ...currentState,
+          ...updates
+        }
+      };
+      
+      // Log เฉพาะเมื่อมีการเปลี่ยนแปลงจริงๆ และไม่ใช่ initial load
+      if (!isInitialLoad.current) {
+        console.log(`Game ${gameId} updated:`, newStates[gameId]);
+      }
+      
+      // Debounce การบันทึกเพื่อป้องกัน multiple saves
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+      
+      saveTimeoutRef.current = setTimeout(() => {
+        saveGameStatesToStorage(newStates);
+        updateFavoritesList(newStates);
+      }, 100);
+      
+      return newStates;
+    });
   };
 
   useEffect(() => {
@@ -79,7 +136,6 @@ function GameCard() {
     // Initialize game states with unique IDs
     const initialStates = {};
     games.forEach((game, index) => {
-      // ใช้ game.id หากมี หรือสร้าง unique ID จาก index
       const gameId = game.id || `game_${index}`;
       initialStates[gameId] = {
         isFavorite: savedStates[gameId]?.isFavorite || false,
@@ -87,47 +143,25 @@ function GameCard() {
         userRating: savedStates[gameId]?.userRating || 0
       };
     });
+    
     setGameStates(initialStates);
-
-    // Update favorites list on initial load
     updateFavoritesList(initialStates);
+    
+    // Mark initial load as complete
+    isInitialLoad.current = false;
   }, []);
-
-  // Save game states to localStorage whenever they change
-  useEffect(() => {
-    if (Object.keys(gameStates).length > 0) {
-      saveGameStatesToStorage(gameStates);
-      updateFavoritesList(gameStates);
-    }
-  }, [gameStates]);
 
   // Function to toggle favorite status
   const toggleFavorite = (gameId, e) => {
     e.preventDefault();
     e.stopPropagation();
     
-    const token = localStorage.getItem('token');
-    if (!token) {
-      alert('Please log in to add favorites');
-      return;
-    }
+    // ป้องกัน double click
+    if (e.detail > 1) return;
     
-    setGameStates(prev => {
-      const newStates = {
-        ...prev,
-        [gameId]: {
-          ...prev[gameId],
-          isFavorite: !prev[gameId]?.isFavorite
-        }
-      };
-      
-      console.log('New state after toggle:', newStates[gameId]);
-      
-      // Save to localStorage immediately
-      saveGameStatesToStorage(newStates);
-      updateFavoritesList(newStates);
-      
-      return newStates;
+    const currentState = gameStates[gameId];
+    updateGameState(gameId, {
+      isFavorite: !currentState?.isFavorite
     });
   };
 
@@ -136,19 +170,13 @@ function GameCard() {
     e.preventDefault();
     e.stopPropagation();
     
-    const token = localStorage.getItem('token');
-    if (!token) {
-      alert('Please log in to like games');
-      return;
-    }
+    // ป้องกัน double click
+    if (e.detail > 1) return;
     
-    setGameStates(prev => ({
-      ...prev,
-      [gameId]: {
-        ...prev[gameId],
-        isLiked: !prev[gameId]?.isLiked
-      }
-    }));
+    const currentState = gameStates[gameId];
+    updateGameState(gameId, {
+      isLiked: !currentState?.isLiked
+    });
   };
 
   // ฟังก์ชันสำหรับให้คะแนนดาว (รองรับครึ่งดาว)
@@ -156,13 +184,12 @@ function GameCard() {
     e.preventDefault();
     e.stopPropagation();
     
-    setGameStates(prev => ({
-      ...prev,
-      [gameId]: {
-        ...prev[gameId],
-        userRating: rating
-      }
-    }));
+    // ป้องกัน double click
+    if (e.detail > 1) return;
+    
+    updateGameState(gameId, {
+      userRating: rating
+    });
   };
 
   // ฟังก์ชันสำหรับ hover effect บนดาว
@@ -246,6 +273,15 @@ function GameCard() {
     });
   };
 
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+    };
+  }, []);
+
   return (
     <>
       <Nav />
@@ -328,7 +364,6 @@ function GameCard() {
 
       <div className={styles.show_game_all}>
         {games.map((game, idx) => {
-          // สร้าง unique ID สำหรับแต่ละเกม
           const gameId = game.id || `game_${idx}`;
           
           return (
@@ -370,9 +405,6 @@ function GameCard() {
 
                 <div className={styles.stars}>
                   {renderStars(gameId)}
-                  {/* <span className={styles.ratingText}>
-                    {gameStates[gameId]?.userRating || 0} / 5
-                  </span> */}
                 </div>
 
                 <div className={styles.item_game_tag_B}>

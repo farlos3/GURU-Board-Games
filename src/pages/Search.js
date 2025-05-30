@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Nav from "./components/Navbar";
 import styles from "../styles/Search.module.css";
 import gamesData from "/src/pages/testjoson.json"; // Import JSON data
+import { trackGameSearch, trackGameFilter } from '../utils/userActivity';
 
 function Search() {
   const [games, setGames] = useState([]);
@@ -58,6 +59,23 @@ function Search() {
     
     setFilteredGames(filtered);
   }, [searchQuery, selectedCategories, playerCount, playTime, games]);
+
+  // Update search query handling
+  useEffect(() => {
+    if (searchQuery) {
+      trackGameSearch(searchQuery);
+    }
+  }, [searchQuery]);
+
+  // Update filter handling
+  useEffect(() => {
+    const filters = {
+      categories: selectedCategories,
+      playerCount,
+      playTime
+    };
+    trackGameFilter(filters);
+  }, [selectedCategories, playerCount, playTime]);
 
   // ฟังก์ชันจัดการ checkbox category
   const handleCategoryChange = (category) => {
