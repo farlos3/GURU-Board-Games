@@ -71,6 +71,8 @@ function GameCard() {
   // ฟังก์ชัน unified สำหรับอัพเดต game state
   const updateGameState = (gameId, updates) => {
     const token = localStorage.getItem('token');
+    const userId = token ? JSON.parse(atob(token.split('.')[1])).id : 'guest';
+    
     if (!token && (updates.isFavorite !== undefined || updates.isLiked !== undefined)) {
       const action = updates.isFavorite !== undefined ? 'add favorites' : 'like games';
       alert(`Please log in to ${action}`);
@@ -93,18 +95,35 @@ function GameCard() {
       if (!hasChanges) {
         return prev;
       }
+
+      // สร้าง timestamp สำหรับการอัพเดต
+      const now = new Date().toISOString();
       
       const newStates = {
         ...prev,
         [gameId]: {
           ...currentState,
-          ...updates
+          ...updates,
+          userId: userId,
+          updatedAt: now,
+          // เพิ่มข้อมูลที่จำเป็นสำหรับการ sync กับ backend
+          gameData: {
+            id: parseInt(gameId),
+            rating: updates.userRating || currentState.userRating || 0,
+            isFavorite: updates.isFavorite !== undefined ? updates.isFavorite : currentState.isFavorite,
+            isLiked: updates.isLiked !== undefined ? updates.isLiked : currentState.isLiked
+          }
         }
       };
       
       // Log เฉพาะเมื่อมีการเปลี่ยนแปลงจริงๆ และไม่ใช่ initial load
       if (!isInitialLoad.current) {
-        console.log(`Game ${gameId} updated:`, newStates[gameId]);
+        console.log(`Game ${gameId} updated by user ${userId}:`, {
+          gameId: parseInt(gameId),
+          userId: userId,
+          updatedAt: now,
+          gameData: newStates[gameId].gameData
+        });
       }
       
       // Debounce การบันทึกเพื่อป้องกัน multiple saves
@@ -160,8 +179,15 @@ function GameCard() {
     if (e.detail > 1) return;
     
     const currentState = gameStates[gameId];
+    const newFavoriteStatus = !currentState?.isFavorite;
+    
     updateGameState(gameId, {
-      isFavorite: !currentState?.isFavorite
+      isFavorite: newFavoriteStatus,
+      // เพิ่มข้อมูลสำหรับการ sync กับ backend
+      favoriteData: {
+        isFavorite: newFavoriteStatus,
+        timestamp: new Date().toISOString()
+      }
     });
   };
 
@@ -174,8 +200,15 @@ function GameCard() {
     if (e.detail > 1) return;
     
     const currentState = gameStates[gameId];
+    const newLikeStatus = !currentState?.isLiked;
+    
     updateGameState(gameId, {
-      isLiked: !currentState?.isLiked
+      isLiked: newLikeStatus,
+      // เพิ่มข้อมูลสำหรับการ sync กับ backend
+      likeData: {
+        isLiked: newLikeStatus,
+        timestamp: new Date().toISOString()
+      }
     });
   };
 
@@ -187,8 +220,16 @@ function GameCard() {
     // ป้องกัน double click
     if (e.detail > 1) return;
     
+    const currentState = gameStates[gameId] || {};
+    const newRating = rating;
+    
     updateGameState(gameId, {
-      userRating: rating
+      userRating: newRating,
+      // เพิ่มข้อมูลสำหรับการ sync กับ backend
+      ratingData: {
+        rating: newRating,
+        timestamp: new Date().toISOString()
+      }
     });
   };
 
