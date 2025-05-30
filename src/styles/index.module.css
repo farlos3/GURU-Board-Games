@@ -30,7 +30,10 @@
   background-color:#EFEFEF;
   border-radius: 20px;
 }
-
+.text-white {
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
 .type_game {
   background-color: #f0f0f0;
   height: 165px;
@@ -42,6 +45,27 @@
   position: relative;
   overflow: hidden;
 }
+/* เพิ่มใน styles.module.css ของ .type_game */
+.type_game:hover .overlay::before {
+  backdrop-filter: blur(5px); /* เบลอมากขึ้น */
+  background-color: rgba(83, 62, 43, 0.55); /* มืดขึ้นนิดนึง */
+  transition: backdrop-filter 0.4s ease, background-color 0.4s ease;
+}
+
+.type_game:hover .overlay {
+  color: white; /* สีตัวหนังสือชัดขึ้น */
+  font-size: 38px; /* ขยายขนาดข้อความ */
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.6); /* ทำให้ตัวอักษรเด่นขึ้น */
+  transition: all 0.3s ease;
+}
+.overlay {
+  transition: color 0.3s ease, font-size 0.3s ease, text-shadow 0.3s ease;
+}
+
+.overlay::before {
+  transition: backdrop-filter 0.3s ease, background-color 0.3s ease;
+}
+
 
 .type_game img {
   width: 100%;
@@ -59,11 +83,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 39px;
+  font-size: 35px;
   font-weight: bold;
   text-align: center;
   border-radius: 10px;
   z-index: 1;
+  text-shadow: 1px 2px 2px rgba(0, 0, 0, 0.7);
 }
 
 .overlay::before {
@@ -249,7 +274,7 @@
 
 /* ===== Slider Styles ===== */
 .slider_container {
-  width: full;
+  width: 100%;
   height:500px;
 }
 
@@ -376,8 +401,8 @@
   100% { transform: scale(1) rotate(0deg); }
 }
 
-/* ===== Enhanced Star Rating System (Half Star Support) ===== */
-.stars {
+/* ===== Enhanced Star Rating Display (Read-only) ===== */
+.starsDisplay {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -385,16 +410,11 @@
   padding: 8px 0;
 }
 
-.starContainer {
+.starDisplayContainer {
   position: relative;
   width: 32px;
   height: 32px;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.starContainer:hover {
-  transform: scale(1.1);
+  /* เอา cursor: pointer ออก เพราะไม่สามารถคลิกได้ */
 }
 
 .starWrapper {
@@ -426,30 +446,6 @@
   transition: clip-path 0.2s ease;
 }
 
-.starHoverIndicator {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 2px;
-  height: 2px;
-  background: #ffc107;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  transition: all 0.2s ease;
-}
-
-.starContainer:hover .starHoverIndicator {
-  opacity: 1;
-  width: 8px;
-  height: 8px;
-  box-shadow: 0 0 10px rgba(255, 193, 7, 0.8);
-}
-
-.starContainer:hover .starForeground {
-  filter: drop-shadow(0 0 12px rgba(255, 193, 7, 0.6));
-}
-
 .ratingText {
   margin-left: 8px;
   font-size: 14px;
@@ -461,109 +457,398 @@
   border: 1px solid #dee2e6;
 }
 
-/* Star Pulse Animation */
-@keyframes starGlow {
-  0% { 
-    filter: drop-shadow(0 0 8px rgba(255, 193, 7, 0.4));
-    transform: scale(1);
-  }
-  50% { 
-    filter: drop-shadow(0 0 16px rgba(255, 193, 7, 0.8));
-    transform: scale(1.05);
-  }
-  100% { 
-    filter: drop-shadow(0 0 8px rgba(255, 193, 7, 0.4));
-    transform: scale(1);
-  }
-}
+/* เอา hover effects และ animations ที่เกี่ยวกับการคลิกออก */
+/* เก็บเฉพาะ style พื้นฐานสำหรับการแสดงผล */
 
-.starContainer:active .starForeground {
-  animation: starGlow 0.3s ease;
-}
+/* ===== Enhanced Responsive Design ===== */
 
-/* Ripple Effect */
-.heart_button:active::after, .favorite_button:active::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.6);
-  transform: translate(-50%, -50%);
-  animation: ripple 0.6s ease-out;
-}
-
-@keyframes ripple {
-  to {
-    width: 120px;
-    height: 120px;
-    opacity: 0;
-  }
-}
-
-/* ===== Responsive Design ===== */
-@media (max-width: 1200px) {
+/* Desktop (1200px - 1399px) */
+@media (max-width: 1399px) and (min-width: 1200px) {
   .show_game_all {
-    grid-template-columns: 1fr 1fr;
-    padding: 12px 100px;
+    grid-template-columns: repeat(3, 360px);
+    gap: 35px;
+    padding: 20px 120px;
+    margin: 0 auto;
   }
   
   .type_game_B {
-    grid-template-columns: 1fr 1fr;
-    padding: 20px 100px 40px 100px;
+    grid-template-columns: repeat(3, 280px);
+    gap: 30px;
+    padding: 20px 120px 40px 120px;
+    margin: 0 auto;
+  }
+  
+  .slider_container {
+    padding: 0 60px;
+    margin: 20px auto;
   }
 }
 
-@media (max-width: 768px) {
+/* Medium screens (992px - 1199px) */
+@media (max-width: 1199px) and (min-width: 992px) {
+  .show_game_all {
+    grid-template-columns: repeat(2, 400px);
+    gap: 35px;
+    padding: 20px 60px;
+    margin: 0 auto;
+  }
+  
+  .type_game_B {
+    grid-template-columns: repeat(3, 250px);
+    gap: 25px;
+    padding: 20px 60px 40px 60px;
+    margin: 0 auto;
+  }
+  
+  .item_game {
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .slider_container {
+    padding: 0 40px;
+    margin: 20px auto;
+  }
+}
+
+/* Small desktop/Large tablet (768px - 991px) */
+@media (max-width: 991px) and (min-width: 768px) {
+  .show_game_all {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    padding: 20px 50px;
+    max-width: 950px;
+    margin: 0 auto;
+  }
+  
+  .type_game_B {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    padding: 20px 50px 40px 50px;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  
+  .item_game {
+    width: 100%;
+    max-width: 420px;
+  }
+  
+  .text_board_game {
+    font-size: 36px;
+  }
+  
+  .overlay {
+    font-size: 28px;
+  }
+  
+  .type_game:hover .overlay {
+    font-size: 32px;
+  }
+  
+  .slider_container {
+    height: 400px;
+    padding: 0 30px;
+    margin: 20px auto;
+  }
+  
+  .slider_container :global(.swiper-slide) .slide_image {
+    height: 400px;
+    transform: scale(0.75);
+  }
+  
+  .slider_container :global(.swiper-slide-active) .slide_image {
+    transform: scale(0.9);
+  }
+}
+
+/* Tablet (576px - 767px) */
+@media (max-width: 767px) and (min-width: 576px) {
+  .show_game_all {
+    grid-template-columns: 1fr;
+    gap: 25px;
+    padding: 20px 40px;
+    max-width: 550px;
+    margin: 0 auto;
+  }
+  
+  .type_game_B {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 20px 40px 30px 40px;
+    margin: 0 auto;
+  }
+  
+  .item_game {
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+  }
+  
+  .item_game img {
+    height: 280px;
+  }
+  
+  .text_board_game {
+    font-size: 32px;
+  }
+  
+  .overlay {
+    font-size: 24px;
+  }
+  
+  .type_game:hover .overlay {
+    font-size: 28px;
+  }
+  
   .rating_buttons {
-    flex-direction: column;
-    gap: 10px;
+    flex-direction: row;
+    gap: 8px;
+    flex-wrap: wrap;
   }
   
   .heart_button, .favorite_button {
-    padding: 12px 20px;
-    font-size: 16px;
-    justify-content: center;
+    flex: 1;
+    min-width: 100px;
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+  
+  .starsDisplay {
+    justify-content: flex-start;
+    gap: 2px;
   }
   
   .star {
     font-size: 28px;
   }
-
-  .starContainer {
+  
+  .starDisplayContainer {
     width: 28px;
     height: 28px;
   }
-
-  .bookmark_icon {
-    width: 20px;
-    height: 20px;
+  
+  .slider_container {
+    height: 350px;
+    padding: 0 20px;
+    margin: 15px auto;
   }
-
-  .type_game_B {
-    grid-template-columns: 1fr;
-    padding: 20px;
+  
+  .slider_container :global(.swiper-slide) .slide_image {
+    height: 350px;
+    transform: scale(0.8);
   }
-
-  .show_game_all {
-    grid-template-columns: 1fr;
-    padding: 12px 20px;
-  }
-
-  .item_game {
-    width: 100%;
-  }
-
-  .stars {
-    flex-wrap: wrap;
-    justify-content: flex-start;
-  }
-
-  .ratingText {
-    font-size: 12px;
-    padding: 2px 6px;
+  
+  .slider_container :global(.swiper-slide-active) .slide_image {
+    transform: scale(0.95);
   }
 }
 
+/* Mobile (up to 575px) - ปรับขนาดให้เหมาะสมกับสไลด์ 210px */
+@media (max-width: 575px) {
+  .slider_container {
+    height: 240px; /* ปรับจาก 280px เป็น 240px */
+    padding: 0 12px; /* ลด padding จาก 15px เป็น 12px */
+    margin: 12px auto; /* ลด margin จาก 15px เป็น 12px */
+  }
+  
+  /* Hide all navigation elements */
+  .slider_container :global(.swiper-button-next),
+  .slider_container :global(.swiper-button-prev),
+  .slider_container :global(.swiper-pagination) {
+    display: none !important;
+  }
+  
+  /* Single slide view - ปรับขนาดให้เหมาะสมกับ 210px */
+  .slider_container :global(.swiper-slide) .slide_image {
+    opacity: 1;
+    transform: scale(1);
+    height: 210px; /* คงเดิม */
+    object-fit: cover;
+    border-radius: 6px; /* ลดจาก 8px เป็น 6px */
+  }
+  
+  .slider_container :global(.swiper-slide-active) .slide_image {
+    transform: scale(1);
+  }
+  
+  /* ปรับขนาดองค์ประกอบอื่นๆ ให้เหมาะสม */
+  .show_game_all {
+    grid-template-columns: 1fr;
+    gap: 20px; /* ลดจาก 25px เป็น 20px */
+    padding: 16px 20px; /* ลดจาก 20px 25px เป็น 16px 20px */
+    margin: 0 auto;
+  }
+  
+  .type_game_B {
+    grid-template-columns: repeat(2, 2fr);
+    gap: 16px; /* ลดจาก 20px เป็น 16px */
+    padding: 16px 20px 24px 20px; /* ลดจาก 20px 25px 30px 25px */
+    margin: 0 auto;
+  }
+  
+  .item_game {
+    width: 100%;
+    max-width: none;
+  }
+  
+  .item_game img {
+    height: 120px; /* ลดจาก 250px เป็น 220px */
+  }
+  
+  .text_board_game {
+    font-size: 26px; /* ลดจาก 28px เป็น 26px */
+    margin: 8px; /* ลดจาก 10px เป็น 8px */
+    padding: 4px; /* ลดจาก 5px เป็น 4px */
+  }
+  
+  .overlay {
+    font-size: 20px; /* ลดจาก 22px เป็น 20px */
+  }
+  
+  .type_game:hover .overlay {
+    font-size: 24px; /* ลดจาก 26px เป็น 24px */
+  }
+  
+  .rating_buttons {
+    flex-direction: column;
+    gap: 6px; /* ลดจาก 8px เป็น 6px */
+  }
+  
+  .heart_button, .favorite_button {
+    width: 100%;
+    padding: 8px 14px; /* ลดจาก 10px 16px เป็น 8px 14px */
+    font-size: 13px; /* ลดจาก 14px เป็น 13px */
+    justify-content: center;
+    min-height: 38px; /* ลดจาก 44px เป็น 38px */
+  }
+  
+  .starsDisplay {
+    justify-content: center;
+    gap: 1px; /* ลดจาก 2px เป็น 1px */
+    flex-wrap: wrap;
+    margin: 8px 6px; /* ลดจาก 12px 6px เป็น 8px 6px */
+  }
+  
+  .star {
+    font-size: 24px; /* ลดจาก 26px เป็น 24px */
+  }
+  
+  .starDisplayContainer {
+    width: 24px; /* ลดจาก 26px เป็น 24px */
+    height: 24px; /* ลดจาก 26px เป็น 24px */
+  }
+  
+  .bookmark_icon {
+    width: 15px; /* ลดจาก 16px เป็น 15px */
+    height: 15px; /* ลดจาก 16px เป็น 15px */
+  }
+  
+  .name_game {
+    font-size: 15px; /* ลดจาก 16px เป็น 15px */
+    text-align: center;
+    justify-content: center;
+    padding: 4px 8px; /* ลดจาก 5px เป็น 4px */
+  }
+  
+  .item_game_tag_B {
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 4px; /* ลดจาก 6px เป็น 4px */
+  }
+  
+  .item_game_tag {
+    font-size: 12px; /* ลดจาก 13px เป็น 12px */
+    padding: 3px 8px; /* ลดจาก 4px 10px เป็น 3px 8px */
+  }
+  
+  .B_item_game_player {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px; /* ลดจาก 10px เป็น 8px */
+    padding: 4px; /* ลดจาก 6px เป็น 4px */
+    font-size: 13px; /* ลดจาก 14px เป็น 13px */
+  }
+  
+  .B_item_game_player img {
+    width: 22px; /* ลดจาก 24px เป็น 22px */
+    padding: 3px; /* ลดจาก 4px เป็น 3px */
+  }
+}
+
+/* เพิ่ม CSS นี้ในไฟล์ styles/index.module.css */
+
+/* Swiper Navigation Buttons */
+.slider_container :global(.swiper-button-next),
+.slider_container :global(.swiper-button-prev) {
+  color: #fff !important;
+  background: rgba(0, 0, 0, 0.5) !important;
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 50% !important;
+  margin-top: -22px !important;
+  transition: all 0.3s ease !important;
+}
+
+.slider_container :global(.swiper-button-next):hover,
+.slider_container :global(.swiper-button-prev):hover {
+  background: rgba(0, 0, 0, 0.8) !important;
+  transform: scale(1.1) !important;
+}
+
+.slider_container :global(.swiper-button-next):after,
+.slider_container :global(.swiper-button-prev):after {
+  font-size: 18px !important;
+  font-weight: 900 !important;
+}
+
+/* Swiper Pagination */
+.slider_container :global(.swiper-pagination) {
+  bottom: 20px !important;
+}
+
+.slider_container :global(.swiper-pagination-bullet) {
+  background: rgba(255, 255, 255, 0.5) !important;
+  opacity: 1 !important;
+  margin: 0 6px !important;
+  transition: all 0.3s ease !important;
+}
+
+.slider_container :global(.swiper-pagination-bullet-active) {
+  background: #fff !important;
+  transform: scale(1.2) !important;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .slider_container :global(.swiper-button-next),
+  .slider_container :global(.swiper-button-prev) {
+    width: 36px !important;
+    height: 36px !important;
+    margin-top: -18px !important;
+  }
+  
+  .slider_container :global(.swiper-button-next):after,
+  .slider_container :global(.swiper-button-prev):after {
+    font-size: 14px !important;
+  }
+  
+  .slider_container :global(.swiper-button-next) {
+    right: 10px !important;
+  }
+  
+  .slider_container :global(.swiper-button-prev) {
+    left: 10px !important;
+  }
+}
+
+/* สำหรับให้ปุ่มอยู่ด้านบนของรูปภาพ */
+.slider_container {
+  position: relative;
+  z-index: 1;
+}
+
+.slider_container :global(.swiper-button-next),
+.slider_container :global(.swiper-button-prev) {
+  z-index: 10 !important;
+}

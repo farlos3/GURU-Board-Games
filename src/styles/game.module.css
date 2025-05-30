@@ -343,8 +343,11 @@
 .B_Categories {
   margin-top: 30px;
   font-size: 20px;
+  padding: 20px 0px 20px 0px;
   width: 100%;
   max-width: 800px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+  border-top: 2px solid rgba(0, 0, 0, 0.08);
 }
 
 .item_game_text_Categories {
@@ -366,6 +369,164 @@
   padding: 5px 12px;
   border-radius: var(--border-radius-lg);
   margin: 5px 12px 5px 0;
+}
+
+/* Review Section - Ultra Minimal Design */
+.B_Review {
+  margin-top: 20px;
+  font-size: 20px;
+  width: 100%;
+  
+  max-width: 800px;
+  
+  color: #2c2c2c;
+}
+
+.review_content {
+  padding: 15px 0;
+  background: transparent;
+  border: none;
+  margin-top: 0px;
+  text-align: left;
+  box-shadow: none;
+  transition: none;
+}
+
+.review_content:hover {
+  box-shadow: none;
+}
+
+/* Enhanced Star Rating for Review */
+.stars_large {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 20px 0;
+  padding: 0;
+}
+
+.stars_large .starContainer {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  position: relative;
+}
+
+.stars_large .starContainer:hover {
+  transform: scale(1.15) rotate(-2deg);
+}
+
+.stars_large .starContainer:active {
+  transform: scale(1.05);
+}
+
+.stars_large .star {
+  font-size: 35px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.stars_large .starBackground {
+  color: #f0f0f0;
+}
+
+.stars_large .starForeground {
+  color: #ffb400;
+  filter: drop-shadow(0 0 12px rgba(255, 180, 0, 0.3));
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.stars_large .starContainer:hover .starForeground {
+  color: #ff9500;
+  filter: drop-shadow(0 0 20px rgba(255, 149, 0, 0.5));
+  transform: scale(1.1);
+}
+
+/* Glow effect animation */
+@keyframes starShine {
+  0% { 
+    filter: drop-shadow(0 0 12px rgba(255, 180, 0, 0.3));
+  }
+  50% { 
+    filter: drop-shadow(0 0 25px rgba(255, 180, 0, 0.7));
+  }
+  100% { 
+    filter: drop-shadow(0 0 12px rgba(255, 180, 0, 0.3));
+  }
+}
+
+.stars_large .starContainer:active .starForeground {
+  animation: starShine 0.6s ease-out;
+}
+
+/* Rating Display */
+.rating_display {
+  margin-top: 15px;
+}
+
+.rating_text {
+  margin-left: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  padding: 4px 8px;
+  border-radius: 12px;
+  border: 1px solid #dee2e6;
+}
+
+.rating_text_empty {
+  font-size: 16px;
+  color: #999;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0.3px;
+}
+
+/* Subtle hover effect for the entire review section */
+.B_Review:hover .stars_large .starBackground {
+  color: #e8e8e8;
+}
+
+.B_Review:hover .rating_text_empty {
+  color: #777;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .stars_large .starContainer {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .stars_large .star {
+    font-size: 35px;
+  }
+  
+  .B_Review {
+    font-size: 20px;
+  }
+  
+  .rating_text,
+  .rating_text_empty {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stars_large {
+    gap: 6px;
+  }
+  
+  .stars_large .starContainer {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .stars_large .star {
+    font-size: 32px;
+  }
 }
 
 /* Similar Games Section */
@@ -598,6 +759,3 @@
 .Footer_B2_text div {
   margin: 0 10px;
 }
-
-
-
