@@ -28,6 +28,8 @@ export default function Register() {
 
     try {
       console.log("Registering user...");
+      console.log("API URL:", process.env.NEXT_PUBLIC_API_URL);
+
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
         method: "POST",
         headers: {
@@ -42,7 +44,7 @@ export default function Register() {
       });
 
       const data = await res.json();
-      console.log("Registration response:", data); // ✅ Debug log
+      console.log("Registration response:", data);
 
       if (res.ok) {
         // ✅ Registration สำเร็จ - ไปหน้า OTP

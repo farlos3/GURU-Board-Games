@@ -23,7 +23,6 @@ const images = [
 ];
 
 function GameCard() {
-  // State สำหรับเก็บข้อมูล favorites, hearts และ ratings ของแต่ละเกม
   const [gameStates, setGameStates] = useState({});
   const [hoverRating, setHoverRating] = useState({});
 
@@ -49,88 +48,135 @@ function GameCard() {
     }
   };
 
+  // ฟังก์ชันสำหรับอัพเดตรายการ favorites ใน localStorage
+  const updateFavoritesList = (newStates) => {
+    try {
+      const favoriteGames = games.filter((game, index) => {
+        const gameId = game.id || `game_${index}`;
+        return newStates[gameId]?.isFavorite;
+      }).map((game, index) => ({
+        ...game,
+        id: game.id || `game_${index}` // ให้แน่ใจว่ามี ID
+      }));
+      localStorage.setItem('favoriteGames', JSON.stringify(favoriteGames));
+    } catch (error) {
+      console.error('Error updating favorites list:', error);
+    }
+  };
+
   useEffect(() => {
     AOS.init({
       duration: 1500,
       once: true,
     });
 
-    // โหลดข้อมูลจาก localStorage
+    // Store all games data in localStorage
+    localStorage.setItem('allGames', JSON.stringify(games));
+
+    // Load existing game states from localStorage
     const savedStates = loadGameStatesFromStorage();
     
-    // Initialize game states
+    // Initialize game states with unique IDs
     const initialStates = {};
-    games.forEach((game, idx) => {
-      initialStates[idx] = {
-        isFavorite: savedStates[idx]?.isFavorite || false,
-        isLiked: savedStates[idx]?.isLiked || false,
-        userRating: savedStates[idx]?.userRating || 0
+    games.forEach((game, index) => {
+      // ใช้ game.id หากมี หรือสร้าง unique ID จาก index
+      const gameId = game.id || `game_${index}`;
+      initialStates[gameId] = {
+        isFavorite: savedStates[gameId]?.isFavorite || false,
+        isLiked: savedStates[gameId]?.isLiked || false,
+        userRating: savedStates[gameId]?.userRating || 0
       };
     });
     setGameStates(initialStates);
+
+    // Update favorites list on initial load
+    updateFavoritesList(initialStates);
   }, []);
 
-  // บันทึกข้อมูลลง localStorage ทุกครั้งที่ gameStates เปลี่ยน
+  // Save game states to localStorage whenever they change
   useEffect(() => {
     if (Object.keys(gameStates).length > 0) {
       saveGameStatesToStorage(gameStates);
+      updateFavoritesList(gameStates);
     }
   }, [gameStates]);
 
-  // ฟังก์ชันสำหรับเปลี่ยนสถานะ favorite
-  const toggleFavorite = (gameIndex, e) => {
+  // Function to toggle favorite status
+  const toggleFavorite = (gameId, e) => {
     e.preventDefault();
     e.stopPropagation();
     
-    setGameStates(prev => ({
-      ...prev,
-      [gameIndex]: {
-        ...prev[gameIndex],
-        isFavorite: !prev[gameIndex]?.isFavorite
-      }
-    }));
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('Please log in to add favorites');
+      return;
+    }
+    
+    setGameStates(prev => {
+      const newStates = {
+        ...prev,
+        [gameId]: {
+          ...prev[gameId],
+          isFavorite: !prev[gameId]?.isFavorite
+        }
+      };
+      
+      console.log('New state after toggle:', newStates[gameId]);
+      
+      // Save to localStorage immediately
+      saveGameStatesToStorage(newStates);
+      updateFavoritesList(newStates);
+      
+      return newStates;
+    });
   };
 
   // ฟังก์ชันสำหรับเปลี่ยนสถานะ heart
-  const toggleHeart = (gameIndex, e) => {
+  const toggleHeart = (gameId, e) => {
     e.preventDefault();
     e.stopPropagation();
     
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('Please log in to like games');
+      return;
+    }
+    
     setGameStates(prev => ({
       ...prev,
-      [gameIndex]: {
-        ...prev[gameIndex],
-        isLiked: !prev[gameIndex]?.isLiked
+      [gameId]: {
+        ...prev[gameId],
+        isLiked: !prev[gameId]?.isLiked
       }
     }));
   };
 
   // ฟังก์ชันสำหรับให้คะแนนดาว (รองรับครึ่งดาว)
-  const handleStarClick = (gameIndex, rating, e) => {
+  const handleStarClick = (gameId, rating, e) => {
     e.preventDefault();
     e.stopPropagation();
     
     setGameStates(prev => ({
       ...prev,
-      [gameIndex]: {
-        ...prev[gameIndex],
+      [gameId]: {
+        ...prev[gameId],
         userRating: rating
       }
     }));
   };
 
   // ฟังก์ชันสำหรับ hover effect บนดาว
-  const handleStarHover = (gameIndex, rating) => {
+  const handleStarHover = (gameId, rating) => {
     setHoverRating(prev => ({
       ...prev,
-      [gameIndex]: rating
+      [gameId]: rating
     }));
   };
 
-  const handleStarLeave = (gameIndex) => {
+  const handleStarLeave = (gameId) => {
     setHoverRating(prev => ({
       ...prev,
-      [gameIndex]: null
+      [gameId]: null
     }));
   };
 
@@ -149,10 +195,10 @@ function GameCard() {
   };
 
   // ฟังก์ชันสำหรับแสดงดาว (รองรับครึ่งดาว)
-  const renderStars = (gameIndex) => {
-    const currentRating = hoverRating[gameIndex] !== null && hoverRating[gameIndex] !== undefined 
-      ? hoverRating[gameIndex] 
-      : (gameStates[gameIndex]?.userRating || 0);
+  const renderStars = (gameId) => {
+    const currentRating = hoverRating[gameId] !== null && hoverRating[gameId] !== undefined 
+      ? hoverRating[gameId] 
+      : (gameStates[gameId]?.userRating || 0);
     
     return [1, 2, 3, 4, 5].map((star) => {
       const isFullStar = currentRating >= star;
@@ -162,14 +208,14 @@ function GameCard() {
         <div 
           key={star} 
           className={styles.starContainer}
-          onMouseLeave={() => handleStarLeave(gameIndex)}
+          onMouseLeave={() => handleStarLeave(gameId)}
           onMouseMove={(e) => {
             const rating = getStarRating(e, star);
-            handleStarHover(gameIndex, rating);
+            handleStarHover(gameId, rating);
           }}
           onClick={(e) => {
             const rating = getStarRating(e, star);
-            handleStarClick(gameIndex, rating, e);
+            handleStarClick(gameId, rating, e);
           }}
         >
           <div className={styles.starWrapper}>
@@ -281,74 +327,80 @@ function GameCard() {
       <div className={styles.text_board_game}> BOARD GAME</div>
 
       <div className={styles.show_game_all}>
-        {games.map((game, idx) => (
-          <Link
-            key={idx}
-            href={`/game/${idx}`}
-            className={styles.item_game}
-            data-aos="fade-up"
-          >
-            <div className={styles.item_game_text}>
-              <div className={styles.name_game}>{game.name}</div>
+        {games.map((game, idx) => {
+          // สร้าง unique ID สำหรับแต่ละเกม
+          const gameId = game.id || `game_${idx}`;
+          
+          return (
+            <Link
+              key={gameId}
+              href={`/game/${idx}`}
+              className={styles.item_game}
+              data-aos="fade-up"
+            >
+              <div className={styles.item_game_text}>
+                <div className={styles.name_game}>{game.name}</div>
 
-              <div className={styles.rating_buttons}>
-                <button 
-                  className={`${styles.heart_button} ${gameStates[idx]?.isLiked ? styles.heart_active : ''}`}
-                  onClick={(e) => toggleHeart(idx, e)}
-                  title={gameStates[idx]?.isLiked ? "Unlike" : "Like"}
-                >
-                  {gameStates[idx]?.isLiked ? "💖" : "🤍"}
-                </button>
-                
-                <button 
-                  className={`${styles.favorite_button} ${gameStates[idx]?.isFavorite ? styles.favorite_active : ''}`}
-                  onClick={(e) => toggleFavorite(idx, e)}
-                  title={gameStates[idx]?.isFavorite ? "Remove from favorites" : "Add to favorites"}
-                >
-                  <svg 
-                    className={styles.bookmark_icon} 
-                    viewBox="0 0 24 24" 
-                    fill={gameStates[idx]?.isFavorite ? "currentColor" : "none"}
-                    stroke="currentColor"
+                <div className={styles.rating_buttons}>
+                  <button 
+                    className={`${styles.heart_button} ${gameStates[gameId]?.isLiked ? styles.heart_active : ''}`}
+                    onClick={(e) => toggleHeart(gameId, e)}
+                    title={gameStates[gameId]?.isLiked ? "Unlike" : "Like"}
                   >
-                    <path d="M19 21L12 16L5 21V5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21Z" strokeWidth="2"/>
-                  </svg>
-                  {gameStates[idx]?.isFavorite ? "Saved" : "Save"}
-                </button>
-              </div>
+                    {gameStates[gameId]?.isLiked ? "💖" : "🤍"}
+                  </button>
+                  
+                  <button 
+                    className={`${styles.favorite_button} ${gameStates[gameId]?.isFavorite ? styles.favorite_active : ''}`}
+                    onClick={(e) => toggleFavorite(gameId, e)}
+                    title={gameStates[gameId]?.isFavorite ? "Remove from favorites" : "Add to favorites"}
+                  >
+                    <svg 
+                      className={styles.bookmark_icon} 
+                      viewBox="0 0 24 24" 
+                      fill={gameStates[gameId]?.isFavorite ? "white" : "none"}
+                      stroke={gameStates[gameId]?.isFavorite ? "white" : "currentColor"}
+                      style={{ transition: 'all 0.3s ease' }}
+                    >
+                      <path d="M19 21L12 16L5 21V5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21Z" strokeWidth="2"/>
+                    </svg>
+                    {gameStates[gameId]?.isFavorite ? "Saved" : "Save"}
+                  </button>
+                </div>
 
-              <div className={styles.stars}>
-                {renderStars(idx)}
-                {/* <span className={styles.ratingText}>
-                  {gameStates[idx]?.userRating || 0} / 5
-                </span> */}
-              </div>
+                <div className={styles.stars}>
+                  {renderStars(gameId)}
+                  {/* <span className={styles.ratingText}>
+                    {gameStates[gameId]?.userRating || 0} / 5
+                  </span> */}
+                </div>
 
-              <div className={styles.item_game_tag_B}>
-                {game.tags.map((tag, tagIndex) => (
-                  <div key={tagIndex} className={styles.item_game_tag}>
-                    {tag}
+                <div className={styles.item_game_tag_B}>
+                  {game.tags.map((tag, tagIndex) => (
+                    <div key={tagIndex} className={styles.item_game_tag}>
+                      {tag}
+                    </div>
+                  ))}
+                </div>
+
+                <div className={styles.B_item_game_player}>
+                  <div className={styles.item_game_player_1}>
+                    <img src="clock-five.png" />
+                    {game.duration}
                   </div>
-                ))}
-              </div>
-
-              <div className={styles.B_item_game_player}>
-                <div className={styles.item_game_player_1}>
-                  <img src="clock-five.png" />
-                  {game.duration}
-                </div>
-                <div className={styles.item_game_player_2}>
-                  <img src="users (1).png" />
-                  {game.players}
+                  <div className={styles.item_game_player_2}>
+                    <img src="users (1).png" />
+                    {game.players}
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div>
-              <img src={game.image} />
-            </div>
-          </Link>
-        ))}
+              <div>
+                <img src={game.image} />
+              </div>
+            </Link>
+          );
+        })}
       </div>
 
       <div className={styles.Footer}>

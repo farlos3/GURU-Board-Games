@@ -3,6 +3,8 @@ import { Home, Heart, User, LogOut } from 'lucide-react';
 import FavoritesPage from './components/favorite';
 import PersonalInfoPage from './components/Personallinfo';
 import { useRouter } from 'next/router';
+import { isAuthenticated, getUserFromToken } from '../utils/auth';
+import { getUserFavorites } from '../utils/gameStates';
 
 const App = () => {
   // เปลี่ยนจาก 'home' เป็น 'personal' เพื่อให้เริ่มต้นที่หน้า Personal Info
@@ -11,45 +13,25 @@ const App = () => {
   const router = useRouter();
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
-  // Default board games data
-  const defaultBoardGames = [
-    {
-      id: 1,
-      name: 'Werewolf',
-      tags: ['Family', 'Party', 'Strategy'],
-      time: '35 min',
-      players: '3-4 player',
-      image: 'https://via.placeholder.com/150x100/4f46e5/white?text=Werewolf'
-    },
-    {
-      id: 2,
-      name: 'Catan',
-      tags: ['Strategy', 'Trading', 'Building'],
-      time: '60 min',
-      players: '3-4 player',
-      image: 'https://via.placeholder.com/150x100/059669/white?text=Catan'
-    },
-    {
-      id: 3,
-      name: 'Monopoly',
-      tags: ['Classic', 'Family', 'Economic'],
-      time: '90 min',
-      players: '2-6 player',
-      image: 'https://via.placeholder.com/150x100/dc2626/white?text=Monopoly'
-    }
-  ];
-
-  // Load default games on component mount
+  // Load favorites when component mounts
   useEffect(() => {
-    setFavorites(defaultBoardGames);
-  }, []);
+    if (!isAuthenticated()) {
+      router.push('/Login');
+      return;
+    }
+
+    const loadFavorites = () => {
+      const userFavorites = getUserFavorites();
+      setFavorites(userFavorites);
+    };
+
+    loadFavorites();
+  }, [router]);
 
   // Handle going back to main website
   const handleGoHome = () => {
     if (window.confirm('คุณต้องการกลับไปหน้าหลักของเว็บไซต์หรือไม่?')) {
-      // ในความเป็นจริง คุณจะทำการ redirect ไปหน้าหลัก
-      alert('กำลังกลับไปหน้าหลักของเว็บไซต์...');
-      // window.location.href = '/'; // หรือใช้ router ของ framework ที่ใช้
+      router.push('/');
     }
   };
 
@@ -71,15 +53,14 @@ const App = () => {
 
   // Menu items configuration
   const menuItems = [
-    { id: 'home', label: 'Home', icon: Home, action: 'home' }, // เปลี่ยนเป็น Back to Main Site
+    { id: 'home', label: 'Home', icon: Home, action: 'home' },
     { id: 'personal', label: 'Personal Info', icon: User, action: 'page' },
     { id: 'favorites', label: 'Favorites', icon: Heart, action: 'page' },
-    
   ];
 
   const handleMenuClick = (item) => {
     if (item.action === 'home') {
-      window.location.href = '/';
+      router.push('/');
     } else {
       setCurrentPage(item.id);
     }
@@ -193,7 +174,13 @@ const App = () => {
       }}>
         {/* Render different pages based on current selection */}
         {currentPage === 'favorites' && (
-          <FavoritesPage favorites={favorites} setFavorites={setFavorites} />
+          <FavoritesPage 
+            favorites={favorites} 
+            setFavorites={setFavorites}
+            onFavoriteUpdate={(updatedFavorites) => {
+              setFavorites(updatedFavorites);
+            }}
+          />
         )}
         {currentPage === 'personal' && <PersonalInfoPage />}
       </div>

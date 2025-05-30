@@ -20,17 +20,16 @@ function Search() {
     setGames(gamesData);
     setFilteredGames(gamesData);
     
-    // Initialize game states - แต่ละเกมจะมี state แยกจากกัน
-    const initialStates = {};
-    gamesData.forEach((game) => {
-      initialStates[game.id] = {
-        isFavorite: false,
-        isLiked: false,
-        userRating: 0,
-        hoverRating: null // เพิ่ม hoverRating เฉพาะแต่ละการ์ด
-      };
-    });
-    setGameStates(initialStates);
+    // Load user's game states using token as ID
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const gameStates = JSON.parse(localStorage.getItem('gameStates')) || {};
+        setGameStates(gameStates[token] || {});
+      } catch (error) {
+        console.error('Error loading user states:', error);
+      }
+    }
   }, []);
 
   // ฟังก์ชันการกรองเกม
@@ -69,46 +68,97 @@ function Search() {
     );
   };
 
-  // ฟังก์ชันสำหรับเปลี่ยนสถานะ favorite (แยกเฉพาะ gameId)
+  // Toggle favorite with token as user ID
   const toggleFavorite = (gameId, e) => {
     e.preventDefault();
     e.stopPropagation();
     
-    setGameStates(prev => ({
-      ...prev,
-      [gameId]: {
-        ...prev[gameId],
-        isFavorite: !prev[gameId]?.isFavorite
-      }
-    }));
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('Please log in to add favorites');
+      return;
+    }
+    
+    try {
+      const allGameStates = JSON.parse(localStorage.getItem('gameStates')) || {};
+      const userGameStates = allGameStates[token] || {};
+      
+      const newUserGameStates = {
+        ...userGameStates,
+        [gameId]: {
+          ...userGameStates[gameId],
+          isFavorite: !userGameStates[gameId]?.isFavorite
+        }
+      };
+      
+      allGameStates[token] = newUserGameStates;
+      localStorage.setItem('gameStates', JSON.stringify(allGameStates));
+      setGameStates(newUserGameStates);
+    } catch (error) {
+      console.error('Error updating favorite:', error);
+    }
   };
 
-  // ฟังก์ชันสำหรับเปลี่ยนสถานะ heart (แยกเฉพาะ gameId)
+  // Toggle heart with token as user ID
   const toggleHeart = (gameId, e) => {
     e.preventDefault();
     e.stopPropagation();
     
-    setGameStates(prev => ({
-      ...prev,
-      [gameId]: {
-        ...prev[gameId],
-        isLiked: !prev[gameId]?.isLiked
-      }
-    }));
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('Please log in to like games');
+      return;
+    }
+    
+    try {
+      const allGameStates = JSON.parse(localStorage.getItem('gameStates')) || {};
+      const userGameStates = allGameStates[token] || {};
+      
+      const newUserGameStates = {
+        ...userGameStates,
+        [gameId]: {
+          ...userGameStates[gameId],
+          isLiked: !userGameStates[gameId]?.isLiked
+        }
+      };
+      
+      allGameStates[token] = newUserGameStates;
+      localStorage.setItem('gameStates', JSON.stringify(allGameStates));
+      setGameStates(newUserGameStates);
+    } catch (error) {
+      console.error('Error updating like:', error);
+    }
   };
 
-  // ฟังก์ชันสำหรับให้คะแนนดาว (แยกเฉพาะ gameId)
+  // Handle star rating with token as user ID
   const handleStarClick = (gameId, rating, e) => {
     e.preventDefault();
     e.stopPropagation();
     
-    setGameStates(prev => ({
-      ...prev,
-      [gameId]: {
-        ...prev[gameId],
-        userRating: rating
-      }
-    }));
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('Please log in to rate games');
+      return;
+    }
+    
+    try {
+      const allGameStates = JSON.parse(localStorage.getItem('gameStates')) || {};
+      const userGameStates = allGameStates[token] || {};
+      
+      const newUserGameStates = {
+        ...userGameStates,
+        [gameId]: {
+          ...userGameStates[gameId],
+          userRating: rating
+        }
+      };
+      
+      allGameStates[token] = newUserGameStates;
+      localStorage.setItem('gameStates', JSON.stringify(allGameStates));
+      setGameStates(newUserGameStates);
+    } catch (error) {
+      console.error('Error updating rating:', error);
+    }
   };
 
   // ฟังก์ชันสำหรับ hover effect บนดาว (แยกเฉพาะ gameId)
@@ -278,7 +328,6 @@ function Search() {
 
         <div className={styles.B_item_all}>
           {filteredGames.map((game) => {
-            // ดึง state ของเกมนี้โดยเฉพาะ
             const currentGameState = gameStates[game.id] || {};
             
             return (
