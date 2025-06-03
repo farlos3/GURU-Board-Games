@@ -1,14 +1,85 @@
 [
   {
+    "id": "0",
     "name": "CASHFLOW",
-    "image": "cashflow.jpg",
+    "image": "CASHFLOW.png",
     "tags": ["Strategy", "Luck-based"],
     "duration": "60-120 min",
     "players": "2-6 players",
     "description":"CASHFLOW is a strategic board game designed by Robert Kiyosaki, the author of Rich Dad Poor Dad. The game simulates financial scenarios to teach concepts of money management, investing, and generating passive income. Players learn how to manage income and expenses, invest in real estate, stocks, and businesses in order to escape the “rat race” and enter the “fast track to wealth.” The game emphasizes smart decision-making and effective financial planning as key tools for achieving financial independence."
+    ,"howToplay": [
+  {
+    "title": "Game Objective",
+    "steps": [
+      "Werewolf team: Eliminate other players until the number of werewolves is equal to or greater than the remaining players.",
+      "Villager team and special roles: Identify and vote out all werewolves before getting eliminated."
+    ]
+  },
+  {
+    "title": "Game Setup",
+    "steps": [
+      "Number of players: 6 or more (the more, the better).",
+      "Prepare role cards according to the number of players, including Werewolves, Villagers, and Special Roles.",
+      "Choose 1 Game Master (GM) who will control the game without participating as a player."
+    ]
+  },
+  {
+    "title": "Role Assignment",
+    "steps": [
+      "Distribute role cards randomly to each player without revealing them to others.",
+      "Players must remember their roles and must not reveal them during the game."
+    ]
+  },
+  {
+    "title": "First Night Phase (Eyes Closed)",
+    "steps": [
+      "GM asks everyone to close their eyes.",
+      "GM calls on the Werewolves to open their eyes and choose a victim.",
+      "GM calls on the Doctor to open their eyes and select one player to protect from being killed.",
+      "GM calls on the Seer to open their eyes and check one player’s role to see if they are a werewolf.",
+      "GM asks everyone to close their eyes again and remembers the choices made by each role."
+    ]
+  },
+  {
+    "title": "Day Phase",
+    "steps": [
+      "GM announces who (if anyone) was killed during the night.",
+      "All players open their eyes and begin discussing, accusing, defending, and trying to identify the werewolves.",
+      "All players vote to eliminate one player from the game.",
+      "The eliminated player must reveal their role and leave the game immediately."
+    ]
+  },
+  {
+    "title": "Night–Day Cycle",
+    "steps": [
+      "Return to the night phase: All players close their eyes and the special roles perform their actions.",
+      "In the morning, GM announces the results and starts the next discussion and voting round.",
+      "Repeat until a win condition is met."
+    ]
+  },
+  {
+    "title": "Winning Conditions",
+    "steps": [
+      "Villagers win when all werewolves are eliminated.",
+      "Werewolves win when their number is equal to or greater than the remaining players."
+    ]
+  },
+  {
+    "title": "Suggested Special Roles (Optional for added fun)",
+    "steps": [
+      "Doctor: Each night, selects one player to protect from being killed.",
+      "Seer: Each night, selects one player to check if they are a werewolf.",
+      "Hunter: If eliminated, can choose one player to die with them.",
+      "Lovers: If one dies, the other dies automatically.",
+      "Gunslinger: If voted out, can shoot and eliminate one player before leaving the game."
+    ]
+  }
+]
+
   },
   
   {
+     "id": "1",
     "name": "Exploding Kittens",
     "image": "exploding_kittens.jpg",
     "tags": ["Luck-based", "Bluffing"],
@@ -17,6 +88,7 @@
     "description":"Exploding Kittens is a card game full of humor and excitement. Players take turns drawing cards from the deck, hoping not to draw an “Exploding Kitten” card, which causes them to be eliminated from the game instantly. However, there are special cards that help players avoid or defuse the explosion, such as the “Laser Pointer” or “Shuffle” cards. This game is suitable for all ages and guarantees laughter every time it’s played."
   },
   {
+    "id": "2",
     "name": "Ultimate Werewolf Deluxe",
     "image": "ultimate_werewolf.jpg",
     "tags": ["Bluffing", "Cooperative", "Puzzle"],
@@ -25,22 +97,25 @@
     "description":"Ultimate Werewolf is a social deduction game where players are assigned secret roles such as werewolves, villagers, or other special characters. The game progresses through alternating night and day phases. During the night, the werewolves secretly choose a victim, and during the day, players discuss and vote to eliminate a suspected werewolf. The game emphasizes communication, deception, and analyzing other players’ behavior. It's ideal for large groups and adds a lot of excitement to parties."
   },
   {
+    "id": "3",
     "name": "Catan",
-    "image": "catan.jpg",
+    "image": "CATAN.png",
     "tags": ["Strategy", "Adventure"],
     "duration": "60-120 min",
     "players": "3-6 players",
     "description":"Catan is a strategy game where players take on the role of settlers on the island of Catan. They must gather resources such as wood, brick, wheat, sheep, and ore to build roads, settlements, and cities. The game emphasizes resource trading with other players, long-term planning, and adapting strategies based on changing situations, making each game unique and challenging."
   },
   {
+    "id": "4",
     "name": "The Resistance: Avalon",
-    "image": "avalon.jpg",
+    "image": "AVALON.png",
     "tags": ["Bluffing", "Cooperative"],
     "duration": "30-60 min",
     "players": "5-10 players",
     "description":"The Resistance: Avalon is a social deduction game set in the era of King Arthur. Players are secretly assigned roles as either members of the loyal servants of Arthur or the minions of Mordred. Special characters, such as Merlin, know the identities of the evil players but must avoid being discovered. The game emphasizes strategic planning, communication, and deception, as players work to either ensure the success or failure of missions based on their secret roles."
   },
   {
+    "id": "5",
     "name": "Coup",
     "image": "coup.jpg",
     "tags": ["Bluffing", "Luck-based"],
@@ -49,6 +124,7 @@
     "description":"Coup is a fast-paced bluffing game where each player has hidden roles and powers. Players can claim any role they want to perform actions like stealing coins or blocking attacks—but others can challenge them. If caught bluffing, a player loses influence. Coup is all about outwitting and out-bluffing your opponents, with quick turns and rising tension leading to a single survivor."
   },
   {
+    "id": "6",
     "name": "Splendor",
     "image": "splendor.jpg",
     "tags": ["Strategy"],
@@ -57,6 +133,7 @@
     "description":"In Splendor, players act as Renaissance-era gem merchants trying to collect development cards and attract noble patrons. By managing resources and building their gem engine, players race to accumulate prestige points. The game is a balance of tactical decision-making, long-term planning, and careful observation of opponents. With elegant mechanics and beautiful components, it’s both accessible and strategically deep."
   },
   {
+    "id": "7",
     "name": "Dixit",
     "image": "dixit.jpg",
     "tags": ["Luck-based", "Puzzle"],
@@ -65,6 +142,7 @@
     "description":"Dixit is a creative storytelling game featuring surreal, dreamlike illustrations. On each turn, a player (the storyteller) gives a clue—such as a phrase, sound, or story—that relates to one of their cards. The other players select cards from their hand that could match the clue. Everyone then guesses which card was the original. Success requires creativity, intuition, and understanding how others think, making it a deeply artistic and social experience."
   },
   {
+    "id": "8",
     "name": "Taboo",
     "image": "taboo.jpg",
     "tags": ["Puzzle", "Cooperative"],
@@ -73,6 +151,7 @@
     "description":"Taboo is a social party game created by the YouTube channel “Thep Leela.” Each player is secretly assigned a “forbidden word” and must stick the card with that word on their forehead without knowing what it says. The goal is to engage in conversation, ask clever questions, and guide others into accidentally saying their own forbidden word—without saying yours first. The game emphasizes communication skills, wit, and strategic thinking. It's perfect for groups of friends and guarantees lots of laughter throughout the game."
   },
   {
+    "id": "9",
     "name": "Sheriff of Nottingham",
     "image": "sheriff_of_nottingham.jpg",
     "tags": ["Bluffing", "Strategy"],
@@ -81,14 +160,16 @@
     "description":"In Sheriff of Nottingham, players take turns playing as merchants who try to bring goods into the city—and as the Sheriff who inspects them. Merchants must declare the goods in their bag, but can choose to lie about illegal goods to earn more coins. The Sheriff must decide whether to inspect or trust them. Players can bluff, bribe, and negotiate their way to victory in this mix of deduction and deception."
   },
   {
+    "id": "10",
     "name": "Salem",
-    "image": "salem.jpg",
+    "image": "SALEM.png",
     "tags": ["Bluffing", "Puzzle"],
     "duration": "30-60 min",
     "players": "4-12 players",
     "description":"This is a party board game to play with friends that focuses on analysis and discussion. If you have played mystery-hunting games like Werewolf or Mafia before, you will definitely enjoy this game. You need to play cards you draw to accuse players you don’t trust and try to protect those you believe are on your side. Be careful—when the evil intentions arise, the witch will begin to spread her curse. The people you trust may no longer be trustworthy. During the night phase, the witch comes out to eliminate unfortunate villagers one by one…"
   },
   {
+    "id": "11",
     "name": "I'm the Boss",
     "image": "im_the_boss.jpg",
     "tags": ["Strategy", "Luck-based"],
@@ -97,6 +178,7 @@
     "description":"In this game, you take on the role of one of six expert investment team leaders. Each investor specializes in a different field—whether it’s media, technology, politics, finance, law, or scientific research—and aims to gain stakes in various deals. Your goal is to become the ultimate “big boss,” controlling and wielding power to close mega-project deals and maximize profits. Since all investors share the same objective, you must be ready to use cunning strategies and creatively leverage your special expertise when necessary. Negotiate, intervene, and secure as many deals as possible to keep everything under your control and prove yourself as the true “boss”!"
   },
   {
+    "id": "12",
     "name": "Secret Hitler",
     "image": "secret_hitler.jpg",
     "tags": ["Bluffing", "Cooperative"],
@@ -105,6 +187,7 @@
     "description":"Secret Hitler is a social deduction game where players are divided into two teams: Liberals and Fascists, with “Hitler” being a secret Fascist player. Players must use strategy, persuasion, and deception to uncover who Hitler is or to support their own team. The Liberals win by passing Liberal policies, while the Fascists aim to pass Fascist policies and protect Hitler. This game is perfect for those who enjoy political challenges and the tension of finding “enemies” within their group of friends."
   },
   {
+    "id": "13",
     "name": "Mogel Motte",
     "image": "mogel_motte.jpg",
     "tags": ["Luck-based", "Bluffing"],
@@ -113,6 +196,7 @@
     "description":"Mogel Motte is a party game that focuses on memory and playful deception. Players must match cards in the correct way while trying to trick others into choosing the wrong ones. The game creates a fun and exciting atmosphere, making it perfect for groups of friends or families looking for lighthearted humor and simple, competitive gameplay."
   },
   {
+    "id": "14",
     "name": "Deception: Murder in Hong Kong",
     "image": "deception.jpg",
     "tags": ["Puzzle", "Cooperative"],
@@ -121,6 +205,7 @@
     "description":"Deception: Murder in Hong Kong is a deduction-based investigation game where players take on roles such as investigators, forensic scientists, or the murderer. The “forensic scientist” provides clues based on evidence left behind by the murderer, and players must communicate and interpret these clues to identify the culprit. The game emphasizes limited communication and detailed analytical thinking, making it ideal for those who enjoy cooperative detective-style games."
   },
   {
+    "id": "15",
     "name": "Survive: Escape from Atlantis!",
     "image": "survive.jpg",
     "tags": ["Adventure", "Luck-based"],
@@ -129,6 +214,7 @@
     "description":"Survive: Escape from Atlantis! is a survival game where players must escape from the sinking island of Atlantis. Players move across the island using boats and smaller land tiles while avoiding various disasters such as sharks, tsunamis, and volcanic eruptions. The game focuses on strategic planning and risk management, with the goal of being the last one standing."
   },
   {
+    "id": "16",
     "name": "Spyfall",
     "image": "spyfall.jpg",
     "tags": ["Puzzle"],
@@ -137,6 +223,7 @@
     "description":"Spyfall is a social deduction game where one player takes on the role of a “spy” who doesn’t know the location everyone else is at, while the other players do. Players take turns asking each other questions to figure out who the spy is, while the spy tries to guess the location without revealing their identity. The game emphasizes communication and behavioral analysis, making it both fun and challenging."
   },
   {
+    "id": "17",
     "name": "Codenames Pictures",
     "image": "codenames_pictures.jpg",
     "tags": ["Puzzle", "Cooperative"],
@@ -145,6 +232,7 @@
     "description":"Codenames: Pictures is a word-guessing game that uses images instead of words. Players are divided into two teams, and each team must use clever clues to help their teammates identify the correct picture symbols on the board—while avoiding the opposing team’s images and the deadly “assassin” image. The game emphasizes creative communication and analytical thinking, making it ideal for playing with large groups."
   },
   {
+    "id": "18",
     "name": "Citadels Classic(TH)",
     "image": "citadels.jpg",
     "tags": ["Strategy", "Luck-based"],
@@ -153,6 +241,7 @@
     "description":"This is a bluffing and strategy card game that’s fun whether you're playing for laughs or taking it seriously. Players compete to build the most impressive city and become the ultimate city-builder, using the unique abilities of character cards to sabotage opponents and gain an advantage."
   },
   {
+    "id": "19",
     "name": "Geistes Blitz",
     "image": "geistes_blitz.jpg",
     "tags": ["Puzzle"],
@@ -161,14 +250,16 @@
     "description":"Geistes Blitz is a fast-paced matching and reaction game where players must grab the correct object based on the revealed card. The game trains quick thinking and sharp observation skills, making it perfect for families or groups of friends looking for a fun, easy-to-learn game that doesn’t take too long to play."
   },
   {
+    "id": "20",
     "name": "Chinatown",
-    "image": "chinatown.jpg",
+    "image": "CHINA_TOWN.png",
     "tags": ["Strategy"],
     "duration": "60 min",
     "players": "3-5 players",
     "description":"Chinatown is a strategy and negotiation game where players buy and trade properties in New York’s Chinatown to build businesses and increase their income. The game focuses on player-to-player negotiation and smart resource management, making it ideal for those who enjoy highly interactive strategy games."
   },
   {
+    "id": "21",
     "name": "Sitting Ducks Gallery",
     "image": "sitting_ducks.jpg",
     "tags": ["Luck-based"],
@@ -177,6 +268,7 @@
     "description": "This is a game where every player must do whatever it takes—negotiating, teaming up, or even betraying one another—to ensure their duck is the last one standing in the pond.\nYou’ll need to use every trick in the book, whether it’s hiding behind another duck to dodge bullets, shifting the aim to a nearby duck, or playing a special card to bring your duck back to life.\nBut remember: in this pond, there are no true friends or permanent enemies!\n\nInspired by the classic Famicom game, this hilarious party board game brings laughter and excitement to your gatherings.\nWith a game mechanic that lets you stay in play for revenge even after getting knocked out, Duck Shooting guarantees fun every time you play."
   },
   {
+    "id": "22",
     "name": "Friday",
     "image": "friday.jpg",
     "tags": ["Strategy", "Luck-based"],
@@ -185,6 +277,7 @@
     "description":"In this game, you take on the role of Friday, a wild man living on a deserted island. One day, someone washes ashore — Robinson. You must try to help Robinson grow stronger and survive on the island, overcoming various dangerous situations to gain experience and get him off the island as quickly as possible, so you can happily be alone on the island."
   },
   {
+    "id": "23",
     "name": "The Haunted Glass",
     "image": "haunted_glass.jpg",
     "tags": ["Puzzle", "Cooperative"],
@@ -193,6 +286,7 @@
     "description":"A game of testing courage, where players attempt to communicate with a deceased friend through a Ouija board. Little do they know, this seemingly fun session will lead to unexpected events, because one of the friends sitting together is the real murderer! This night will end either with the spirit finding peace or the murderer’s cunning causing more victims."
   },
   {
+    "id": "24",
     "name": "MicroMacro: Crime City",
     "image": "micromacro.jpg",
     "tags": ["Puzzle", "Cooperative"],
@@ -201,6 +295,7 @@
     "description":"Micromacro: Crime City is an investigative game where players must search for clues on a large city map and connect various events to solve the case. The game emphasizes keen observation and detailed analysis, making it perfect for those who enjoy picture-based detective work."
   },
   {
+    "id": "25",
     "name": "Monopoly",
     "image": "monopoly.jpg",
     "tags": ["Strategy", "Luck-based"],
@@ -209,6 +304,7 @@
     "description":"Monopoly is a strategy and money management game where players buy and sell properties and collect rent from others to accumulate wealth and bankrupt their opponents. This game is suitable for players of all ages who enjoy strategic gameplay and financial competition."
   },
   {
+    "id": "26",
     "name": "Mansions of Madness",
     "image": "mansions_of_madness.jpg",
     "tags": ["Adventure", "Puzzle", "Cooperative"],
@@ -217,6 +313,7 @@
     "description":"Mansion of Madness is a detective investigation game set in a haunted house where players must find the murderer and uncover the secrets of the mansion. The game has a mysterious atmosphere filled with puzzles, making it perfect for those who enjoy investigative games and thrilling experiences."
   },
   {
+    "id": "27",
     "name": "Zombie Kidz Evolution",
     "image": "zombie_kidz.jpg",
     "tags": ["Adventure", "Cooperative"],
@@ -225,6 +322,7 @@
     "description":"Zombie Kidz Evolution is a cooperative game where players must work together to eliminate invading zombies and survive. The game focuses on strategic planning and team coordination, making it ideal for players who enjoy cooperative gameplay and excitement."
   },
   {
+    "id": "28",
     "name": "Zombicide (2nd Edition)",
     "image": "zombicide.jpg",
     "tags": ["Adventure", "Cooperative"],
@@ -233,6 +331,7 @@
     "description":"Zombicide 2nd Edition is a survival and investigation game set in a world overrun by zombies. Players must gather weapons and equipment while planning strategies to deal with the overwhelming number of zombies. The game emphasizes cooperation, tactical planning, and intense combat, making it perfect for those who enjoy action-packed games and teamwork."
   },
   {
+    "id": "29",
     "name": "I'm Stuck in the Lift",
     "image": "stuck_in_lift.jpg",
     "tags": ["Puzzle", "Bluffing"],
@@ -241,6 +340,7 @@
     "description":"This is a party game where players must cooperate to resolve situations when trapped in an elevator. Players need to answer questions or complete various tasks to find a way out. The game focuses on teamwork, communication, and having fun with friends."
   },
   {
+    "id": "30",
     "name": "Cat and the Tower",
     "image": "cat_and_tower.jpg",
     "tags": ["Puzzle", "Strategy"],

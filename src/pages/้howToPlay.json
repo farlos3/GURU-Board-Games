@@ -1,0 +1,139 @@
+[
+  {
+    "id": 0,
+    "name": "Werewolf",
+    "image": "werewolf.jpg",
+    "howToplay": [
+  {
+    "title": "Game Objective",
+    "steps": [
+      "Werewolf team: Eliminate other players until the number of werewolves is equal to or greater than the remaining players.",
+      "Villager team and special roles: Identify and vote out all werewolves before getting eliminated."
+    ]
+  },
+  {
+    "title": "Game Setup",
+    "steps": [
+      "Number of players: 6 or more (the more, the better).",
+      "Prepare role cards according to the number of players, including Werewolves, Villagers, and Special Roles.",
+      "Choose 1 Game Master (GM) who will control the game without participating as a player."
+    ]
+  },
+  {
+    "title": "Role Assignment",
+    "steps": [
+      "Distribute role cards randomly to each player without revealing them to others.",
+      "Players must remember their roles and must not reveal them during the game."
+    ]
+  },
+  {
+    "title": "First Night Phase (Eyes Closed)",
+    "steps": [
+      "GM asks everyone to close their eyes.",
+      "GM calls on the Werewolves to open their eyes and choose a victim.",
+      "GM calls on the Doctor to open their eyes and select one player to protect from being killed.",
+      "GM calls on the Seer to open their eyes and check one player’s role to see if they are a werewolf.",
+      "GM asks everyone to close their eyes again and remembers the choices made by each role."
+    ]
+  },
+  {
+    "title": "Day Phase",
+    "steps": [
+      "GM announces who (if anyone) was killed during the night.",
+      "All players open their eyes and begin discussing, accusing, defending, and trying to identify the werewolves.",
+      "All players vote to eliminate one player from the game.",
+      "The eliminated player must reveal their role and leave the game immediately."
+    ]
+  },
+  {
+    "title": "Night–Day Cycle",
+    "steps": [
+      "Return to the night phase: All players close their eyes and the special roles perform their actions.",
+      "In the morning, GM announces the results and starts the next discussion and voting round.",
+      "Repeat until a win condition is met."
+    ]
+  },
+  {
+    "title": "Winning Conditions",
+    "steps": [
+      "Villagers win when all werewolves are eliminated.",
+      "Werewolves win when their number is equal to or greater than the remaining players."
+    ]
+  },
+  {
+    "title": "Suggested Special Roles (Optional for added fun)",
+    "steps": [
+      "Doctor: Each night, selects one player to protect from being killed.",
+      "Seer: Each night, selects one player to check if they are a werewolf.",
+      "Hunter: If eliminated, can choose one player to die with them.",
+      "Lovers: If one dies, the other dies automatically.",
+      "Gunslinger: If voted out, can shoot and eliminate one player before leaving the game."
+    ]
+  }
+]
+
+  },
+  {
+    "id": 1,
+    "name": "Mafia",
+    "image": "mafia.jpg",
+    "howToplay": [
+      {
+        "title": "Game Overview",
+        "steps": [
+          "Players are divided into two teams: Mafia and Townspeople",
+          "The game alternates between Day and Night phases",
+          "The goal is to eliminate the opposing team"
+        ]
+      },
+      {
+        "title": "Night Phase",
+        "steps": [
+          "All players close their eyes",
+          "Mafia members silently choose a target to eliminate",
+          "Special roles may perform their night actions"
+        ]
+      },
+      {
+        "title": "Day Phase",
+        "steps": [
+          "Players discuss who they think is Mafia",
+          "Vote to eliminate a suspected Mafia member",
+          "The eliminated player reveals their role"
+        ]
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "The Resistance: Avalon",
+    "image": "avalon.jpg",
+    "howToplay": [
+      {
+        "title": "Setup",
+        "steps": [
+          "Players receive loyalty cards (Good or Evil)",
+          "Evil players know each other's identities",
+          "Good players must work together without knowing who to trust"
+        ]
+      },
+      {
+        "title": "Quest Selection",
+        "steps": [
+          "The leader proposes a team for the current quest",
+          "All players vote to approve or reject the team",
+          "If approved, the quest begins"
+        ]
+      },
+      {
+        "title": "Quest Resolution",
+        "steps": [
+          "Team members secretly play Success or Fail cards",
+          "Good players must play Success",
+          "Evil players can play either card",
+          "Quest succeeds only if all cards are Success"
+        ]
+      }
+    ]
+  }
+]

@@ -3,7 +3,7 @@ import Nav from "../components/Navbar";
 import styles from "../../styles/game.module.css";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import games from "../testjoson.json";
+import games from "/src/pages/Real-data.json"; // Import JSON data
 
 function GameDetail() {
   const router = useRouter();
@@ -32,6 +32,10 @@ function GameDetail() {
   const saveGameStatesToStorage = (states) => {
     try {
       localStorage.setItem("gameStates", JSON.stringify(states));
+      // เพิ่มบรรทัดนี้เพื่อส่ง event ไปยังหน้าอื่น
+      window.dispatchEvent(
+        new CustomEvent("gameStatesChanged", { detail: states })
+      );
     } catch (error) {
       console.error("Error saving game states to localStorage:", error);
     }
@@ -40,7 +44,7 @@ function GameDetail() {
   // แทนที่ useEffect ตัวแรกในไฟล์ paste.txt (บรรทัดที่ 42-75) ด้วยโค้ดนี้
   useEffect(() => {
     if (id && games[id]) {
-      const game = games[id];
+      const game = games.find((g) => g.id === id);
       setCurrentGame(game);
 
       // หาเกมที่คล้ายกัน (เกมที่มี tag เหมือนกัน แต่ไม่ใช่เกมปัจจุบัน)
@@ -105,6 +109,16 @@ function GameDetail() {
       },
     }));
   };
+  useEffect(() => {
+    const handleGameStatesChange = (event) => {
+      setGameStates(event.detail);
+    };
+
+    window.addEventListener("gameStatesChanged", handleGameStatesChange);
+    return () => {
+      window.removeEventListener("gameStatesChanged", handleGameStatesChange);
+    };
+  }, []);
 
   // ฟังก์ชันสำหรับเปลี่ยนสถานะ heart
   const toggleHeart = (gameIndex, e) => {
@@ -215,35 +229,35 @@ function GameDetail() {
   };
 
   const renderStarsReadOnly = (game) => {
-  const rating = game.rating || 0;
-  return [1, 2, 3, 4, 5].map((star) => {
-    const isFullStar = rating >= star;
-    const isHalfStar = rating >= star - 0.5 && rating < star;
+    const rating = game.rating || 0;
+    return [1, 2, 3, 4, 5].map((star) => {
+      const isFullStar = rating >= star;
+      const isHalfStar = rating >= star - 0.5 && rating < star;
 
-    return (
-      <div key={star} className={styles.starContainer}>
-        <div className={styles.starWrapper}>
-          {/* Background star (empty) */}
-          <span className={`${styles.star} ${styles.starBackground}`}>★</span>
+      return (
+        <div key={star} className={styles.starContainer}>
+          <div className={styles.starWrapper}>
+            {/* Background star (empty) */}
+            <span className={`${styles.star} ${styles.starBackground}`}>★</span>
 
-          {/* Foreground star (filled) */}
-          <span
-            className={`${styles.star} ${styles.starForeground}`}
-            style={{
-              clipPath: isFullStar
-                ? "inset(0 0 0 0)"
-                : isHalfStar
-                ? "inset(0 50% 0 0)"
-                : "inset(0 100% 0 0)",
-            }}
-          >
-            ★
-          </span>
+            {/* Foreground star (filled) */}
+            <span
+              className={`${styles.star} ${styles.starForeground}`}
+              style={{
+                clipPath: isFullStar
+                  ? "inset(0 0 0 0)"
+                  : isHalfStar
+                  ? "inset(0 50% 0 0)"
+                  : "inset(0 100% 0 0)",
+              }}
+            >
+              ★
+            </span>
+          </div>
         </div>
-      </div>
-    );
-  });
-};
+      );
+    });
+  };
 
   if (!currentGame) {
     return (
@@ -303,11 +317,21 @@ function GameDetail() {
                   {gameStates[id]?.isFavorite ? "Saved" : "Save"}
                 </button>
               </div>
-              
+
               <div className={styles.details_text}>
                 {currentGame.description ||
                   "Uncover hidden identities and survive the tension-filled nights in this game — a game of deduction, deception, and dramatic reveal. Players take on secret roles, with each night bringing new danger and each day filled with accusations, alliances, and shocking betrayals. Work together to achieve your goal — or blend in and strike from the shadows. With a rotating cast of roles and endless possibilities for bluffing and strategy, no two games are ever the same. Perfect for parties and group gatherings."}
               </div>
+
+              <div className={styles.B_HowToPlay}>
+                <Link href={`/HowToPlay/${id}`}>
+                  <button className={styles.howToPlayButton}>
+                   
+                    How to Play
+                  </button>
+                </Link>
+              </div>
+              
               <div className={styles.B_player_play_time}>
                 <div className={styles.B_player}>
                   <div>Player</div>
@@ -318,6 +342,7 @@ function GameDetail() {
                   {currentGame.duration}
                 </div>
               </div>
+              
               <div className={styles.B_Categories}>
                 <div>Categories</div>
                 <div className={styles.item_game_text_Categories}>
@@ -356,107 +381,107 @@ function GameDetail() {
         </div>
 
         <div className={styles.B_Similar_games}>
-  <div className={styles.text_Similar_games}>
-    Similar Games You Might Enjoy
-  </div>
-  <div className={styles.show_game_all}>
-    {similarGames.map((game, idx) => {
-      const gameIndex = games.findIndex((g) => g.name === game.name);
-      return (
-        <Link key={idx} href={`/game/${gameIndex}`}>
-          <div
-            className={styles.item_game}
-            data-aos="fade-up"
-            data-aos-anchor-placement="top-bottom"
-          >
-            <div className={styles.item_game_text}>
-              <div className={styles.name_game}>{game.name}</div>
-
-              {/* ปุ่ม Heart และ Favorite เหมือนเดิม */}
-              <div className={styles.rating_buttons}>
-                <button
-                  className={`${styles.heart_button} ${
-                    gameStates[gameIndex]?.isLiked
-                      ? styles.heart_active
-                      : ""
-                  }`}
-                  onClick={(e) => toggleHeart(gameIndex, e)}
-                  title={
-                    gameStates[gameIndex]?.isLiked ? "Unlike" : "Like"
-                  }
-                >
-                  {gameStates[gameIndex]?.isLiked ? "💖" : "🤍"}
-                </button>
-
-                <button
-                  className={`${styles.favorite_button} ${
-                    gameStates[gameIndex]?.isFavorite
-                      ? styles.favorite_active
-                      : ""
-                  }`}
-                  onClick={(e) => toggleFavorite(gameIndex, e)}
-                  title={
-                    gameStates[gameIndex]?.isFavorite
-                      ? "Remove from favorites"
-                      : "Add to favorites"
-                  }
-                >
-                  <svg
-                    className={styles.bookmark_icon}
-                    viewBox="0 0 24 24"
-                    fill={
-                      gameStates[gameIndex]?.isFavorite
-                        ? "currentColor"
-                        : "none"
-                    }
-                    stroke="currentColor"
-                  >
-                    <path
-                      d="M19 21L12 16L5 21V5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21Z"
-                      strokeWidth="2"
-                    />
-                  </svg>
-                  {gameStates[gameIndex]?.isFavorite ? "Saved" : "Save"}
-                </button>
-              </div>
-
-              {/* แก้ส่วนดาว - ใช้ renderStarsReadOnly แทน renderStars */}
-              <div className={styles.stars}>
-                {renderStarsReadOnly(game)}
-                <span className={styles.rating_text}>
-                  {(game.rating || 0).toFixed(1)} / 5
-                </span>
-              </div>
-
-              <div className={styles.item_game_tag_B}>
-                {game.tags.map((tag, tagIndex) => (
-                  <div key={tagIndex} className={styles.item_game_tag}>
-                    {tag}
-                  </div>
-                ))}
-              </div>
-
-              <div className={styles.B_item_game_player}>
-                <div className={styles.item_game_player_1}>
-                  <img src="/clock-five.png" alt="clock" />
-                  {game.duration}
-                </div>
-                <div className={styles.item_game_player_2}>
-                  <img src="/users (1).png" alt="users" />
-                  {game.players}
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <img src={`/${game.image}`} alt={game.name} />
-            </div>
+          <div className={styles.text_Similar_games}>
+            Similar Games You Might Enjoy
           </div>
-        </Link>
-      );
-    })}
-  </div>
-</div>
+          <div className={styles.show_game_all}>
+            {similarGames.map((game, idx) => {
+              const gameIndex = games.findIndex((g) => g.name === game.name);
+              return (
+                <Link key={idx} href={`/game/${gameIndex}`}>
+                  <div
+                    className={styles.item_game}
+                    data-aos="fade-up"
+                    data-aos-anchor-placement="top-bottom"
+                  >
+                    <div className={styles.item_game_text}>
+                      <div className={styles.name_game}>{game.name}</div>
+
+                      {/* ปุ่ม Heart และ Favorite เหมือนเดิม */}
+                      <div className={styles.rating_buttons}>
+                        <button
+                          className={`${styles.heart_button} ${
+                            gameStates[gameIndex]?.isLiked
+                              ? styles.heart_active
+                              : ""
+                          }`}
+                          onClick={(e) => toggleHeart(gameIndex, e)}
+                          title={
+                            gameStates[gameIndex]?.isLiked ? "Unlike" : "Like"
+                          }
+                        >
+                          {gameStates[gameIndex]?.isLiked ? "💖" : "🤍"}
+                        </button>
+
+                        <button
+                          className={`${styles.favorite_button} ${
+                            gameStates[gameIndex]?.isFavorite
+                              ? styles.favorite_active
+                              : ""
+                          }`}
+                          onClick={(e) => toggleFavorite(gameIndex, e)}
+                          title={
+                            gameStates[gameIndex]?.isFavorite
+                              ? "Remove from favorites"
+                              : "Add to favorites"
+                          }
+                        >
+                          <svg
+                            className={styles.bookmark_icon}
+                            viewBox="0 0 24 24"
+                            fill={
+                              gameStates[gameIndex]?.isFavorite
+                                ? "currentColor"
+                                : "none"
+                            }
+                            stroke="currentColor"
+                          >
+                            <path
+                              d="M19 21L12 16L5 21V5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21Z"
+                              strokeWidth="2"
+                            />
+                          </svg>
+                          {gameStates[gameIndex]?.isFavorite ? "Saved" : "Save"}
+                        </button>
+                      </div>
+
+                      {/* แก้ส่วนดาว - ใช้ renderStarsReadOnly แทน renderStars */}
+                      <div className={styles.stars}>
+                        {renderStarsReadOnly(game)}
+                        <span className={styles.rating_text}>
+                          {(game.rating || 0).toFixed(1)} / 5
+                        </span>
+                      </div>
+
+                      <div className={styles.item_game_tag_B}>
+                        {game.tags.map((tag, tagIndex) => (
+                          <div key={tagIndex} className={styles.item_game_tag}>
+                            {tag}
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className={styles.B_item_game_player}>
+                        <div className={styles.item_game_player_1}>
+                          <img src="/clock-five.png" alt="clock" />
+                          {game.duration}
+                        </div>
+                        <div className={styles.item_game_player_2}>
+                          <img src="/users (1).png" alt="users" />
+                          {game.players}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <img src={`/${game.image}`} alt={game.name} />
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
 
         <div className={styles.Footer}>
           <div className={styles.Footer_B1}>
@@ -469,15 +494,14 @@ function GameDetail() {
             </div>
             <div className={styles.Footer_B1_S2}>
               <div>GURU BOARD GAME</div>
-              <a>Home</a>
-              <a>Search Game</a>
-              <a>Game</a>
+              <Link href="/">Home</Link>
+              <Link href="/Search">Search Game</Link>
             </div>
             <div className={styles.Footer_B1_S3}>
               <div>ABOUT US</div>
-              <a>Line</a>
-              <a>Facebook</a>
-              <a>Instagram</a>
+              <a href="https://line.me">Line</a>
+              <a href="https://facebook.com">Facebook</a>
+              <a href="https://www.instagram.com/khaw_fang/">Instagram</a>
             </div>
           </div>
           <div className={styles.Footer_B2}>

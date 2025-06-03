@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Nav from "./components/Navbar";
 import Link from "next/link";
 import styles from "../styles/Search.module.css";
-import gamesData from "/src/pages/testjoson.json"; // Import JSON data
+import gamesData from "/src/pages/Real-data.json"; // Import JSON data
 
 function Search() {
   const [games, setGames] = useState([]);
@@ -46,12 +46,11 @@ function Search() {
   };
 
   // โหลดข้อมูลเกมจาก JSON
-  // แทนที่ useEffect ตัวแรกในไฟล์ paste-2.txt (บรรทัดที่ 50-69) ด้วยโค้ดนี้
   useEffect(() => {
     setGames(gamesData);
     setFilteredGames(gamesData);
 
-    // โหลดข้อมูลจาก localStorage (เฉพาะ favorite และ heart)
+    // โหลดข้อมูลจาก localStorage (รวมทั้ง favorite, heart และ userRating)
     const savedStates = loadGameStatesFromStorage();
 
     const updatedStates = { ...savedStates };
@@ -61,12 +60,13 @@ function Search() {
         updatedStates[index] = {
           isFavorite: false,
           isLiked: false,
-          // ลบ userRating และ hoverRating ออก - ใช้ข้อมูลจาก JSON แทน
+          userRating: 0, // เพิ่ม userRating กลับมา
         };
       } else {
-        // ถ้ามีข้อมูลเก่าอยู่แล้ว ให้ลบ userRating และ hoverRating ออก
-        delete updatedStates[index].userRating;
-        delete updatedStates[index].hoverRating;
+        // ถ้ามีข้อมูลเก่าอยู่แล้ว ให้เก็บ userRating ไว้
+        if (!updatedStates[index].hasOwnProperty('userRating')) {
+          updatedStates[index].userRating = 0;
+        }
       }
     });
 
@@ -192,10 +192,12 @@ function Search() {
     }));
   };
 
-  // แทนที่ฟังก์ชัน renderStars ด้วยฟังก์ชันใหม่
-  const renderStars = (game) => {
-    // ใช้คะแนนจาก JSON (สมมติว่าใน JSON มี field ชื่อ rating)
-    const rating = game.rating || 0;
+  // แก้ไขฟังก์ชัน renderStars ให้ใช้คะแนนจาก localStorage หากมี หรือใช้จาก JSON หากไม่มี
+  const renderStars = (game, gameIndex) => {
+    // ลำดับความสำคัญ: userRating จาก localStorage > rating จาก JSON
+    const userRating = gameStates[gameIndex]?.userRating || 0;
+    const jsonRating = game.rating || 0;
+    const rating = userRating > 0 ? userRating : jsonRating;
 
     return [1, 2, 3, 4, 5].map((star) => {
       const isFullStar = rating >= star;
@@ -222,6 +224,14 @@ function Search() {
       );
     });
   };
+
+  // ฟังก์ชันแสดงคะแนนที่ใช้งาน
+  const getDisplayRating = (game, gameIndex) => {
+    const userRating = gameStates[gameIndex]?.userRating || 0;
+    const jsonRating = game.rating || 0;
+    return userRating > 0 ? userRating : jsonRating;
+  };
+
   // ดึง categories ที่ไม่ซ้ำกันจากข้อมูล
   const getAllCategories = () => {
     const allTags = games.flatMap((game) => game.tags);
@@ -317,7 +327,7 @@ function Search() {
           <div className={styles.B_item_all}>
             {currentGames.map((game, index) => {
               // คำนวณ gameIndex ที่แท้จริงในข้อมูลทั้งหมด
-              const actualGameIndex = startIndex + index;
+              const actualGameIndex = games.findIndex((g) => g.name === game.name);
               const currentGameState = gameStates[actualGameIndex] || {};
 
               return (
@@ -374,9 +384,13 @@ function Search() {
                       </div>
 
                       <div className={styles.stars}>
-                        {renderStars(game)}
+                        {renderStars(game, actualGameIndex)}
                         <span className={styles.rating_text}>
-                          {(game.rating || 0).toFixed(1)} / 5
+                          {getDisplayRating(game, actualGameIndex).toFixed(1)} / 5
+                          {/* แสดงข้อความเพิ่มเติมหากเป็นคะแนนจากผู้ใช้ */}
+                          {/* {gameStates[actualGameIndex]?.userRating > 0 && (
+                            <span className={styles.user_rating_indicator}> (Your Rating)</span>
+                          )} */}
                         </span>
                       </div>
 
@@ -474,15 +488,15 @@ function Search() {
           </div>
           <div className={styles.Footer_B1_S2}>
             <div>GURU BOARD GAME</div>
-            <a>Home</a>
-            <a>Search Game</a>
-            <a>Game</a>
+            <Link href="/">Home</Link>
+            <Link href="/Search">Search Game</Link>
+            
           </div>
           <div className={styles.Footer_B1_S3}>
             <div> ABOUT US </div>
-            <a>Line</a>
-            <a>Facebook</a>
-            <a>Instagram</a>
+            <a href="https://line.me">Line</a>
+            <a href="https://facebook.com">Facebook</a>
+             <a href="https://www.instagram.com/khaw_fang/">Instagram</a>
           </div>
         </div>
         <div className={styles.Footer_B2}>

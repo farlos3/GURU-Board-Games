@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Nav from "./components/Navbar";
 import styles from "/src/styles/index.module.css";
+import gamesData from "/src/pages/Real-data.json"; // Import JSON data
 
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -12,107 +13,49 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import Link from "next/link";
 
-// Sample games data with ratings
-const games = [
-  {
-    "name": "Werewolf",
-    "image": "item_2.png",
-    "tags": ["Family", "Party", "Strategy"],
-    "duration": "35 min",
-    "players": "3-4 players",
-    "description": "qwdqdqdqwdqwdqwdqwdqwdwqdwqdwqdwqdwqdqwdqwdqwdwqdqwdq",
-    "rating": 3.5
-  },
-  {
-    "name": "Codenames",
-    "image": "marisa.jpg",
-    "tags": ["Puzzle", "Strategy"],
-    "duration": "20 min",
-    "players": "2-8 players",
-    "rating": 4.2
-  },
-  {
-    "name": "Dixit",
-    "image": "defraud.png",
-    "tags": ["Family", "Creative"],
-    "duration": "30 min",
-    "players": "3-6 players",
-    "rating": 4.8
-  },
-  {
-    "name": "Azul",
-    "image": "item_2.png",
-    "tags": ["Family", "Party", "Strategy"],
-    "duration": "35 min",
-    "players": "3-4 players",
-    "rating": 2.5
-  },
-  {
-    "name": "Ticket to Ride",
-    "image": "item_2.png",
-    "tags": ["Puzzle", "Strategy"],
-    "duration": "20 min",
-    "players": "2-8 players",
-    "rating": 5.0
-  },
-  {
-    "name": "Splendor",
-    "image": "item_2.png",
-    "tags": ["Family", "Creative"],
-    "duration": "30 min",
-    "players": "3-6 players",
-    "rating": 1.5
-  },
-  {
-    "name": "Pandemic",
-    "image": "item_2.png",
-    "tags": ["Family", "Creative"],
-    "duration": "30 min",
-    "players": "3-6 players",
-    "rating": 4.0
-  },
-  {
-    "name": "Catan",
-    "image": "item_2.png",
-    "tags": ["Family", "Creative"],
-    "duration": "30 min",
-    "players": "3-6 players",
-    "rating": 3.8
-  }
-  
-];
-
 const images = [
   "Wolf.png",
-  "karthik.jpg",
-  "Wolf.png",
-  "karthik.jpg",
-  "Wolf.png",
-  "olav-ahrens.jpg",
+  "AVALON.png",
+  "CASHFLOW.png",
+  "CATAN.png",
+  "CHINA_TOWN.png",
+  "SALEM.png",
 ];
 
 function GameCard() {
-  // State สำหรับเก็บข้อมูล favorites และ hearts ของแต่ละเกม (เอา rating ออก)
+  const [games, setGames] = useState([]);
+  // State สำหรับเก็บข้อมูล favorites, hearts และ ratings ของแต่ละเกม
   const [gameStates, setGameStates] = useState({});
 
-  // จำกัดเกมที่จะแสดงเป็น 12 อันแรก
-  const displayedGames = games.slice(0, 12);
-
-  // ฟังก์ชันสำหรับโหลดข้อมูลจาก localStorage (ใช้ JavaScript variables แทน)
+  // ฟังก์ชันสำหรับโหลดข้อมูลจาก localStorage (ใช้ JavaScript variables แทนใน Claude.ai)
   const loadGameStatesFromStorage = () => {
-    // ใน Claude.ai artifacts ไม่สามารถใช้ localStorage ได้
-    // ใช้ state เก็บข้อมูลแทน
-    return {};
-  };
+  try {
+    const savedStates = localStorage.getItem("gameStates");
+    if (savedStates) {
+      return JSON.parse(savedStates);
+    }
+  } catch (error) {
+    console.error("Error loading game states from localStorage:", error);
+  }
+  return {};
+};
 
-  // ฟังก์ชันสำหรับบันทึกข้อมูล (placeholder function)
-  const saveGameStatesToStorage = (states) => {
-    // ใน Claude.ai artifacts ไม่สามารถใช้ localStorage ได้
-    // ข้อมูลจะอยู่ใน memory เท่านั้น
-    console.log("Game states updated:", states);
-  };
+const saveGameStatesToStorage = (states) => {
+  try {
+    localStorage.setItem("gameStates", JSON.stringify(states));
+    // เพิ่มการส่ง event เพื่อให้หน้าอื่นๆ รู้ว่าข้อมูลเปลี่ยน
+    window.dispatchEvent(
+      new CustomEvent("gameStatesChanged", { detail: states })
+    );
+  } catch (error) {
+    console.error("Error saving game states to localStorage:", error);
+  }
+};
 
+  // โหลดข้อมูลเกมจาก JSON
   useEffect(() => {
+    setGames(gamesData);
+    
     AOS.init({
       duration: 1500,
       once: true,
@@ -121,17 +64,21 @@ function GameCard() {
     // โหลดข้อมูลจาก storage
     const savedStates = loadGameStatesFromStorage();
 
-    // ใช้ข้อมูลที่มีอยู่แล้วใน savedStates แทนการสร้างใหม่
-    // เพิ่มเฉพาะเกมที่ยังไม่มีใน savedStates (เฉพาะ 12 อันแรก)
+    // สร้าง state สำหรับเกมทั้งหมด
     const updatedStates = { ...savedStates };
 
-    displayedGames.forEach((game, idx) => {
-      if (!updatedStates[idx]) {
-        updatedStates[idx] = {
+    gamesData.forEach((game, index) => {
+      if (!updatedStates[index]) {
+        updatedStates[index] = {
           isFavorite: false,
           isLiked: false,
-          // เอา userRating ออก เพราะจะใช้ rating จาก JSON เท่านั้น
+          userRating: 0, // เพิ่ม userRating
         };
+      } else {
+        // ถ้ามีข้อมูลเก่าอยู่แล้ว ให้เก็บ userRating ไว้
+        if (!updatedStates[index].hasOwnProperty('userRating')) {
+          updatedStates[index].userRating = 0;
+        }
       }
     });
 
@@ -144,6 +91,21 @@ function GameCard() {
       saveGameStatesToStorage(gameStates);
     }
   }, [gameStates]);
+
+  // Listen for changes from other pages
+  useEffect(() => {
+  const handleGameStatesChange = (event) => {
+    setGameStates(event.detail);
+  };
+
+  window.addEventListener("gameStatesChanged", handleGameStatesChange);
+  return () => {
+    window.removeEventListener("gameStatesChanged", handleGameStatesChange);
+  };
+}, []);
+
+  // จำกัดเกมที่จะแสดงเป็น 12 อันแรก
+  const displayedGames = games.slice(0, 12);
 
   // ฟังก์ชันสำหรับเปลี่ยนสถานะ favorite
   const toggleFavorite = (gameIndex, e) => {
@@ -173,10 +135,12 @@ function GameCard() {
     }));
   };
 
-  // ฟังก์ชันสำหรับแสดงดาว (แสดงเฉพาะคะแนนจาก JSON - ไม่สามารถคลิกได้)
-  const renderStars = (gameIndex) => {
-    const game = displayedGames[gameIndex];
-    const rating = game?.rating || 0;
+  // ฟังก์ชันสำหรับแสดงดาว (เหมือนหน้า Search)
+  const renderStars = (game, gameIndex) => {
+    // ลำดับความสำคัญ: userRating จาก localStorage > rating จาก JSON
+    const userRating = gameStates[gameIndex]?.userRating || 0;
+    const jsonRating = game.rating || 0;
+    const rating = userRating > 0 ? userRating : jsonRating;
 
     return (
       <div className={styles.starsDisplay}>
@@ -208,10 +172,17 @@ function GameCard() {
           );
         })}
         <span className={styles.ratingText}>
-          {rating.toFixed(1)} / 5
+          {getDisplayRating(game, gameIndex).toFixed(1)} / 5
         </span>
       </div>
     );
+  };
+
+  // ฟังก์ชันแสดงคะแนนที่ใช้งาน
+  const getDisplayRating = (game, gameIndex) => {
+    const userRating = gameStates[gameIndex]?.userRating || 0;
+    const jsonRating = game.rating || 0;
+    return userRating > 0 ? userRating : jsonRating;
   };
 
   return (
@@ -338,20 +309,20 @@ function GameCard() {
       
       <div className={styles.type_game_B}>
         <a className={styles.type_game}>
-          <img src="marisa.jpg" alt="บอร์ดเกม ครอบครัว" />
-          <div className={styles.overlay}>Strategy</div>
+          <img src="marisa.jpg "  />
+          <div className={styles.overlay}>Cooperative </div>
         </a>
         <a className={styles.type_game}>
           <img src="Adventure.png" />
-          <div className={styles.overlay}>Puzzle</div>
-        </a>
-        <a className={styles.type_game}>
-          <img src="2h-media.jpg" />
           <div className={styles.overlay}>Adventure</div>
         </a>
         <a className={styles.type_game}>
+          <img src="surface-X1GZqv-F7Tw-unsplash.jpg" />
+          <div className={styles.overlay}>Luck-based </div>
+        </a>
+        <a className={styles.type_game}>
           <img src="ross.jpg" />
-          <div className={styles.overlay}>Cooperative</div>
+          <div className={styles.overlay}>Strategy</div>
         </a>
         <a className={styles.type_game}>
           <img src="defraud.png" />
@@ -359,7 +330,7 @@ function GameCard() {
         </a>
         <a className={styles.type_game}>
           <img src="olav-ahrens.jpg" />
-          <div className={styles.overlay}>Luck-based</div>
+          <div className={styles.overlay}>Puzzle</div>
         </a>
       </div>
       
@@ -413,8 +384,8 @@ function GameCard() {
                 </button>
               </div>
 
-              {/* แสดงดาวจาก JSON (ไม่สามารถคลิกได้) */}
-              {renderStars(idx)}
+              {/* แสดงดาวเหมือนหน้า Search */}
+              {renderStars(game, idx)}
 
               <div className={styles.item_game_tag_B}>
                 {game.tags.map((tag, tagIndex) => (
@@ -459,9 +430,9 @@ function GameCard() {
           </div>
           <div className={styles.Footer_B1_S3}>
             <div> ABOUT US </div>
-            <a>Line</a>
-            <a>Facebook</a>
-            <a>Instagram</a>
+            <a href="https://line.me">Line</a>
+            <a href="https://facebook.com">Facebook</a>
+             <a href="https://www.instagram.com/khaw_fang/">Instagram</a>
           </div>
         </div>
         <div className={styles.Footer_B2}>

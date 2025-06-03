@@ -2,40 +2,40 @@
   
   {
     "name": "Werewolf",
-    "image": "item_2.png",
+    "image": "AVALON.png",
     "tags": ["Family", "Party", "Strategy"],
     "duration": "35 min",
     "players": "3-4 players",
-    "description": "qwdqdqdqwdqwdqwdqwdqwdwqdwqdwqdwqdwqdqwdwqdqwdqwdwqdqwdq",
-    "rating": 4.5
+    "description": "qwdqdqdqwdqwdqwdqwdqwdwqdwqdwqdwqdwqdqwdwqdqwdqwdwqdqwdq"
+    
   },
   {
     "name": "Codenames",
-    "image": "marisa.jpg",
+    "image": "CASHFLOW.png",
     "tags": ["Puzzle", "Strategy"],
     "duration": "20 min",
-    "players": "2-8 players",
-    "rating": 3.5
+    "players": "2-8 players"
+    
     
   },
   {
     "name": "Dixit",
-    "image": "defraud.png",
+    "image": "CATAN.png",
     "tags": ["Family", "Creative"],
     "duration": "30 min",
-    "players": "3-6 players",
-    "rating": 3.5
+    "players": "3-6 players"
+    
   },
   {
     "name": "Werewolf",
-    "image": "item_2.png",
+    "image": "CHINA_TOWN.png",
     "tags": ["Family", "Party", "Strategy"],
     "duration": "35 min",
     "players": "3-4 players"
   },
   {
     "name": "Codenames",
-    "image": "item_2.png",
+    "image": "SALEM.png",
     "tags": ["Puzzle", "Strategy"],
     "duration": "20 min",
     "players": "2-8 players"

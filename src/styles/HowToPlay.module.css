@@ -1,0 +1,366 @@
+.container {
+  /* font-family: 'sans-serif'; */
+  color: #222;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  position: relative;
+}
+
+.headerImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+}
+
+.content {
+  margin-top: 24px;
+}
+
+.htp {
+  list-style: decimal;
+  margin-top: 10px;
+  padding-left: 30px;
+}
+
+.nameborad {
+  margin-top: 50px;
+  font-size: 25px;
+}
+
+/* ปรับปรุงการจัดวางปุ่มย้อนกลับ */
+.backButtonContainer {
+  margin: 20px 0 10px 0; /* เปลี่ยนจาก absolute positioning */
+  display: flex;
+  justify-content: flex-start;
+  padding: 0 20px; /* เพิ่ม padding เพื่อให้สอดคล้องกับ container */
+}
+
+.backButton {
+  background: linear-gradient(135deg, #6c757d, #495057);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  min-width: 44px;
+  min-height: 44px;
+  justify-content: center;
+}
+
+.backButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.backButton:hover::before {
+  left: 100%;
+}
+
+.backButton:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 3px 12px rgba(108, 117, 125, 0.4);
+  background: linear-gradient(135deg, #5a6268, #343a40);
+}
+
+.backButton:active {
+  transform: translateY(0px) scale(0.98);
+  transition: all 0.1s ease;
+}
+
+.backIcon {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s ease;
+  stroke-width: 2.5;
+  flex-shrink: 0;
+}
+
+.backButton:hover .backIcon {
+  transform: translateX(-1px);
+}
+
+/* Mobile First - Extra Small devices (สำหรับมือถือขนาดเล็ก) */
+@media (max-width: 375px) {
+  .backButtonContainer {
+    margin: 15px 0 10px 0;
+    padding: 0 15px;
+  }
+  
+  .backButton {
+    padding: 8px 12px;
+    font-size: 12px;
+    border-radius: 16px;
+    min-width: 40px;
+    min-height: 40px;
+  }
+  
+  .backIcon {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .container {
+    padding: 15px;
+  }
+}
+
+/* Small devices (มือถือ) */
+@media (min-width: 376px) and (max-width: 575px) {
+  .backButtonContainer {
+    margin: 15px 0 10px 0;
+    padding: 0 20px;
+  }
+  
+  .backButton {
+    padding: 8px 14px;
+    font-size: 13px;
+    border-radius: 18px;
+  }
+  
+  .backIcon {
+    width: 15px;
+    height: 15px;
+  }
+  
+  .container {
+    padding: 20px;
+  }
+}
+
+/* Medium devices (แท็บเล็ต) */
+@media (min-width: 576px) and (max-width: 767px) {
+  .backButtonContainer {
+    margin: 20px 0 15px 0;
+    padding: 0 20px;
+  }
+  
+  .backButton {
+    padding: 10px 16px;
+    font-size: 14px;
+    border-radius: 20px;
+    gap: 5px;
+  }
+  
+  .backIcon {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .container {
+    padding: 20px;
+  }
+}
+
+/* Large devices (แท็บเล็ตใหญ่และเดสก์ท็อปเล็ก) */
+@media (min-width: 768px) and (max-width: 991px) {
+  .backButtonContainer {
+    margin: 20px 0 15px 0;
+    padding: 0 20px;
+  }
+  
+  .backButton {
+    padding: 12px 18px;
+    font-size: 14px;
+    border-radius: 22px;
+    gap: 6px;
+  }
+  
+  .backIcon {
+    width: 17px;
+    height: 17px;
+  }
+  
+  .container {
+    padding: 20px;
+  }
+}
+
+/* Extra large devices (เดสก์ท็อป) */
+@media (min-width: 992px) {
+  .backButtonContainer {
+    margin: 25px 0 20px 0;
+    padding: 0 20px;
+  }
+  
+  .backButton {
+    padding: 12px 20px;
+    font-size: 15px;
+    border-radius: 24px;
+    gap: 7px;
+  }
+  
+  .backIcon {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .container {
+    padding: 20px;
+  }
+}
+
+/* สำหรับหน้าจอที่มีความสูงน้อย (landscape mode บนมือถือ) */
+@media (max-height: 500px) {
+  .backButtonContainer {
+    margin: 10px 0 5px 0;
+  }
+  
+  .backButton {
+    padding: 6px 10px;
+    font-size: 11px;
+    min-height: 36px;
+  }
+  
+  .backIcon {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+/* สำหรับ high-DPI screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .backButton {
+    border: 0.5px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Footer */
+.Footer {
+  background-color: #333;
+  width: full;
+  margin: 100px 0px 0px 0px;
+}
+
+.Footer_B1 {
+  display: grid;
+  grid-template-columns: 45% 25% 25%;
+  padding: 40px;
+}
+
+.Footer_B1_S1 {
+  text-align: center;
+  font-weight: bold;
+  font-size: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: "Lilita One", sans-serif;
+  align-self: center;
+}
+
+.Footer_B1_S2 {
+  display: flex;
+  font-size: 18px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  align-self: center;
+}
+
+.Footer_B1_S2 div {
+  font-weight: bold;
+  padding: 5px;
+}
+
+.Footer_B1_S2 a {
+  padding: 5px;
+  color: rgba(255, 255, 255, 0.61);
+}
+
+.Footer_B1_S3 {
+  display: flex;
+  font-size: 18px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  align-self: center;
+}
+
+.Footer_B1_S3 a {
+  padding: 5px;
+  color: rgba(255, 255, 255, 0.61);
+}
+
+.Footer_B1_S3 div {
+  font-weight: bold;
+  padding: 5px;
+}
+
+.Footer_B2 {
+  padding: 10px;
+}
+
+.Footer_B2_box {
+  background-color: rgba(255, 255, 255, 0.61);
+  margin: 0px 10px;
+  width: full;
+  height: 4px;
+}
+
+.Footer_B2_text {
+  padding: 10px 5px 0px 10px;
+  margin: 0px 10px;
+  font-size: 18px;
+  display: flex;
+  flex-direction: row-reverse;
+  color: rgba(255, 255, 255, 0.61);
+}
+
+.Footer_B2_text div {
+  margin: 0px 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .B_Search_all {
+    grid-template-columns: 1fr 2fr;
+  }
+  
+  .Footer_B1 {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .B_Search_all {
+    grid-template-columns: 1fr;
+  }
+  
+  .B_item_all {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+  
+  .Footer_B1 {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .Footer_B2_text {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .Footer_B2_text div {
+    margin: 5px 0;
+  }
+}

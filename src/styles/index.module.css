@@ -206,18 +206,20 @@
 }
 
 /* ===== Footer Styles ===== */
-.Footer{
-  background-color: #333;
-  width: full;
-  margin: 100px 0px 0px 0px;
-}
+/* Footer */
+ .Footer{
+    background-color: #333;
+    width: full;
+    margin: 100px 0px 0px 0px;
+    
+  }
 
 .Footer_B1{
   display: grid;
   grid-template-columns: 45% 25% 25%;
+  
   padding: 40px;
 }
-
 .Footer_B1_S1{
   text-align: center;
   font-weight: bold;
@@ -226,39 +228,50 @@
   flex-direction: column;
   align-items: center;
   font-family:"Lilita One", sans-serif ;
-  align-self: center;
+  align-self: center; /* <<< บังคับให้จัดกลางในแนวดิ่ง */
 }
 
-.Footer_B1_S2, .Footer_B1_S3 {
+.Footer_B1_S2 {
   display: flex;
   font-size: 18px;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  align-self: center;
+  align-self: center; /* <<< บังคับให้จัดกลางในแนวดิ่ง */
 }
-
-.Footer_B1_S2 div, .Footer_B1_S3 div{
+.Footer_B1_S2 div{
   font-weight: bold;
   padding: 5px;
 }
-
-.Footer_B1_S2 a, .Footer_B1_S3 a{
+.Footer_B1_S2 a{
   padding: 5px;
   color: rgba(255, 255, 255, 0.61);
 }
-
+.Footer_B1_S3 {
+  display: flex;
+  font-size: 18px;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  align-self: center; /* <<< บังคับให้จัดกลางในแนวดิ่ง */
+}
+.Footer_B1_S3 a{
+  padding: 5px;
+  color: rgba(255, 255, 255, 0.61);
+}
+.Footer_B1_S3 div{
+  font-weight: bold;
+  padding: 5px;
+}
 .Footer_B2{
   padding: 10px;
 }
-
 .Footer_B2_box{
   background-color: rgba(255, 255, 255, 0.61);
   margin: 0px 10px;
   width: full;
   height: 4px;
 }
-
 .Footer_B2_text{
   padding: 10px 5px 0px 10px;
   margin: 0px 10px;
@@ -266,11 +279,48 @@
   display: flex;
   flex-direction: row-reverse;
   color: rgba(255, 255, 255, 0.61);
+  
+}
+.Footer_B2_text div {
+  margin:  0px 10px;;
 }
 
-.Footer_B2_text div {
-  margin: 0px 10px;
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .B_Search_all {
+    grid-template-columns: 1fr 2fr;
+  }
+  
+  .Footer_B1 {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
 }
+
+@media (max-width: 768px) {
+  .B_Search_all {
+    grid-template-columns: 1fr;
+  }
+  
+  .B_item_all {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+  
+  .Footer_B1 {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .Footer_B2_text {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .Footer_B2_text div {
+    margin: 5px 0;
+  }
+}
+
 
 /* ===== Slider Styles ===== */
 .slider_container {
