@@ -33,6 +33,8 @@ export const updateGameState = (gameId, updates) => {
   const user = getUserFromToken();
   if (!user) return null;
   
+  console.log('Preparing to update game state:', { gameId, updates });
+
   try {
     const currentStates = getUserGameStates();
     const newStates = {

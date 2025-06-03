@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Nav from "./components/Navbar";
 import styles from "../styles/Search.module.css";
-import gamesData from "/src/pages/testjoson.json"; // Import JSON data
 import { trackGameSearch, trackGameFilter } from '../utils/userActivity';
 import LoginPopup from './components/LoginPopup';
+import AOS from 'aos';
 
 // Debounce function
 const debounce = (func, wait) => {
@@ -25,6 +25,8 @@ function Search() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [filteredGames, setFilteredGames] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   
   // State สำหรับเก็บข้อมูล favorites, hearts และ ratings ของแต่ละเกม (แยกอิสระ)
   const [gameStates, setGameStates] = useState({});
@@ -32,22 +34,68 @@ function Search() {
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [loginMessage, setLoginMessage] = useState('');
 
-  // โหลดข้อมูลเกมจาก JSON
   useEffect(() => {
-    setGames(gamesData);
-    setFilteredGames(gamesData);
+    console.log('Search page initial useEffect running');
+    AOS.init({
+      duration: 1500,
+      once: true,
+    });
+
+    // Load all boardgames from API
+    fetchAllBoardgames();
+
+    // Load user's game states using token as ID (This will be updated after fetchAllBoardgames completes)
+    const savedStates = loadGameStatesFromStorage();
+    // We don't set initial game states here directly based on savedStates
+    // because fetchAllBoardgames will do it with actual game IDs.
     
-    // Load user's game states using token as ID
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        const gameStates = JSON.parse(localStorage.getItem('gameStates')) || {};
-        setGameStates(gameStates[token] || {});
-      } catch (error) {
-        console.error('Error loading user states:', error);
-      }
+  }, []); // Empty dependency array means this runs once on mount
+
+  // Use another useEffect to update game states when games data is updated after fetching
+  useEffect(() => {
+    console.log('Games state updated, initializing game states for fetched games');
+    if (games.length > 0) {
+      const savedStates = loadGameStatesFromStorage();
+      const initialStates = {};
+      const token = localStorage.getItem('token');
+      const userGameStates = token ? (JSON.parse(localStorage.getItem('gameStates')) || {})[token] || {} : {};
+
+      games.forEach(game => {
+        initialStates[game.id] = userGameStates[game.id] || { isFavorite: false, isLiked: false, userRating: 0 };
+      });
+      setGameStates(initialStates);
     }
-  }, []);
+  }, [games]); // Run this effect when the 'games' state changes
+
+  // ฟังก์ชันสำหรับโหลดข้อมูล boardgame ทั้งหมดจาก API
+  const fetchAllBoardgames = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/recommendations/all-boardgames`);
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch all boardgames: ${response.status} ${response.statusText}`);
+      }
+      
+      console.log('API Response Status:', response.status);
+      const data = await response.json();
+      console.log('Fetched all boardgames data:', data);
+      
+      // Assuming the API returns an array of games in data.boardgames
+      const fetchedGames = data.boardgames || [];
+      setGames(fetchedGames);
+      setFilteredGames(fetchedGames); // Initially show all fetched games
+
+      // Load user's game states using token as ID and initialize for fetched games (Moved to a separate useEffect)
+      
+    } catch (error) {
+      console.error('Error in fetchAllBoardgames:', error);
+      setError('Failed to load boardgames. Please try again later.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // สร้าง debounced functions สำหรับ search และ filter
   const debouncedSearch = useCallback(
@@ -84,23 +132,25 @@ function Search() {
   // ฟังก์ชันการกรองเกม (แยกออกมาเพื่อให้เรียกใช้ได้โดยตรง)
   const filterGames = useCallback(() => {
     let filtered = games.filter(game => {
-      // กรองตามชื่อเกม
-      const matchesSearch = game.name.toLowerCase().includes(searchQuery.toLowerCase());
+      // กรองตามชื่อเกม (ใช้ game.title แทน game.name)
+      const matchesSearch = game.title.toLowerCase().includes(searchQuery.toLowerCase());
       
-      // กรองตามหมวดหมู่
+      // กรองตามหมวดหมู่ (ปรับให้รองรับ categories ที่เป็น string หรือ array)
+      const gameCategories = Array.isArray(game.categories) 
+        ? game.categories.map(cat => cat.toLowerCase())
+        : (game.categories ? game.categories.split(',').map(cat => cat.trim().toLowerCase()) : []);
+      
       const matchesCategory = selectedCategories.length === 0 || 
-        selectedCategories.some(category => 
-          game.tags.some(tag => tag.toLowerCase() === category.toLowerCase())
+        selectedCategories.some(selectedCat => 
+          gameCategories.includes(selectedCat.toLowerCase())
         );
       
-      // กรองตามจำนวนผู้เล่น
-      const playerRange = game.players.match(/(\d+)-(\d+)/);
-      const matchesPlayerCount = !playerRange || 
-        (parseInt(playerRange[1]) <= playerCount && playerCount <= parseInt(playerRange[2]));
+      // กรองตามจำนวนผู้เล่น (ใช้ min_players และ max_players)
+      const matchesPlayerCount = game.min_players <= playerCount && playerCount <= game.max_players;
       
-      // กรองตามเวลาเล่น
-      const gameTime = parseInt(game.duration.match(/\d+/)?.[0] || 0);
-      const matchesPlayTime = gameTime <= playTime;
+      // กรองตามเวลาเล่น (ใช้ play_time_min และ play_time_max)
+      // Assuming playTime slider value is in minutes
+      const matchesPlayTime = game.play_time_min <= playTime && playTime <= game.play_time_max; // Consider games fully within the selected playTime range, or adjust logic as needed
       
       return matchesSearch && matchesCategory && matchesPlayerCount && matchesPlayTime;
     });
@@ -308,10 +358,14 @@ function Search() {
     });
   };
 
-  // ดึง categories ที่ไม่ซ้ำกันจากข้อมูล
+  // ดึง categories ที่ไม่ซ้ำกันจากข้อมูล (ปรับให้รองรับ categories ที่เป็น string หรือ array)
   const getAllCategories = () => {
-    const allTags = games.flatMap(game => game.tags);
-    return [...new Set(allTags)];
+    const allCategories = games.flatMap(game => 
+      Array.isArray(game.categories) 
+        ? game.categories 
+        : (game.categories ? game.categories.split(',').map(cat => cat.trim()) : [])
+    );
+    return [...new Set(allCategories)].sort(); // Sort categories alphabetically
   };
 
   // ฟังก์ชันสำหรับโหลดข้อมูลจาก localStorage
@@ -413,81 +467,98 @@ function Search() {
         </div>
 
         <div className={styles.B_item_all}>
-          {filteredGames.map((game) => {
-            const currentGameState = gameStates[game.id] || {};
-            
-            return (
-              <div
-                key={game.id}
-                className={styles.item_game}
-                data-aos="fade-up"
-                data-aos-anchor-placement="top-bottom"
-              >
-                <div className={styles.item_game_text}>
-                  <div className={styles.name_game}>{game.name}</div>
-
-                  <div className={styles.rating_buttons}>
-                    <button 
-                      className={`${styles.heart_button} ${currentGameState.isLiked ? styles.heart_active : ''}`}
-                      onClick={(e) => toggleHeart(game.id, e)}
-                      title={currentGameState.isLiked ? "Unlike" : "Like"}
-                    >
-                      {currentGameState.isLiked ? "💖" : "🤍"}
-                    </button>
-                    
-                    <button 
-                      className={`${styles.favorite_button} ${currentGameState.isFavorite ? styles.favorite_active : ''}`}
-                      onClick={(e) => toggleFavorite(game.id, e)}
-                      title={currentGameState.isFavorite ? "Remove from favorites" : "Add to favorites"}
-                    >
-                      <svg 
-                        className={styles.bookmark_icon} 
-                        viewBox="0 0 24 24" 
-                        fill={currentGameState.isFavorite ? "currentColor" : "none"}
-                        stroke="currentColor"
-                      >
-                        <path d="M19 21L12 16L5 21V5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21Z" strokeWidth="2"/>
-                      </svg>
-                      {currentGameState.isFavorite ? "Saved" : "Save"}
-                    </button>
-                  </div>
-
-                  <div className={styles.stars}>
-                    {renderStars(game.id)}
-                  </div>
-
-                  <div className={styles.item_game_tag_B}>
-                    {game.tags.map((tag, tagIndex) => (
-                      <div key={tagIndex} className={styles.item_game_tag}>
-                        {tag}
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className={styles.B_item_game_player}>
-                    <div className={styles.item_game_player_1}>
-                      <img src="clock-five.png" alt="time" />
-                      {game.duration}
-                    </div>
-                    <div className={styles.item_game_player_2}>
-                      <img src="users (1).png" alt="players" />
-                      {game.players}
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <img src={game.image} alt={game.name} />
-                </div>
-              </div>
-            );
-          })}
-          
-          {filteredGames.length === 0 && (
+          {isLoading ? (
+            <div className={styles.loading}>Loading boardgames...</div>
+          ) : error ? (
+            <div className={styles.error}>{error}</div>
+          ) : filteredGames.length === 0 && !isLoading && !error ? (
             <div className={styles.no_results}>
               <h3>ไม่พบเกมที่ตรงกับเงื่อนไขการค้นหา</h3>
               <p>ลองปรับเปลี่ยนเงื่อนไขการค้นหาหรือใช้คำค้นหาอื่น</p>
             </div>
+          ) : (
+            filteredGames.map((game) => {
+              const currentGameState = gameStates[game.id] || {};
+              
+              return (
+                <div
+                  key={game.id}
+                  className={styles.item_game}
+                  data-aos="fade-up"
+                  data-aos-anchor-placement="top-bottom"
+                >
+                  <div className={styles.item_game_text}>
+                    <div className={styles.name_game}>{game.title}</div>
+
+                    <div className={styles.rating_buttons}>
+                      <button 
+                        className={`${styles.heart_button} ${currentGameState.isLiked ? styles.heart_active : ''}`}
+                        onClick={(e) => toggleHeart(game.id, e)}
+                        title={currentGameState.isLiked ? "Unlike" : "Like"}
+                      >
+                        {currentGameState.isLiked ? "💖" : "🤍"}
+                      </button>
+                      
+                      <button 
+                        className={`${styles.favorite_button} ${currentGameState.isFavorite ? styles.favorite_active : ''}`}
+                        onClick={(e) => toggleFavorite(game.id, e)}
+                        title={currentGameState.isFavorite ? "Remove from favorites" : "Add to favorites"}
+                      >
+                        <svg 
+                          className={styles.bookmark_icon} 
+                          viewBox="0 0 24 24" 
+                          fill={currentGameState.isFavorite ? "currentColor" : "none"}
+                          stroke="currentColor"
+                        >
+                          <path d="M19 21L12 16L5 21V5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21Z" strokeWidth="2"/>
+                        </svg>
+                        {currentGameState.isFavorite ? "Saved" : "Save"}
+                      </button>
+                    </div>
+
+                    <div className={styles.stars}>
+                      {renderStars(game.id)}
+                    </div>
+
+                    <div className={styles.item_game_tag_B}>
+                      {/* Display category/categories */}
+                      {Array.isArray(game.categories) ? (
+                        game.categories.map((tag, tagIndex) => (
+                          <div key={tagIndex} className={styles.item_game_tag}>
+                            {tag}
+                          </div>
+                        ))
+                      ) : game.categories ? (
+                         <div className={styles.item_game_tag}>
+                           {game.categories}
+                         </div>
+                      ) : null}
+                    </div>
+
+                    <div className={styles.B_item_game_player}>
+                      <div className={styles.item_game_player_1}>
+                        <img src="clock-five.png" alt="time" />
+                        {/* Display play time */}
+                        {game.play_time_min === game.play_time_max 
+                          ? `${game.play_time_min} mins` 
+                          : `${game.play_time_min}-${game.play_time_max} mins`}
+                      </div>
+                      <div className={styles.item_game_player_2}>
+                        <img src="users (1).png" alt="players" />
+                        {/* Display players */}
+                        {game.min_players === game.max_players
+                          ? `${game.min_players} players`
+                          : `${game.min_players}-${game.max_players} players`}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <img src={game.image_url} alt={game.title} />
+                  </div>
+                </div>
+              );
+            })
           )}
         </div>
       </div>

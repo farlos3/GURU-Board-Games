@@ -11,24 +11,17 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import Link from "next/link";
-import games from "../pages/testjoson.json";
 import LoginPopup from './components/LoginPopup';
 import { getUserGameStates, toggleGameLike, toggleGameFavorite, getGameLikeStatus, getGameFavoriteStatus } from '../utils/gameStates';
 
-const images = [
-  "Wolf.png",
-  "karthik.jpg",
-  "Wolf.png",
-  "karthik.jpg",
-  "Wolf.png",
-  "olav-ahrens.jpg",
-];
-
 function GameCard() {
+  const [games, setGames] = useState([]);
   const [gameStates, setGameStates] = useState({});
   const [hoverRating, setHoverRating] = useState({});
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [loginMessage, setLoginMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   
   // ใช้ useRef เพื่อ track การเปลี่ยนแปลงและป้องกัน multiple logs
   const isInitialLoad = useRef(true);
@@ -68,12 +61,10 @@ function GameCard() {
   // ฟังก์ชันสำหรับอัพเดตรายการ favorites ใน localStorage
   const updateFavoritesList = (newStates) => {
     try {
-      const favoriteGames = games.filter((game, index) => {
-        const gameId = game.id || `game_${index}`;
-        return newStates[gameId]?.isFavorite;
-      }).map((game, index) => ({
-        ...game,
-        id: game.id || `game_${index}`
+      const favoriteGames = games.filter((game) => {
+        return newStates[game.id]?.isFavorite;
+      }).map(game => ({
+        ...game
       }));
       localStorage.setItem('favoriteGames', JSON.stringify(favoriteGames));
     } catch (error) {
@@ -81,77 +72,41 @@ function GameCard() {
     }
   };
 
-  // ฟังก์ชัน unified สำหรับอัพเดต game state
-  const updateGameState = (gameId, updates) => {
-    const token = localStorage.getItem('token');
-    const userId = token ? JSON.parse(atob(token.split('.')[1])).id : 'guest';
-    
-    if (!token && (updates.isFavorite !== undefined || updates.isLiked !== undefined)) {
-      const action = updates.isFavorite !== undefined ? 'add favorites' : 'like games';
-      setLoginMessage(`Please log in to ${action}`);
-      setShowLoginPopup(true);
-      return;
+  // ฟังก์ชันสำหรับโหลดข้อมูลเกมยอดนิยมจาก API
+  const fetchPopularGames = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/recommendations/popular`);
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch popular games');
+      }
+      
+      const data = await response.json();
+      console.log('Fetched popular games data:', data);
+      
+      // Corrected to access data.boardgames
+      const fetchedGames = data.boardgames || [];
+      setGames(fetchedGames);
+
+      // Initialize game states for fetched games
+      const initialStates = {};
+      fetchedGames.forEach(game => {
+        initialStates[game.id] = {
+          isFavorite: getGameFavoriteStatus(game.id),
+          isLiked: getGameLikeStatus(game.id)
+        };
+      });
+      setGameStates(initialStates);
+      updateFavoritesList(initialStates);
+      
+    } catch (error) {
+      console.error('Error fetching popular games:', error);
+      setError('Failed to load popular games. Please try again later.');
+    } finally {
+      setIsLoading(false);
     }
-
-    setGameStates(prev => {
-      // Check if there's actually a change
-      const currentState = prev[gameId] || {};
-      let hasChanges = false;
-      
-      for (const key in updates) {
-        if (currentState[key] !== updates[key]) {
-          hasChanges = true;
-          break;
-        }
-      }
-      
-      // If no changes, don't update
-      if (!hasChanges) {
-        return prev;
-      }
-
-      // สร้าง timestamp สำหรับการอัพเดต
-      const now = new Date().toISOString();
-      
-      const newStates = {
-        ...prev,
-        [gameId]: {
-          ...currentState,
-          ...updates,
-          userId: userId,
-          updatedAt: now,
-          // เพิ่มข้อมูลที่จำเป็นสำหรับการ sync กับ backend
-          gameData: {
-            id: parseInt(gameId),
-            rating: updates.userRating || currentState.userRating || 0,
-            isFavorite: updates.isFavorite !== undefined ? updates.isFavorite : currentState.isFavorite,
-            isLiked: updates.isLiked !== undefined ? updates.isLiked : currentState.isLiked
-          }
-        }
-      };
-      
-      // Log เฉพาะเมื่อมีการเปลี่ยนแปลงจริงๆ และไม่ใช่ initial load
-      if (!isInitialLoad.current) {
-        console.log(`Game ${gameId} updated by user ${userId}:`, {
-          gameId: parseInt(gameId),
-          userId: userId,
-          updatedAt: now,
-          gameData: newStates[gameId].gameData
-        });
-      }
-      
-      // Debounce การบันทึกเพื่อป้องกัน multiple saves
-      if (saveTimeoutRef.current) {
-        clearTimeout(saveTimeoutRef.current);
-      }
-      
-      saveTimeoutRef.current = setTimeout(() => {
-        saveGameStatesToStorage(newStates);
-        updateFavoritesList(newStates);
-      }, 100);
-      
-      return newStates;
-    });
   };
 
   useEffect(() => {
@@ -160,28 +115,34 @@ function GameCard() {
       once: true,
     });
 
-    // Store all games data in localStorage
-    localStorage.setItem('allGames', JSON.stringify(games));
+    // Load popular games from API
+    fetchPopularGames();
 
-    // Load existing game states from localStorage
+    // Load existing game states from localStorage (This will be updated after fetchPopularGames completes)
     const savedStates = loadGameStatesFromStorage();
-    
-    // Initialize game states with unique IDs
-    const initialStates = {};
-    games.forEach((game, index) => {
-      const gameId = game.id || `game_${index}`;
-      initialStates[gameId] = {
-        isFavorite: getGameFavoriteStatus(gameId),
-        isLiked: getGameLikeStatus(gameId)
-      };
-    });
-    
-    setGameStates(initialStates);
-    updateFavoritesList(initialStates);
+    // We don't set initial game states here directly based on savedStates
+    // because fetchPopularGames will do it with actual game IDs.
+    // The updateFavoritesList call within fetchPopularGames will handle favorites based on new game IDs.
     
     // Mark initial load as complete
     isInitialLoad.current = false;
-  }, []);
+  }, []); // Empty dependency array means this runs once on mount
+
+  // Use another useEffect to update favorites list when games state is updated after fetching
+  useEffect(() => {
+    if (games.length > 0) {
+      const savedStates = loadGameStatesFromStorage();
+      const initialStates = {};
+      games.forEach(game => {
+        initialStates[game.id] = {
+          isFavorite: getGameFavoriteStatus(game.id), // Use getGameFavoriteStatus which reads from localStorage
+          isLiked: getGameLikeStatus(game.id) // Use getGameLikeStatus which reads from localStorage
+        };
+      });
+      setGameStates(initialStates);
+      updateFavoritesList(initialStates);
+    }
+  }, [games]); // Run this effect when the 'games' state changes
 
   // Function to toggle favorite status
   const handleToggleFavorite = (gameId, e) => {
@@ -198,15 +159,11 @@ function GameCard() {
       return;
     }
     
-    const newStates = toggleGameFavorite(gameId);
-    if (newStates) {
-      setGameStates(prev => ({
-        ...prev,
-        [gameId]: {
-          ...prev[gameId],
-          isFavorite: !prev[gameId]?.isFavorite
-        }
-      }));
+    // toggleGameFavorite updates localStorage and returns the updated state object
+    const updatedStates = toggleGameFavorite(gameId);
+    if (updatedStates) {
+      setGameStates(updatedStates); // Update state with the returned object
+      updateFavoritesList(updatedStates); // Update favorites list in localStorage
     }
   };
 
@@ -225,15 +182,10 @@ function GameCard() {
       return;
     }
     
-    const newStates = toggleGameLike(gameId);
-    if (newStates) {
-      setGameStates(prev => ({
-        ...prev,
-        [gameId]: {
-          ...prev[gameId],
-          isLiked: !prev[gameId]?.isLiked
-        }
-      }));
+    // toggleGameLike updates localStorage and returns the updated state object
+    const updatedStates = toggleGameLike(gameId);
+    if (updatedStates) {
+      setGameStates(updatedStates); // Update state with the returned object
     }
   };
 
@@ -245,17 +197,27 @@ function GameCard() {
     // ป้องกัน double click
     if (e.detail > 1) return;
     
-    const currentState = gameStates[gameId] || {};
-    const newRating = rating;
-    
-    updateGameState(gameId, {
-      userRating: newRating,
-      // เพิ่มข้อมูลสำหรับการ sync กับ backend
-      ratingData: {
-        rating: newRating,
-        timestamp: new Date().toISOString()
+    const token = localStorage.getItem('token');
+     if (!token) {
+      setLoginMessage('Please log in to rate games');
+      setShowLoginPopup(true);
+      return;
+    }
+
+    // You might want to send this rating to your backend as well
+    console.log(`Rated game ${gameId}: ${rating} stars`);
+
+    setGameStates(prev => ({
+      ...prev,
+      [gameId]: {
+        ...prev[gameId],
+        userRating: rating
       }
-    });
+    }));
+    // Note: Saving rating to localStorage is not handled by toggleGameLike/Favorite
+    // You would need to implement a separate function or modify updateGameState
+    // if you want to persist ratings locally or sync with backend.
+    
   };
 
   // ฟังก์ชันสำหรับ hover effect บนดาว
@@ -367,9 +329,9 @@ function GameCard() {
           modules={[Autoplay, Navigation, Pagination]}
           className="mySwiper"
         >
-          {images.map((img, index) => (
-            <SwiperSlide key={index}>
-              <img src={img} className={styles.slide_image} />
+          {games.map((game) => (
+            <SwiperSlide key={game.id}>
+              <img src={game.image_url} className={styles.slide_image} title={game.image_url} />
             </SwiperSlide>
           ))}
         </Swiper>
@@ -428,78 +390,140 @@ function GameCard() {
 
       <div className={styles.text_board_game}> BOARD GAME</div>
 
-      <div className={styles.show_game_all}>
-        {games.map((game, idx) => {
-          const gameId = game.id || `game_${idx}`;
-          
-          return (
-            <Link
-              key={gameId}
-              href={`/game/${idx}`}
-              className={styles.item_game}
-              data-aos="fade-up"
-            >
-              <div className={styles.item_game_text}>
-                <div className={styles.name_game}>{game.name}</div>
+      {isLoading ? (
+        <div className={styles.loading}>Loading popular games...</div>
+      ) : error ? (
+        <div className={styles.error}>{error}</div>
+      ) : games.length === 0 ? (
+        <div className={styles.no_results}>
+          <h3>No popular games found at the moment.</h3>
+        </div>
+      ) : (
+        <div className={styles.show_game_all}>
+          {games.slice(0, 5).map((game) => {
+            const gameId = game.id;
+            
+            return (
+              <Link
+                key={gameId}
+                href={`/game/${gameId}`}
+                className={styles.item_game}
+                data-aos="fade-up"
+              >
+                <div className={styles.item_game_text}>
+                  <div className={styles.name_game}>{game.title}</div>
 
-                <div className={styles.rating_buttons}>
-                  <button 
-                    className={`${styles.heart_button} ${gameStates[gameId]?.isLiked ? styles.heart_active : ''}`}
-                    onClick={(e) => handleToggleLike(gameId, e)}
-                    title={gameStates[gameId]?.isLiked ? "Unlike" : "Like"}
-                  >
-                    {gameStates[gameId]?.isLiked ? "💖" : "🤍"}
-                  </button>
-                  
-                  <button 
-                    className={`${styles.favorite_button} ${gameStates[gameId]?.isFavorite ? styles.favorite_active : ''}`}
-                    onClick={(e) => handleToggleFavorite(gameId, e)}
-                    title={gameStates[gameId]?.isFavorite ? "Remove from favorites" : "Add to favorites"}
-                  >
-                    <svg 
-                      className={styles.bookmark_icon} 
-                      viewBox="0 0 24 24" 
-                      fill={gameStates[gameId]?.isFavorite ? "white" : "none"}
-                      stroke={gameStates[gameId]?.isFavorite ? "white" : "currentColor"}
-                      style={{ transition: 'all 0.3s ease' }}
+                  <div className={styles.rating_buttons}>
+                    <button 
+                      className={`${styles.heart_button} ${gameStates[gameId]?.isLiked ? styles.heart_active : ''}`}
+                      onClick={(e) => handleToggleLike(gameId, e)}
+                      title={gameStates[gameId]?.isLiked ? "Unlike" : "Like"}
                     >
-                      <path d="M19 21L12 16L5 21V5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21Z" strokeWidth="2"/>
-                    </svg>
-                    {gameStates[gameId]?.isFavorite ? "Saved" : "Save"}
-                  </button>
-                </div>
+                      {gameStates[gameId]?.isLiked ? "💖" : "🤍"}
+                    </button>
+                    
+                    <button 
+                      className={`${styles.favorite_button} ${gameStates[gameId]?.isFavorite ? styles.favorite_active : ''}`}
+                      onClick={(e) => handleToggleFavorite(gameId, e)}
+                      title={gameStates[gameId]?.isFavorite ? "Remove from favorites" : "Add to favorites"}
+                    >
+                      <svg 
+                        className={styles.bookmark_icon} 
+                        viewBox="0 0 24 24" 
+                        fill={gameStates[gameId]?.isFavorite ? "white" : "none"}
+                        stroke={gameStates[gameId]?.isFavorite ? "white" : "currentColor"}
+                        style={{ transition: 'all 0.3s ease' }}
+                      >
+                        <path d="M19 21L12 16L5 21V5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21Z" strokeWidth="2"/>
+                      </svg>
+                      {gameStates[gameId]?.isFavorite ? "Saved" : "Save"}
+                    </button>
+                  </div>
 
-                <div className={styles.stars}>
-                  {renderStars(gameId)}
-                </div>
+                  <div className={styles.stars}>
+                    {/* Render stars based on rating_avg from API */}
+                    {[1, 2, 3, 4, 5].map((star) => {
+                      const rating = game.rating_avg || 0; // Use API rating_avg
+                      const isFullStar = rating >= star;
+                      const isHalfStar = rating >= star - 0.5 && rating < star;
+                      
+                      return (
+                        <div 
+                          key={star} 
+                          className={styles.starContainer}
+                          // Hover and click handlers are for user interaction, not API rating display
+                          // You might want to add separate handlers for user ratings to be sent to backend
+                          onMouseLeave={() => setHoverRating(prev => ({...prev, [gameId]: null}))}
+                           onMouseMove={(e) => {
+                             const calculatedRating = getStarRating(e, star);
+                             setHoverRating(prev => ({...prev, [gameId]: calculatedRating}));
+                           }}
+                           onClick={(e) => {
+                             const clickedRating = getStarRating(e, star);
+                             handleStarClick(gameId, clickedRating, e);
+                           }}
+                         >
+                           <div className={styles.starWrapper}>
+                            {/* Background star (empty) */}
+                             <span className={`${styles.star} ${styles.starBackground}`}>
+                              ★
+                            </span>
+                            
+                            {/* Foreground star (filled) */}
+                            <span 
+                              className={`${styles.star} ${styles.starForeground}`}
+                              style={{
+                                clipPath: isFullStar 
+                                  ? 'inset(0 0 0 0)' 
+                                  : isHalfStar 
+                                    ? 'inset(0 50% 0 0)' 
+                                    : 'inset(0 100% 0 0)'
+                              }}
+                            >
+                              ★
+                            </span>
+                          </div>
+                           <div className={styles.starHoverIndicator}></div>
+                         </div>
+                      );
+                    })}
+                  </div>
 
-                <div className={styles.item_game_tag_B}>
-                  {game.tags.map((tag, tagIndex) => (
-                    <div key={tagIndex} className={styles.item_game_tag}>
-                      {tag}
+                  <div className={styles.item_game_tag_B}>
+                    {/* Display category as a single tag */}
+                    {game.categories && (
+                      <div className={styles.item_game_tag}>
+                        {game.categories}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className={styles.B_item_game_player}>
+                    <div className={styles.item_game_player_1}>
+                      <img src="clock-five.png" />
+                      {/* Display play time */}
+                      {game.play_time_min === game.play_time_max 
+                        ? `${game.play_time_min} mins` 
+                        : `${game.play_time_min}-${game.play_time_max} mins`}
                     </div>
-                  ))}
-                </div>
-
-                <div className={styles.B_item_game_player}>
-                  <div className={styles.item_game_player_1}>
-                    <img src="clock-five.png" />
-                    {game.duration}
-                  </div>
-                  <div className={styles.item_game_player_2}>
-                    <img src="users (1).png" />
-                    {game.players}
+                    <div className={styles.item_game_player_2}>
+                      <img src="users (1).png" />
+                      {/* Display players */}
+                      {game.min_players === game.max_players
+                        ? `${game.min_players} players`
+                        : `${game.min_players}-${game.max_players} players`}
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div>
-                <img src={game.image} />
-              </div>
-            </Link>
-          );
-        })}
-      </div>
+                <div>
+                  <img src={game.image_url} alt={game.title} title={game.image_url}/>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      )}
 
       <div className={styles.Footer}>
         <div className={styles.Footer_B1}>

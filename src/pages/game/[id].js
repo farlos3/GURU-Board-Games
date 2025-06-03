@@ -3,9 +3,9 @@ import Nav from "../components/Navbar";
 import styles from "../../styles/game.module.css";
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import games from '../testjoson.json';
+import { getToken } from '../../utils/auth';
+import { getUserGameStates } from '../../utils/gameStates';
 import { trackGameView, trackGameLike, trackGameFavorite, trackGameRating } from '../../utils/userActivity';
-import { getUserGameStates, toggleGameLike, toggleGameFavorite, getGameLikeStatus, getGameFavoriteStatus } from '../../utils/gameStates';
 import LoginPopup from '../components/LoginPopup';
 
 function GameDetail() {
@@ -19,6 +19,8 @@ function GameDetail() {
   const [hoverRating, setHoverRating] = useState({});
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [loginMessage, setLoginMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // ฟังก์ชันสำหรับโหลดข้อมูลจาก localStorage
   const loadGameStatesFromStorage = () => {
@@ -52,49 +54,57 @@ function GameDetail() {
   };
 
   useEffect(() => {
-    if (id && games[id]) {
-      const game = games[id];
-      setCurrentGame(game);
-      
-      // Start tracking game view
-      const viewTracker = trackGameView(id);
-      
-      // หาเกมที่คล้ายกัน (เกมที่มี tag เหมือนกัน แต่ไม่ใช่เกมปัจจุบัน)
-      const similar = games.filter((g, index) => 
-        index != id && 
-        g.tags.some(tag => game.tags.includes(tag))
-      ).slice(0, 4);
-      
-      setSimilarGames(similar);
+    if (!id) return;
+    
+    const fetchGameData = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const token = getToken();
+        
+        const headers = {'Content-Type': 'application/json'};
+        if (token) {
+          headers['Authorization'] = `Bearer ${token}`;
+        }
 
-      // โหลดข้อมูลจาก localStorage
-      const savedStates = loadGameStatesFromStorage();
-      
-      // Initialize game states
-      const initialStates = {};
-      
-      // เกมปัจจุบัน
-      initialStates[id] = {
-        isFavorite: getGameFavoriteStatus(id),
-        isLiked: getGameLikeStatus(id)
-      };
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/boardgames/${id}`, {
+          headers: headers,
+        });
 
-      // เกมที่คล้ายกัน
-      similar.forEach((game) => {
-        const gameIndex = games.findIndex(g => g.name === game.name);
-        initialStates[gameIndex] = {
-          isFavorite: getGameFavoriteStatus(gameIndex),
-          isLiked: getGameLikeStatus(gameIndex)
-        };
-      });
-      
-      setGameStates(initialStates);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch game data: ${response.status} ${response.statusText}`);
+        }
 
-      // Cleanup function to stop tracking when component unmounts
-      return () => {
-        viewTracker.stop();
-      };
-    }
+        const data = await response.json();
+        console.log('Fetched game data:', data);
+
+        setCurrentGame(data);
+
+        // Initialize game state for the current game from fetched data
+        setGameStates(prev => ({
+          ...prev,
+          [id]: {
+            isFavorite: data.favoritedByCurrentUser || false,
+            isLiked: data.likedByCurrentUser || false,
+            userRating: data.currentUserRating || 0
+          }
+        }));
+
+        // Note: Similar games logic needs to be updated to fetch from API as well if needed
+        // For now, similarGames state will remain empty.
+        setSimilarGames([]);
+
+      } catch (error) {
+        console.error('Error fetching game data:', error);
+        setError('Failed to load game data. Please try again later.');
+        setCurrentGame(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchGameData();
+
   }, [id]);
 
   // บันทึกข้อมูลลง localStorage ทุกครั้งที่ gameStates เปลี่ยน
@@ -103,6 +113,35 @@ function GameDetail() {
       saveGameStatesToStorage(gameStates);
     }
   }, [gameStates]);
+
+  // Function to send state update to backend API
+  const sendGameStateUpdate = async (gameId, updateData) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.error('Cannot send state update, user not logged in.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/games/updateState`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ gameId, updateData })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Failed to send state update:', errorData);
+      } else {
+        console.log('State update sent successfully:', { gameId, updateData });
+      }
+    } catch (error) {
+      console.error('Error sending state update:', error);
+    }
+  };
 
   // ฟังก์ชันสำหรับเปลี่ยนสถานะ favorite
   const handleToggleFavorite = (gameId, e) => {
@@ -118,13 +157,18 @@ function GameDetail() {
     
     const newStates = toggleGameFavorite(gameId);
     if (newStates) {
-      setGameStates(prev => ({
-        ...prev,
-        [gameId]: {
-          ...prev[gameId],
-          isFavorite: !prev[gameId]?.isFavorite
-        }
-      }));
+      setGameStates(prev => {
+        const updatedGameStates = {
+          ...prev,
+          [gameId]: {
+            ...prev[gameId],
+            isFavorite: !prev[gameId]?.isFavorite
+          }
+        };
+        // Send update to backend
+        sendGameStateUpdate(gameId, { isFavorite: updatedGameStates[gameId].isFavorite });
+        return updatedGameStates;
+      });
     }
   };
 
@@ -142,13 +186,18 @@ function GameDetail() {
     
     const newStates = toggleGameLike(gameId);
     if (newStates) {
-      setGameStates(prev => ({
-        ...prev,
-        [gameId]: {
-          ...prev[gameId],
-          isLiked: !prev[gameId]?.isLiked
-        }
-      }));
+      setGameStates(prev => {
+        const updatedGameStates = {
+          ...prev,
+          [gameId]: {
+            ...prev[gameId],
+            isLiked: !prev[gameId]?.isLiked
+          }
+        };
+        // Send update to backend
+        sendGameStateUpdate(gameId, { isLiked: updatedGameStates[gameId].isLiked });
+        return updatedGameStates;
+      });
     }
   };
 
@@ -176,6 +225,9 @@ function GameDetail() {
       // Track the rating action
       trackGameRating(gameId, rating);
       
+      // Send update to backend
+      sendGameStateUpdate(gameId, { userRating: rating });
+
       return newState;
     });
   };
@@ -262,6 +314,22 @@ function GameDetail() {
   };
 
   if (!currentGame) {
+    if (isLoading) {
+      return (
+        <>
+          <Nav />
+          <div>Loading game details...</div>
+        </>
+      );
+    }
+    if (error) {
+      return (
+        <>
+          <Nav />
+          <div>Error loading game details: {error.message}</div>
+        </>
+      );
+    }
     return (
       <>
         <Nav />
@@ -281,7 +349,7 @@ function GameDetail() {
           </div>
           <div className={styles.B_B_details}>
             <div className={styles.B_details}>
-              <h1>{currentGame.name}</h1>
+              <h1>{currentGame.title}</h1>
 
               {/* ปุ่ม Heart, Favorite และ Star Rating สำหรับเกมปัจจุบัน */}
               <div className={styles.rating_buttons}>
@@ -315,28 +383,38 @@ function GameDetail() {
               </div>
 
               <div className={styles.details_text}>
-                {currentGame.description || "Uncover hidden identities and survive the tension-filled nights in this game — a game of deduction, deception, and dramatic reveal. Players take on secret roles, with each night bringing new danger and each day filled with accusations, alliances, and shocking betrayals. Work together to achieve your goal — or blend in and strike from the shadows. With a rotating cast of roles and endless possibilities for bluffing and strategy, no two games are ever the same. Perfect for parties and group gatherings."}
+                {currentGame.description}
               </div>
 
               <div className={styles.B_player_play_time}>
                 <div className={styles.B_player}>
                   <div>Player</div>
-                  {currentGame.players}
+                  {currentGame.min_players === currentGame.max_players
+                    ? `${currentGame.min_players}`
+                    : `${currentGame.min_players}-${currentGame.max_players}`}
                 </div>
                 <div className={styles.B_play_time}>
                   <div>Play Time</div>
-                  {currentGame.duration}
+                  {currentGame.play_time_min === currentGame.play_time_max 
+                    ? `${currentGame.play_time_min} mins` 
+                    : `${currentGame.play_time_min}-${currentGame.play_time_max} mins`}
                 </div>
               </div>
               <div className={styles.B_Categories}>
                 <div>Categories</div>
                 <div className={styles.item_game_text_Categories}>
                   <div className={styles.item_game_tag_B_Categories}>
-                    {currentGame.tags.map((tag, index) => (
-                      <div key={index} className={styles.item_game_tag_Categories}>
-                        {tag}
-                      </div>
-                    ))}
+                    {Array.isArray(currentGame.categories) ? (
+                      currentGame.categories.map((tag, index) => (
+                        <div key={index} className={styles.item_game_tag_Categories}>
+                          {tag}
+                        </div>
+                      ))
+                    ) : currentGame.categories ? (
+                       <div className={styles.item_game_tag_Categories}>
+                         {currentGame.categories}
+                       </div>
+                    ) : null}
                   </div>
                 </div>
               </div>
@@ -347,76 +425,90 @@ function GameDetail() {
         <div className={styles.B_Similar_games}>
           <div className={styles.text_Similar_games}>Similar Games You Might Enjoy</div>
           <div className={styles.show_game_all}>
-            {similarGames.map((game, idx) => {
-              const gameIndex = games.findIndex(g => g.name === game.name);
-              return (
-                <Link key={idx} href={`/game/${gameIndex}`}>
-                  <div
-                    className={styles.item_game}
-                    data-aos="fade-up"
-                    data-aos-anchor-placement="top-bottom"
-                  >
-                    <div className={styles.item_game_text}>
-                      <div className={styles.name_game}>{game.name}</div>
+            {similarGames.length === 0 && !isLoading && !error ? (
+              <div>No similar games found.</div>
+            ) : (
+              similarGames.map((game, idx) => {
+                const gameId = game.id;
+                return (
+                  <Link key={gameId} href={`/game/${gameId}`}>
+                    <div
+                      className={styles.item_game}
+                      data-aos="fade-up"
+                      data-aos-anchor-placement="top-bottom"
+                    >
+                      <div className={styles.item_game_text}>
+                        <div className={styles.name_game}>{game.title}</div>
 
-                      {/* ปุ่ม Heart, Favorite และ Star Rating สำหรับเกมที่คล้ายกัน */}
-                      <div className={styles.rating_buttons}>
-                        <button 
-                          className={`${styles.heart_button} ${gameStates[gameIndex]?.isLiked ? styles.heart_active : ''}`}
-                          onClick={(e) => handleToggleLike(gameIndex, e)}
-                          title={gameStates[gameIndex]?.isLiked ? "Unlike" : "Like"}
-                        >
-                          {gameStates[gameIndex]?.isLiked ? "💖" : "🤍"}
-                        </button>
-                        
-                        <button 
-                          className={`${styles.favorite_button} ${gameStates[gameIndex]?.isFavorite ? styles.favorite_active : ''}`}
-                          onClick={(e) => handleToggleFavorite(gameIndex, e)}
-                          title={gameStates[gameIndex]?.isFavorite ? "Remove from favorites" : "Add to favorites"}
-                        >
-                          <svg 
-                            className={styles.bookmark_icon} 
-                            viewBox="0 0 24 24" 
-                            fill={gameStates[gameIndex]?.isFavorite ? "currentColor" : "none"}
-                            stroke="currentColor"
+                        {/* ปุ่ม Heart, Favorite และ Star Rating สำหรับเกมที่คล้ายกัน */}
+                        <div className={styles.rating_buttons}>
+                          <button 
+                            className={`${styles.heart_button} ${gameStates[gameId]?.isLiked ? styles.heart_active : ''}`}
+                            onClick={(e) => handleToggleLike(gameId, e)}
+                            title={gameStates[gameId]?.isLiked ? "Unlike" : "Like"}
                           >
-                            <path d="M19 21L12 16L5 21V5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21Z" strokeWidth="2"/>
-                          </svg>
-                          {gameStates[gameIndex]?.isFavorite ? "Saved" : "Save"}
-                        </button>
-                      </div>
+                            {gameStates[gameId]?.isLiked ? "💖" : "🤍"}
+                          </button>
+                          
+                          <button 
+                            className={`${styles.favorite_button} ${gameStates[gameId]?.isFavorite ? styles.favorite_active : ''}`}
+                            onClick={(e) => handleToggleFavorite(gameId, e)}
+                            title={gameStates[gameId]?.isFavorite ? "Remove from favorites" : "Add to favorites"}
+                          >
+                            <svg 
+                              className={styles.bookmark_icon} 
+                              viewBox="0 0 24 24" 
+                              fill={gameStates[gameId]?.isFavorite ? "currentColor" : "none"}
+                              stroke="currentColor"
+                            >
+                              <path d="M19 21L12 16L5 21V5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21Z" strokeWidth="2"/>
+                            </svg>
+                            {gameStates[gameId]?.isFavorite ? "Saved" : "Save"}
+                          </button>
+                        </div>
 
-                      <div className={styles.stars}>
-                        {renderStars(gameIndex)}
-                      </div>
+                        <div className={styles.stars}>
+                          {renderStars(gameId)}
+                        </div>
 
-                      <div className={styles.item_game_tag_B}>
-                        {game.tags.map((tag, tagIndex) => (
-                          <div key={tagIndex} className={styles.item_game_tag}>
-                            {tag}
+                        <div className={styles.item_game_tag_B}>
+                          {Array.isArray(game.categories) ? (
+                            game.categories.map((tag, tagIndex) => (
+                              <div key={tagIndex} className={styles.item_game_tag}>
+                                {tag}
+                              </div>
+                            ))
+                          ) : game.categories ? (
+                             <div className={styles.item_game_tag}>
+                               {game.categories}
+                             </div>
+                          ) : null}
+                        </div>
+
+                        <div className={styles.B_item_game_player}>
+                          <div className={styles.item_game_player_1}>
+                            <img src="/clock-five.png" alt="clock" />
+                            {game.play_time_min === game.play_time_max 
+                              ? `${game.play_time_min} mins` 
+                              : `${game.play_time_min}-${game.play_time_max} mins`}
                           </div>
-                        ))}
-                      </div>
-
-                      <div className={styles.B_item_game_player}>
-                        <div className={styles.item_game_player_1}>
-                          <img src="/clock-five.png" alt="clock" />
-                          {game.duration}
-                        </div>
-                        <div className={styles.item_game_player_2}>
-                          <img src="/users (1).png" alt="users" />
-                          {game.players}
+                          <div className={styles.item_game_player_2}>
+                            <img src="/users (1).png" alt="users" />
+                            {game.min_players === game.max_players
+                              ? `${game.min_players} players`
+                              : `${game.min_players}-${game.max_players} players`}
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    <div>
-                      <img src={`/${game.image}`} alt={game.name} />
+                      <div>
+                        <img src={game.image_url} alt={game.title} />
+                      </div>
                     </div>
-                  </div>
-                </Link>
-              );
-            })}
+                  </Link>
+                );
+              })
+            )}
           </div>
         </div>
 

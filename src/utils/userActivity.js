@@ -84,6 +84,16 @@ const sendActivityImmediately = async (type, data) => {
   };
 
   try {
+    let logMessage = `Sending activity '${type}' to backend for user ${userId}`;
+    if (type === ActivityType.VIEW_GAME_END && data) {
+      const { gameId, duration, isLiked, isFavorite, userRating } = data;
+      logMessage += ` (Game: ${gameId}, Duration: ${duration}s, Liked: ${isLiked}, Favorited: ${isFavorite}, Rating: ${userRating})`;
+    } else if (data && Object.keys(data).length > 0) {
+        // Log data for other types if data exists
+        logMessage += ': ' + JSON.stringify(data);
+    }
+    console.log(logMessage);
+
     const response = await fetch(`${backendUrl}/user/activities`, {
       method: 'POST',
       headers: {
@@ -105,7 +115,23 @@ const sendActivityImmediately = async (type, data) => {
       // throw new Error('Failed to send activity immediately'); // Removed throw to prevent uncaught promise warning
     }
 
-    console.log('✅ Activity sent immediately successfully:', { type, userId });
+    // console.log('✅ Activity sent immediately successfully:', { type, userId }); // Original success log
+    let successLogMessage = `✅ Activity sent immediately successfully: '${type}' for user ${userId}`;
+    if (type === ActivityType.VIEW_GAME_END && activity.data) {
+        const { gameId, duration } = activity.data;
+        // Only include isLiked, isFavorite, userRating if they exist in the data
+        const stateDetails = [];
+        if (activity.data.hasOwnProperty('isLiked')) stateDetails.push(`Liked: ${activity.data.isLiked}`);
+        if (activity.data.hasOwnProperty('isFavorite')) stateDetails.push(`Favorited: ${activity.data.isFavorite}`);
+        if (activity.data.hasOwnProperty('userRating')) stateDetails.push(`Rating: ${activity.data.userRating}`);
+        
+        successLogMessage += ` (Game: ${gameId}, Duration: ${duration}s${stateDetails.length > 0 ? ', ' + stateDetails.join(', ') : ''})`;
+    } else if (activity.data && Object.keys(activity.data).length > 0) {
+        // Log data for other types if data exists in the sent activity object
+        successLogMessage += ': ' + JSON.stringify(activity.data);
+    }
+    console.log(successLogMessage);
+
   } catch (error) {
     console.error('❌ Error sending activity immediately:', {
       error,
@@ -149,9 +175,9 @@ export const trackGameView = (gameId) => {
 
   const startTimestamp = new Date().toISOString();
 
-  // Return stop function
+  // Return stop function that accepts finalGameState
   return {
-    stop: () => {
+    stop: (finalGameState = {}) => { // Accept finalGameState with a default empty object
       const userId = getUserId(); // Re-check userId on stop
       const backendUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -177,12 +203,12 @@ export const trackGameView = (gameId) => {
         startTimestamp
       });
 
-      // Send VIEW_GAME_END when exiting the page
+      // Send VIEW_GAME_END when exiting the page, including final game state
       sendActivityImmediately(ActivityType.VIEW_GAME_END, {
         gameId,
         startTimestamp,
         endTimestamp,
-        duration
+        duration,
       });
     }
   };
@@ -194,24 +220,22 @@ const SEARCH_FILTER_DELAY = 5000; // 5 seconds
 
 export const trackGameLike = (gameId, isLiked) => {
   console.log(`👍 Tracking LIKE_GAME for game ${gameId}: ${isLiked}`);
-  // Use gameId as key for debounce to track per-game actions
-  const key = `gameAction_${gameId}`;
-  // Debounce sending the LIKE_GAME activity for this game.
-  // Note: This sends only the LIKE state after debounce. If you need combined
-  // state (like, fav, rating) after any of these actions, more complex state
-  // management within the debounce is needed.
+  // Use a unique key for LIKE activity
+  const key = `like_game_${gameId}`;
   debounceSendActivity(key, LIKE_FAV_RATING_DELAY, ActivityType.LIKE_GAME, { gameId, isLiked });
 };
 
 export const trackGameFavorite = (gameId, isFavorite) => {
   console.log(`⭐ Tracking FAVORITE_GAME for game ${gameId}: ${isFavorite}`);
-  const key = `gameAction_${gameId}`;
+  // Use a unique key for FAVORITE activity
+  const key = `favorite_game_${gameId}`;
   debounceSendActivity(key, LIKE_FAV_RATING_DELAY, ActivityType.FAVORITE_GAME, { gameId, isFavorite });
 };
 
 export const trackGameRating = (gameId, rating) => {
   console.log(`🌟 Tracking RATE_GAME for game ${gameId}: ${rating}`);
-  const key = `gameAction_${gameId}`;
+  // Use a unique key for RATING activity
+  const key = `rating_game_${gameId}`;
   debounceSendActivity(key, LIKE_FAV_RATING_DELAY, ActivityType.RATE_GAME, { gameId, rating });
 };
 
