@@ -15,8 +15,20 @@ const PersonalInfoPage = () => {
   const [profileImage, setProfileImage] = useState(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deletePassword, setDeletePassword] = useState('');
+  const [isMobile, setIsMobile] = useState(false);
 
   const router = useRouter();
+
+  // Check if screen is mobile size
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
 
   // Define fetchUserProfile outside of useEffect
   const fetchUserProfile = async () => {
@@ -183,8 +195,20 @@ const PersonalInfoPage = () => {
   };
 
   return (
-    <div style={{ padding: '40px 60px' }}>
-      <h1 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '40px', color: '#333' }}>Personal information</h1>
+    <div style={{ 
+      padding: isMobile ? '20px 16px' : '40px 60px',
+      maxWidth: '100%',
+      boxSizing: 'border-box'
+    }}>
+      <h1 style={{ 
+        fontSize: isMobile ? '24px' : '32px', 
+        fontWeight: 'bold', 
+        marginBottom: isMobile ? '20px' : '40px', 
+        color: '#333',
+        textAlign: isMobile ? 'center' : 'left'
+      }}>
+        Personal information
+      </h1>
       
       {/* Profile Card */}
       <div style={{
@@ -194,10 +218,11 @@ const PersonalInfoPage = () => {
         marginBottom: '24px',
         boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
         overflow: 'hidden',
-        position: 'relative'
+        position: 'relative',
+        maxWidth: '100%'
       }}>
         <div style={{
-          height: '250px',
+          height: isMobile ? '200px' : '250px',
           position: 'relative',
           display: 'flex',
           alignItems: 'center',
@@ -208,11 +233,11 @@ const PersonalInfoPage = () => {
             size={20} 
             style={{
               position: 'absolute',
-              top: '10px',
-              right: '16px',
+              top: isMobile ? '8px' : '10px',
+              right: isMobile ? '12px' : '16px',
               cursor: 'pointer',
               color: 'white',
-              fontSize: '30px'
+              fontSize: isMobile ? '24px' : '30px'
             }}
             onClick={handleColorChange}
           >
@@ -220,8 +245,8 @@ const PersonalInfoPage = () => {
           </div>
           <div 
             style={{
-              width: '150px',
-              height: '150px',
+              width: isMobile ? '120px' : '150px',
+              height: isMobile ? '120px' : '150px',
               borderRadius: '50%',
               backgroundColor: '#e5e5e5',
               display: 'flex',
@@ -245,7 +270,7 @@ const PersonalInfoPage = () => {
                 }}
               />
             ) : (
-              <User size={60} color="#666" />
+              <User size={isMobile ? 50 : 60} color="#666" />
             )}
             <input
               id="fileInput"
@@ -258,8 +283,8 @@ const PersonalInfoPage = () => {
         </div>
         <div style={{
           textAlign: 'center',
-          padding: '20px 40px 40px 40px',
-          fontSize: '24px',
+          padding: isMobile ? '16px 20px 24px 20px' : '20px 40px 40px 40px',
+          fontSize: isMobile ? '20px' : '24px',
           fontWeight: 'bold',
           color: '#333'
         }}>
@@ -270,12 +295,12 @@ const PersonalInfoPage = () => {
                onChange={(e) => setProfileData(prev => ({...prev, name: e.target.value}))}
                style={{
                  textAlign: 'center',
-                 fontSize: '24px',
+                 fontSize: isMobile ? '20px' : '24px',
                  fontWeight: 'bold',
                  color: '#333',
                  border: '2px solid #e5e5e5',
                  borderRadius: '8px',
-                 padding: '8px',
+                 padding: isMobile ? '6px' : '8px',
                  width: '100%',
                  boxSizing: 'border-box'
                }}
@@ -290,14 +315,16 @@ const PersonalInfoPage = () => {
       <div style={{
         backgroundColor: 'white',
         borderRadius: '16px',
-        padding: '32px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        padding: isMobile ? '20px' : '32px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+        maxWidth: '100%',
+        boxSizing: 'border-box'
       }}>
-        <div style={{ marginBottom: '24px' }}>
+        <div style={{ marginBottom: isMobile ? '20px' : '24px' }}>
           <label style={{
             display: 'block',
             marginBottom: '8px',
-            fontSize: '16px',
+            fontSize: isMobile ? '14px' : '16px',
             fontWeight: '500',
             color: '#333'
           }}>Username</label>
@@ -307,11 +334,11 @@ const PersonalInfoPage = () => {
             disabled={true}
             style={{
               width: '100%',
-              padding: '12px 16px',
+              padding: isMobile ? '10px 14px' : '12px 16px',
               border: '2px solid #e5e5e5',
               color: "rgb(0, 0, 0)",
               borderRadius: '8px',
-              fontSize: '16px',
+              fontSize: isMobile ? '14px' : '16px',
               outline: 'none',
               transition: 'border-color 0.2s',
               boxSizing: 'border-box',
@@ -322,11 +349,11 @@ const PersonalInfoPage = () => {
           />
         </div>
             
-        <div style={{ marginBottom: '24px' }}>
+        <div style={{ marginBottom: isMobile ? '20px' : '24px' }}>
           <label style={{
             display: 'block',
             marginBottom: '8px',
-            fontSize: '16px',
+            fontSize: isMobile ? '14px' : '16px',
             fontWeight: '500',
             color: '#333'
           }}>Email</label>
@@ -336,11 +363,11 @@ const PersonalInfoPage = () => {
             disabled={true}
             style={{
               width: '100%',
-              padding: '12px 16px',
+              padding: isMobile ? '10px 14px' : '12px 16px',
               border: '2px solid #e5e5e5',
               color: "rgb(0, 0, 0)",
               borderRadius: '8px',
-              fontSize: '16px',
+              fontSize: isMobile ? '14px' : '16px',
               outline: 'none',
               transition: 'border-color 0.2s',
               boxSizing: 'border-box',
@@ -355,13 +382,14 @@ const PersonalInfoPage = () => {
           display: 'flex',
           justifyContent: 'flex-end',
           gap: '12px',
-          marginTop: '24px'
+          marginTop: isMobile ? '20px' : '24px',
+          flexDirection: isMobile ? 'column' : 'row'
         }}>
           {isEditing ? (
             <>
               <button
                 style={{
-                  padding: '10px 20px',
+                  padding: isMobile ? '12px 20px' : '10px 20px',
                   border: 'none',
                   borderRadius: '6px',
                   fontSize: '14px',
@@ -370,9 +398,11 @@ const PersonalInfoPage = () => {
                   transition: 'background-color 0.2s',
                   display: 'flex',
                   alignItems: 'center',
+                  justifyContent: 'center',
                   gap: '5px',
                   backgroundColor: '#22c55e',
-                  color: 'white'
+                  color: 'white',
+                  width: isMobile ? '100%' : 'auto'
                 }}
                 onClick={handleSave}
               >
@@ -380,7 +410,7 @@ const PersonalInfoPage = () => {
               </button>
               <button
                 style={{
-                  padding: '10px 20px',
+                  padding: isMobile ? '12px 20px' : '10px 20px',
                   border: 'none',
                   borderRadius: '6px',
                   fontSize: '14px',
@@ -389,9 +419,11 @@ const PersonalInfoPage = () => {
                   transition: 'background-color 0.2s',
                   display: 'flex',
                   alignItems: 'center',
+                  justifyContent: 'center',
                   gap: '5px',
                   backgroundColor: '#6b7280',
-                  color: 'white'
+                  color: 'white',
+                  width: isMobile ? '100%' : 'auto'
                 }}
                 onClick={handleCancel}
               >
@@ -401,7 +433,7 @@ const PersonalInfoPage = () => {
           ) : (
             <button
               style={{
-                padding: '10px 20px',
+                padding: isMobile ? '12px 20px' : '10px 20px',
                 border: 'none',
                 borderRadius: '6px',
                 fontSize: '14px',
@@ -410,9 +442,11 @@ const PersonalInfoPage = () => {
                 transition: 'background-color 0.2s',
                 display: 'flex',
                 alignItems: 'center',
+                justifyContent: 'center',
                 gap: '5px',
                 backgroundColor: '#ef4444',
-                color: 'white'
+                color: 'white',
+                width: isMobile ? '100%' : 'auto'
               }}
               onClick={handleEdit}
             >
@@ -426,9 +460,11 @@ const PersonalInfoPage = () => {
       {/* Remove account link */}
       <div 
         style={{
-          position: 'absolute',
-          bottom: '-20px',
-          right: '60px',
+          position: isMobile ? 'static' : 'absolute',
+          bottom: isMobile ? 'auto' : '-20px',
+          right: isMobile ? 'auto' : '60px',
+          marginTop: isMobile ? '20px' : '0',
+          textAlign: isMobile ? 'center' : 'right',
           color: '#888',
           cursor: 'pointer',
           textDecoration: 'underline',
@@ -452,18 +488,32 @@ const PersonalInfoPage = () => {
           justifyContent: 'center',
           alignItems: 'center',
           zIndex: 1000,
+          padding: '20px'
         }}>
           <div style={{
             backgroundColor: 'white',
-            padding: '24px',
+            padding: isMobile ? '20px' : '24px',
             borderRadius: '8px',
             boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
             textAlign: 'center',
             maxWidth: '400px',
-            width: '90%',
+            width: '100%',
+            margin: '0 auto'
           }}>
-            <h3 style={{ marginBottom: '16px', fontSize: '20px', color: '#333' }}>Confirm Account Deletion</h3>
-            <p style={{ marginBottom: '16px', color: '#666' }}>Please enter your password to confirm account deletion.</p>
+            <h3 style={{ 
+              marginBottom: '16px', 
+              fontSize: isMobile ? '18px' : '20px', 
+              color: '#333' 
+            }}>
+              Confirm Account Deletion
+            </h3>
+            <p style={{ 
+              marginBottom: '16px', 
+              color: '#666',
+              fontSize: isMobile ? '14px' : '16px'
+            }}>
+              Please enter your password to confirm account deletion.
+            </p>
             <input
                type="password"
                placeholder="Enter your password"
@@ -471,17 +521,23 @@ const PersonalInfoPage = () => {
                onChange={(e) => setDeletePassword(e.target.value)}
                style={{
                  width: '100%',
-                 padding: '10px',
+                 padding: isMobile ? '12px' : '10px',
                  marginBottom: '24px',
                  border: '1px solid #ccc',
                  borderRadius: '4px',
                  boxSizing: 'border-box',
+                 fontSize: isMobile ? '14px' : '16px'
                }}
             />
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'center', 
+              gap: '12px',
+              flexDirection: isMobile ? 'column' : 'row'
+            }}>
               <button
                 style={{
-                  padding: '10px 20px',
+                  padding: isMobile ? '12px 20px' : '10px 20px',
                   border: 'none',
                   borderRadius: '6px',
                   fontSize: '14px',
@@ -489,6 +545,7 @@ const PersonalInfoPage = () => {
                   cursor: 'pointer',
                   backgroundColor: '#ef4444',
                   color: 'white',
+                  width: isMobile ? '100%' : 'auto'
                 }}
                 onClick={confirmDelete}
               >
@@ -496,7 +553,7 @@ const PersonalInfoPage = () => {
               </button>
               <button
                 style={{
-                  padding: '10px 20px',
+                  padding: isMobile ? '12px 20px' : '10px 20px',
                   border: 'none',
                   borderRadius: '6px',
                   fontSize: '14px',
@@ -504,6 +561,7 @@ const PersonalInfoPage = () => {
                   cursor: 'pointer',
                   backgroundColor: '#6b7280',
                   color: 'white',
+                  width: isMobile ? '100%' : 'auto'
                 }}
                 onClick={cancelDelete}
               >

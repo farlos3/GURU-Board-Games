@@ -354,7 +354,7 @@
   position: relative;
   width: 24px;
   height: 24px;
-  cursor: pointer;
+  
   transition: transform 0.2s ease;
 }
 
@@ -377,6 +377,16 @@
   user-select: none;
   transition: all 0.2s ease;
   text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+.rating_text {
+  margin-left: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  padding: 4px 8px;
+  border-radius: 12px;
+  border: 1px solid #dee2e6;
 }
 
 .starBackground {
@@ -549,4 +559,180 @@
   .Footer_B2_text div {
     margin: 5px 0;
   }
+}
+/* Pagination Styles */
+.games_info {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 20px;
+  padding: 0 10px;
+  text-align: center;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 40px 0;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+
+.pagination_btn {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.pagination_btn:hover {
+  background: #f5f5f5;
+  border-color: #999;
+  color: #000;
+}
+
+.pagination_btn:active {
+  background: #e9e9e9;
+}
+
+.pagination_btn:disabled {
+  background: #f8f8f8;
+  border-color: #e0e0e0;
+  color: #ccc;
+  cursor: not-allowed;
+}
+
+.pagination_btn:disabled:hover {
+  background: #f8f8f8;
+  border-color: #e0e0e0;
+  color: #ccc;
+}
+
+/* Previous/Next buttons */
+.pagination_prev,
+.pagination_next {
+  padding: 10px 20px;
+  font-weight: 600;
+  background: #007bff;
+  border-color: #007bff;
+  color: white;
+}
+
+.pagination_prev:hover,
+.pagination_next:hover {
+  background: #0056b3;
+  border-color: #0056b3;
+  color: white;
+}
+
+.pagination_prev:disabled,
+.pagination_next:disabled {
+  background: #f8f8f8;
+  border-color: #e0e0e0;
+  color: #ccc;
+}
+
+/* Number buttons container */
+.pagination_numbers {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Individual page number buttons */
+.pagination_number {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.pagination_number:hover {
+  background: #f0f0f0;
+  border-color: #bbb;
+}
+
+/* Active page button */
+.pagination_active {
+  background: #007bff !important;
+  border-color: #007bff !important;
+  color: white !important;
+}
+
+.pagination_active:hover {
+  background: #0056b3 !important;
+  border-color: #0056b3 !important;
+  color: white !important;
+}
+
+/* Responsive pagination */
+@media (max-width: 768px) {
+  .pagination {
+    gap: 6px;
+    padding: 15px 10px;
+  }
+  
+  .pagination_btn {
+    padding: 8px 12px;
+    font-size: 13px;
+    min-height: 36px;
+  }
+  
+  .pagination_prev,
+  .pagination_next {
+    padding: 8px 16px;
+  }
+  
+  .pagination_number {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .games_info {
+    font-size: 13px;
+    margin-bottom: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination {
+    gap: 4px;
+    padding: 10px 5px;
+  }
+  
+  .pagination_btn {
+    padding: 6px 10px;
+    font-size: 12px;
+    min-height: 32px;
+  }
+  
+  .pagination_prev,
+  .pagination_next {
+    padding: 6px 12px;
+  }
+  
+  .pagination_number {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+/* Focus states for accessibility */
+.pagination_btn:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
 }

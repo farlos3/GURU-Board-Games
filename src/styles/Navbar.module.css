@@ -1,78 +1,482 @@
 @import url('https://fonts.googleapis.com/css2?family=Lilita+One&display=swap');
+
 .navbar { 
   background-color: #333;
   padding: 10px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-family: "Lilita One", sans-serif;
-  /* font-family: 'Poppins', sans-serif; */
   border-radius: 10px;
   position: sticky;
-  /* height: 75px; */
-  top:0;
-   box-shadow: 0 2px 5px rgba(255, 0, 0, 0.1); /*// เพิ่มเงาให้ Navbar */
-  z-index: 1000; /* เพิ่ม z-index เพื่อให้ Navbar อยู่ด้านบน */
-  margin: 0px 5px;
-  margin-top: 5px;
-  align-items: center;
+  top: 0;
+  box-shadow: 0 2px 5px rgba(255, 0, 0, 0.1);
+  z-index: 1000;
+  margin: 5px 5px 0px 5px;
+  flex-wrap: wrap;
 }
 
-.navLink { 
-  
+.logo {
   color: #fff;
-  text-decoration: none;
-  /* margin: 0 3rem; */
-  font-size: 17px;
-  width: 170px;
-  text-align:center;
-  
+  font-size: 18px;
+  padding: 5px 8px;
+  white-space: nowrap;
 }
 
-.Link_All{
+.Link_All {
   background-color: #555;
   padding: 5px 60px;
   height: 40px;
   border-radius: 8px;
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
-.log_sign{
-  display: flex;
-  
+.navLink { 
+  color: #fff;
+  text-decoration: none;
+  font-size: 17px;
+  width: 170px;
+  text-align: center;
+  white-space: nowrap;
 }
-.login{
+
+.log_sign {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.login, .sign {
+  background-color: #fff;
   display: flex;
   align-items: center;
-  text-align:center;
-  background-color: #fff;
-  /* width: 75px; */
+  justify-content: center;
+  text-align: center;
   height: 40px;
   color: #000000;
-  text-align:center;
   padding: 5px 13px;
   border-radius: 8px;
   font-size: 17px;
+  white-space: nowrap;
+  text-decoration: none;
 }
-.sign{
+
+.sign {
+  padding: 5px 8px;
+}
+
+/* ===== Hamburger Menu Styles ===== */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  z-index: 1001;
+}
+
+.hamburgerLine {
+  width: 25px;
+  height: 3px;
   background-color: #fff;
+  margin: 3px 0;
+  transition: 0.3s;
+  border-radius: 2px;
+}
+
+/* Mobile Menu Overlay */
+.mobileMenuOverlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1100;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.mobileMenuOverlay.active {
+  display: block;
+  opacity: 1;
+}
+
+/* Mobile Sidebar Menu */
+.mobileMenu {
+  position: fixed;
+  top: 0;
+  left: -300px;
+  width: 300px;
+  height: 100%;
+  background: linear-gradient(180deg, #2c2c2c 0%, #262626 100%);
+  z-index: 1200;
+  transition: left 0.3s ease;
+  box-shadow: 2px 0 20px rgba(0, 0, 0, 0.4);
+  font-family: "Lilita One", sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+.mobileMenu.active {
+  left: 0;
+}
+
+.mobileMenuHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #333 0%, #3d3d3d 100%);
+  border-bottom: 2px solid #444;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.mobileMenuLogo {
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 28px;
+  cursor: pointer;
+  padding: 5px;
+  width: 35px;
+  height: 35px;
   display: flex;
   align-items: center;
-  text-align:center;
-  /* width: 75px; */
-  height: 40px;
-  margin: 0 1rem;
-  color: #000000;
-  text-align:center;
-  padding: 5px 8px;
-  border-radius: 8px;
-  font-size: 17px;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
 }
 
-.logo{
+.closeButton:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: scale(1.1);
+}
+
+.mobileMenuContent {
+  flex: 1;
+  padding: 10px 0;
+  overflow-y: auto;
+}
+
+.mobileMenuItem {
+  display: flex;
+  align-items: center;
   color: #fff;
-  font-size: 18px;
-  padding: 5px 8px;
+  text-decoration: none;
+  padding: 18px 25px;
+  font-size: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
 }
 
+.mobileMenuItem:hover {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  padding-left: 30px;
+  box-shadow: inset 3px 0 0 #007bff;
+}
 
+.menuIcon {
+  margin-right: 12px;
+  font-size: 18px;
+  width: 24px;
+  text-align: center;
+}
+
+/* .mobileMenuDivider {
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #555 50%, transparent 100%);
+  margin: 15px 20px;
+} */
+
+/* Mobile Menu Footer - Auth Section */
+.mobileMenuFooter {
+  background: linear-gradient(180deg, #2c2c2c 0%, #262626 100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.authButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Mobile Auth Buttons - Same style as menu items */
+.mobileLoginButton, .mobileSignupButton {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  text-decoration: none;
+  padding: 18px 25px;
+  font-size: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  font-family: "Lilita One", sans-serif;
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.mobileLoginButton:hover, .mobileSignupButton:hover {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  padding-left: 30px;
+  box-shadow: inset 3px 0 0 #007bff;
+  transform: none;
+}
+
+/* Remove the last border from the last auth button */
+.mobileSignupButton {
+  border-bottom: none;
+}
+
+/* Logout Button - Same style as menu items */
+.logoutButton {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  text-decoration: none;
+  padding: 18px 25px;
+  font-size: 16px;
+  border-bottom: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  font-family: "Lilita One", sans-serif;
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.logoutButton:hover {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  padding-left: 30px;
+  box-shadow: inset 3px 0 0 #dc3545;
+  transform: none;
+}
+
+/* ===== Responsive Design ===== */
+
+/* Large Desktop (1200px+) */
+@media (min-width: 1200px) {
+  .navbar {
+    padding: 12px 20px;
+  }
+  
+  .logo {
+    font-size: 20px;
+  }
+  
+  .Link_All {
+    padding: 5px 80px;
+  }
+  
+  .navLink {
+    font-size: 18px;
+    width: 180px;
+  }
+  
+  .login, .sign {
+    font-size: 18px;
+    padding: 5px 16px;
+  }
+}
+
+/* Medium Desktop (992px - 1199px) */
+@media (max-width: 1199px) and (min-width: 992px) {
+  .navbar {
+    padding: 10px 15px;
+  }
+  
+  .Link_All {
+    padding: 5px 50px;
+  }
+  
+  .navLink {
+    width: 150px;
+    font-size: 16px;
+  }
+  
+  .login, .sign {
+    font-size: 16px;
+    padding: 5px 12px;
+  }
+}
+
+/* Tablet (768px - 991px) */
+@media (max-width: 991px) and (min-width: 768px) {
+  .navbar {
+    padding: 8px 12px;
+    gap: 10px;
+  }
+  
+  .logo {
+    font-size: 16px;
+  }
+  
+  .Link_All {
+    padding: 5px 30px;
+  }
+  
+  .navLink {
+    width: 120px;
+    font-size: 15px;
+  }
+  
+  .login, .sign {
+    font-size: 15px;
+    padding: 5px 10px;
+    height: 36px;
+  }
+  
+  .log_sign {
+    gap: 8px;
+  }
+}
+
+/* Small Tablet and Mobile */
+@media (max-width: 767px) {
+  .hamburger {
+    display: flex;
+    order: 1;
+  }
+  
+  .logo {
+    order: 2;
+    flex: 1;
+    text-align: center;
+    font-size: 16px;
+  }
+  
+  /* Hide desktop navigation on mobile */
+  .Link_All {
+    display: none;
+  }
+  
+  .log_sign {
+    display: none;
+  }
+  
+  .navbar {
+    padding: 10px 15px;
+    justify-content: space-between;
+  }
+}
+
+/* Mobile (up to 575px) */
+@media (max-width: 575px) {
+  .navbar {
+    padding: 8px 15px;
+    flex-direction: row;
+    align-items: center;
+    height: auto;
+  }
+  
+  .logo {
+    font-size: 14px;
+  }
+  
+  .hamburger {
+    padding: 8px;
+  }
+  
+  .hamburgerLine {
+    width: 22px;
+    height: 2px;
+  }
+  
+  .mobileMenu {
+    width: 280px;
+    left: -280px;
+  }
+}
+
+/* Extra Small Mobile (up to 400px) */
+@media (max-width: 400px) {
+  .navbar {
+    margin: 2px;
+    border-radius: 8px;
+    padding: 6px 12px;
+  }
+  
+  .logo {
+    font-size: 12px;
+  }
+  
+  .hamburgerLine {
+    width: 20px;
+  }
+  
+  .mobileMenu {
+    width: 250px;
+    left: -250px;
+  }
+  
+  .mobileMenuItem {
+    font-size: 14px;
+    padding: 15px 20px;
+  }
+  
+  .mobileLoginButton, .mobileSignupButton, .logoutButton {
+    font-size: 14px;
+    padding: 15px 20px;
+  }
+  
+  .menuIcon {
+    font-size: 16px;
+    margin-right: 10px;
+  }
+}
+
+/* Landscape Mobile */
+@media (max-height: 500px) and (orientation: landscape) and (max-width: 767px) {
+  .navbar {
+    padding: 5px 15px;
+  }
+  
+  .logo {
+    font-size: 18px;
+  }
+  
+  .hamburger {
+    padding: 5px;
+  }
+  
+  .hamburgerLine {
+    width: 20px;
+    height: 2px;
+    margin: 2px 0;
+  }
+  
+  .mobileMenuItem {
+    padding: 12px 25px;
+  }
+  
+  .mobileMenuFooter {
+    padding: 15px 20px;
+  }
+  
+  .mobileLoginButton, .mobileSignupButton, .logoutButton {
+    padding: 12px 25px;
+  }
+}

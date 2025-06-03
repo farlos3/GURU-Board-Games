@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Nav from "./components/Navbar";
+import Link from "next/link";
 import styles from "../styles/Search.module.css";
 import { trackGameSearch, trackGameFilter } from '../utils/userActivity';
 import LoginPopup from './components/LoginPopup';
@@ -27,10 +28,13 @@ function Search() {
   const [filteredGames, setFilteredGames] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
+  // เพิ่ม state สำหรับ pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const gamesPerPage = 9;
+
   // State สำหรับเก็บข้อมูล favorites, hearts และ ratings ของแต่ละเกม (แยกอิสระ)
   const [gameStates, setGameStates] = useState({});
-  const [hoverRating, setHoverRating] = useState({}); // แยกเฉพาะ gameId
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [loginMessage, setLoginMessage] = useState('');
 
@@ -43,13 +47,7 @@ function Search() {
 
     // Load all boardgames from API
     fetchAllBoardgames();
-
-    // Load user's game states using token as ID (This will be updated after fetchAllBoardgames completes)
-    const savedStates = loadGameStatesFromStorage();
-    // We don't set initial game states here directly based on savedStates
-    // because fetchAllBoardgames will do it with actual game IDs.
-    
-  }, []); // Empty dependency array means this runs once on mount
+  }, []);
 
   // Use another useEffect to update game states when games data is updated after fetching
   useEffect(() => {
@@ -65,7 +63,7 @@ function Search() {
       });
       setGameStates(initialStates);
     }
-  }, [games]); // Run this effect when the 'games' state changes
+  }, [games]);
 
   // ฟังก์ชันสำหรับโหลดข้อมูล boardgame ทั้งหมดจาก API
   const fetchAllBoardgames = async () => {
@@ -86,8 +84,6 @@ function Search() {
       const fetchedGames = data.boardgames || [];
       setGames(fetchedGames);
       setFilteredGames(fetchedGames); // Initially show all fetched games
-
-      // Load user's game states using token as ID and initialize for fetched games (Moved to a separate useEffect)
       
     } catch (error) {
       console.error('Error in fetchAllBoardgames:', error);
@@ -129,12 +125,14 @@ function Search() {
     debouncedFilter(filters);
   }, [selectedCategories, playerCount, playTime, debouncedFilter]);
 
-  // ฟังก์ชันการกรองเกม (แยกออกมาเพื่อให้เรียกใช้ได้โดยตรง)
-  const filterGames = useCallback(() => {
-    let filtered = games.filter(game => {
+  // ฟังก์ชันการกรองเกม
+  useEffect(() => {
+    let filtered = games.filter((game) => {
       // กรองตามชื่อเกม (ใช้ game.title แทน game.name)
-      const matchesSearch = game.title.toLowerCase().includes(searchQuery.toLowerCase());
-      
+      const matchesSearch = game.title
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+
       // กรองตามหมวดหมู่ (ปรับให้รองรับ categories ที่เป็น string หรือ array)
       const gameCategories = Array.isArray(game.categories) 
         ? game.categories.map(cat => cat.toLowerCase())
@@ -144,38 +142,55 @@ function Search() {
         selectedCategories.some(selectedCat => 
           gameCategories.includes(selectedCat.toLowerCase())
         );
-      
+
       // กรองตามจำนวนผู้เล่น (ใช้ min_players และ max_players)
       const matchesPlayerCount = game.min_players <= playerCount && playerCount <= game.max_players;
-      
+
       // กรองตามเวลาเล่น (ใช้ play_time_min และ play_time_max)
-      // Assuming playTime slider value is in minutes
-      const matchesPlayTime = game.play_time_min <= playTime && playTime <= game.play_time_max; // Consider games fully within the selected playTime range, or adjust logic as needed
-      
-      return matchesSearch && matchesCategory && matchesPlayerCount && matchesPlayTime;
+      const matchesPlayTime = game.play_time_min <= playTime && playTime <= game.play_time_max;
+
+      return (
+        matchesSearch &&
+        matchesCategory &&
+        matchesPlayerCount &&
+        matchesPlayTime
+      );
     });
-    
+
     setFilteredGames(filtered);
-  }, [games, searchQuery, selectedCategories, playerCount, playTime]);
+    setCurrentPage(1); // รีเซ็ตกลับไปหน้าแรกเมื่อกรองข้อมูลใหม่
+  }, [searchQuery, selectedCategories, playerCount, playTime, games]);
 
-  // ใช้ debounce สำหรับการ filter เกม
-  const debouncedFilterGames = useCallback(
-    debounce(() => {
-      filterGames();
-    }, 300),
-    [filterGames]
-  );
+  // คำนวณข้อมูลสำหรับ pagination
+  const totalPages = Math.ceil(filteredGames.length / gamesPerPage);
+  const startIndex = (currentPage - 1) * gamesPerPage;
+  const endIndex = startIndex + gamesPerPage;
+  const currentGames = filteredGames.slice(startIndex, endIndex);
 
-  // เรียกใช้ debounced filter เมื่อมีการเปลี่ยนแปลง filter
-  useEffect(() => {
-    debouncedFilterGames();
-  }, [searchQuery, selectedCategories, playerCount, playTime, debouncedFilterGames]);
+  // ฟังก์ชันเปลี่ยนหน้า
+  const goToPage = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    // เลื่อนกลับไปด้านบนเมื่อเปลี่ยนหน้า
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      goToPage(currentPage - 1);
+    }
+  };
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      goToPage(currentPage + 1);
+    }
+  };
 
   // ฟังก์ชันจัดการ checkbox category
   const handleCategoryChange = (category) => {
-    setSelectedCategories(prev => 
-      prev.includes(category) 
-        ? prev.filter(c => c !== category)
+    setSelectedCategories((prev) =>
+      prev.includes(category)
+        ? prev.filter((c) => c !== category)
         : [...prev, category]
     );
   };
@@ -207,6 +222,11 @@ function Search() {
       allGameStates[token] = newUserGameStates;
       localStorage.setItem('gameStates', JSON.stringify(allGameStates));
       setGameStates(newUserGameStates);
+      
+      // Dispatch custom event เพื่อให้หน้าอื่นๆ รู้ว่าข้อมูลเปลี่ยน
+      window.dispatchEvent(
+        new CustomEvent("gameStatesChanged", { detail: newUserGameStates })
+      );
     } catch (error) {
       console.error('Error updating favorite:', error);
     }
@@ -239,10 +259,27 @@ function Search() {
       allGameStates[token] = newUserGameStates;
       localStorage.setItem('gameStates', JSON.stringify(allGameStates));
       setGameStates(newUserGameStates);
+      
+      // Dispatch custom event เพื่อให้หน้าอื่นๆ รู้ว่าข้อมูลเปลี่ยน
+      window.dispatchEvent(
+        new CustomEvent("gameStatesChanged", { detail: newUserGameStates })
+      );
     } catch (error) {
       console.error('Error updating like:', error);
     }
   };
+
+  // Listen for changes from other pages
+  useEffect(() => {
+    const handleGameStatesChange = (event) => {
+      setGameStates(event.detail);
+    };
+
+    window.addEventListener("gameStatesChanged", handleGameStatesChange);
+    return () => {
+      window.removeEventListener("gameStatesChanged", handleGameStatesChange);
+    };
+  }, []);
 
   // Handle star rating with token as user ID
   const handleStarClick = (gameId, rating, e) => {
@@ -251,7 +288,8 @@ function Search() {
     
     const token = localStorage.getItem('token');
     if (!token) {
-      alert('Please log in to rate games');
+      setLoginMessage('Please log in to rate games');
+      setShowLoginPopup(true);
       return;
     }
     
@@ -270,12 +308,17 @@ function Search() {
       allGameStates[token] = newUserGameStates;
       localStorage.setItem('gameStates', JSON.stringify(allGameStates));
       setGameStates(newUserGameStates);
+      
+      // Dispatch custom event เพื่อให้หน้าอื่นๆ รู้ว่าข้อมูลเปลี่ยน
+      window.dispatchEvent(
+        new CustomEvent("gameStatesChanged", { detail: newUserGameStates })
+      );
     } catch (error) {
       console.error('Error updating rating:', error);
     }
   };
 
-  // ฟังก์ชันสำหรับ hover effect บนดาว (แยกเฉพาะ gameId)
+  // ฟังก์ชันสำหรับ hover effect บนดาว
   const handleStarHover = (gameId, rating) => {
     setGameStates(prev => ({
       ...prev,
@@ -310,17 +353,22 @@ function Search() {
     }
   };
 
-  // ฟังก์ชันสำหรับแสดงดาว (ใช้ hoverRating ของแต่ละ gameId แยกจากกัน)
-  const renderStars = (gameId) => {
+  // แก้ไขฟังก์ชัน renderStars ให้ใช้คะแนนจาก localStorage หากมี หรือใช้จาก API หากไม่มี
+  const renderStars = (game, gameId) => {
     const gameState = gameStates[gameId] || {};
-    const currentRating = gameState.hoverRating !== null && gameState.hoverRating !== undefined 
-      ? gameState.hoverRating 
-      : (gameState.userRating || 0);
+    const userRating = gameState.userRating || 0;
+    const apiRating = game.rating || 0;
+    const hoverRating = gameState.hoverRating;
     
+    // ลำดับความสำคัญ: hoverRating > userRating > rating จาก API
+    const rating = hoverRating !== null && hoverRating !== undefined 
+      ? hoverRating 
+      : (userRating > 0 ? userRating : apiRating);
+
     return [1, 2, 3, 4, 5].map((star) => {
-      const isFullStar = currentRating >= star;
-      const isHalfStar = currentRating >= star - 0.5 && currentRating < star;
-      
+      const isFullStar = rating >= star;
+      const isHalfStar = rating >= star - 0.5 && rating < star;
+
       return (
         <div 
           key={star} 
@@ -336,26 +384,31 @@ function Search() {
           }}
         >
           <div className={styles.starWrapper}>
-            <span className={`${styles.star} ${styles.starBackground}`}>
-              ★
-            </span>
-            <span 
+            <span className={`${styles.star} ${styles.starBackground}`}>★</span>
+            <span
               className={`${styles.star} ${styles.starForeground}`}
               style={{
-                clipPath: isFullStar 
-                  ? 'inset(0 0 0 0)' 
-                  : isHalfStar 
-                    ? 'inset(0 50% 0 0)' 
-                    : 'inset(0 100% 0 0)'
+                clipPath: isFullStar
+                  ? "inset(0 0 0 0)"
+                  : isHalfStar
+                  ? "inset(0 50% 0 0)"
+                  : "inset(0 100% 0 0)",
               }}
             >
               ★
             </span>
           </div>
-          <div className={styles.starHoverIndicator}></div>
         </div>
       );
     });
+  };
+
+  // ฟังก์ชันแสดงคะแนนที่ใช้งาน
+  const getDisplayRating = (game, gameId) => {
+    const gameState = gameStates[gameId] || {};
+    const userRating = gameState.userRating || 0;
+    const apiRating = game.rating || 0;
+    return userRating > 0 ? userRating : apiRating;
   };
 
   // ดึง categories ที่ไม่ซ้ำกันจากข้อมูล (ปรับให้รองรับ categories ที่เป็น string หรือ array)
@@ -371,6 +424,7 @@ function Search() {
   // ฟังก์ชันสำหรับโหลดข้อมูลจาก localStorage
   const loadGameStatesFromStorage = () => {
     try {
+      // เปลี่ยนจาก JSON.parse เป็น getItem ธรรมดา
       const token = localStorage.getItem('token');
       const savedStates = localStorage.getItem('gameStates');
       
@@ -382,10 +436,16 @@ function Search() {
       }
       
       if (savedStates) {
-        return JSON.parse(savedStates);
+        try {
+          return JSON.parse(savedStates);
+        } catch (parseError) {
+          console.error("Invalid JSON in localStorage:", parseError);
+          localStorage.removeItem('gameStates');
+          return {};
+        }
       }
     } catch (error) {
-      console.error('Error loading game states from localStorage:', error);
+      console.error("Error loading game states from localStorage:", error);
     }
     return {};
   };
@@ -401,7 +461,7 @@ function Search() {
           <div className={styles.B_Search}>
             <div className={styles.Text_filter}>Filter</div>
             <div className={styles.Text_search}>Search</div>
-            
+
             <div className={styles.box_Search}>
               <img src="search_icon.png" alt="search" />
               <input
@@ -450,11 +510,11 @@ function Search() {
             {/* Categories */}
             <div className={styles.B_Categories}>
               <div className={styles.text_time}>Categories</div>
-              {getAllCategories().map(category => (
+              {getAllCategories().map((category) => (
                 <label key={category}>
-                  <input 
-                    type="checkbox" 
-                    name="category" 
+                  <input
+                    type="checkbox"
+                    name="category"
                     value={category.toLowerCase()}
                     checked={selectedCategories.includes(category)}
                     onChange={() => handleCategoryChange(category)}
@@ -466,99 +526,176 @@ function Search() {
           </div>
         </div>
 
-        <div className={styles.B_item_all}>
-          {isLoading ? (
-            <div className={styles.loading}>Loading boardgames...</div>
-          ) : error ? (
-            <div className={styles.error}>{error}</div>
-          ) : filteredGames.length === 0 && !isLoading && !error ? (
-            <div className={styles.no_results}>
-              <h3>ไม่พบเกมที่ตรงกับเงื่อนไขการค้นหา</h3>
-              <p>ลองปรับเปลี่ยนเงื่อนไขการค้นหาหรือใช้คำค้นหาอื่น</p>
-            </div>
-          ) : (
-            filteredGames.map((game) => {
-              const currentGameState = gameStates[game.id] || {};
-              
-              return (
-                <div
-                  key={game.id}
-                  className={styles.item_game}
-                  data-aos="fade-up"
-                  data-aos-anchor-placement="top-bottom"
-                >
-                  <div className={styles.item_game_text}>
-                    <div className={styles.name_game}>{game.title}</div>
+        <div className={styles.B_games_section}>
+          {/* แสดงข้อมูลจำนวนเกมและหน้าปัจจุบัน */}
+          <div className={styles.games_info}>
+            <p>
+              Showing {startIndex + 1}-
+              {Math.min(endIndex, filteredGames.length)} of{" "}
+              {filteredGames.length} games (page {currentPage} of {totalPages})
+            </p>
+          </div>
 
-                    <div className={styles.rating_buttons}>
-                      <button 
-                        className={`${styles.heart_button} ${currentGameState.isLiked ? styles.heart_active : ''}`}
-                        onClick={(e) => toggleHeart(game.id, e)}
-                        title={currentGameState.isLiked ? "Unlike" : "Like"}
-                      >
-                        {currentGameState.isLiked ? "💖" : "🤍"}
-                      </button>
-                      
-                      <button 
-                        className={`${styles.favorite_button} ${currentGameState.isFavorite ? styles.favorite_active : ''}`}
-                        onClick={(e) => toggleFavorite(game.id, e)}
-                        title={currentGameState.isFavorite ? "Remove from favorites" : "Add to favorites"}
-                      >
-                        <svg 
-                          className={styles.bookmark_icon} 
-                          viewBox="0 0 24 24" 
-                          fill={currentGameState.isFavorite ? "currentColor" : "none"}
-                          stroke="currentColor"
-                        >
-                          <path d="M19 21L12 16L5 21V5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21Z" strokeWidth="2"/>
-                        </svg>
-                        {currentGameState.isFavorite ? "Saved" : "Save"}
-                      </button>
-                    </div>
+          <div className={styles.B_item_all}>
+            {isLoading ? (
+              <div className={styles.loading}>Loading boardgames...</div>
+            ) : error ? (
+              <div className={styles.error}>{error}</div>
+            ) : currentGames.length === 0 && !isLoading && !error ? (
+              <div className={styles.no_results}>
+                <h3>No games found that match the search criteria.</h3>
+                <p>
+                  Please try adjusting the search filters or using different
+                  keywords.
+                </p>
+              </div>
+            ) : (
+              currentGames.map((game) => {
+                const currentGameState = gameStates[game.id] || {};
 
-                    <div className={styles.stars}>
-                      {renderStars(game.id)}
-                    </div>
+                return (
+                  <Link key={game.id} href={`/game/${game.id}`}>
+                    <div
+                      className={styles.item_game}
+                      data-aos="fade-up"
+                      data-aos-anchor-placement="top-bottom"
+                    >
+                      <div className={styles.item_game_text}>
+                        <div className={styles.name_game}>{game.title}</div>
 
-                    <div className={styles.item_game_tag_B}>
-                      {/* Display category/categories */}
-                      {Array.isArray(game.categories) ? (
-                        game.categories.map((tag, tagIndex) => (
-                          <div key={tagIndex} className={styles.item_game_tag}>
-                            {tag}
+                        <div className={styles.rating_buttons}>
+                          <button
+                            className={`${styles.heart_button} ${
+                              currentGameState.isLiked ? styles.heart_active : ""
+                            }`}
+                            onClick={(e) => toggleHeart(game.id, e)}
+                            title={currentGameState.isLiked ? "Unlike" : "Like"}
+                          >
+                            {currentGameState.isLiked ? "💖" : "🤍"}
+                          </button>
+
+                          <button
+                            className={`${styles.favorite_button} ${
+                              currentGameState.isFavorite
+                                ? styles.favorite_active
+                                : ""
+                            }`}
+                            onClick={(e) => toggleFavorite(game.id, e)}
+                            title={
+                              currentGameState.isFavorite
+                                ? "Remove from favorites"
+                                : "Add to favorites"
+                            }
+                          >
+                            <svg
+                              className={styles.bookmark_icon}
+                              viewBox="0 0 24 24"
+                              fill={
+                                currentGameState.isFavorite
+                                  ? "currentColor"
+                                  : "none"
+                              }
+                              stroke="currentColor"
+                            >
+                              <path
+                                d="M19 21L12 16L5 21V5C5 3.89543 5.89543 3 7 3H17C18.1046 3 19 3.89543 19 5V21Z"
+                                strokeWidth="2"
+                              />
+                            </svg>
+                            {currentGameState.isFavorite ? "Saved" : "Save"}
+                          </button>
+                        </div>
+
+                        <div className={styles.stars}>
+                          {renderStars(game, game.id)}
+                          <span className={styles.rating_text}>
+                            {getDisplayRating(game, game.id).toFixed(1)} / 5
+                          </span>
+                        </div>
+
+                        <div className={styles.item_game_tag_B}>
+                          {/* Display category/categories */}
+                          {Array.isArray(game.categories) ? (
+                            game.categories.map((tag, tagIndex) => (
+                              <div key={tagIndex} className={styles.item_game_tag}>
+                                {tag}
+                              </div>
+                            ))
+                          ) : game.categories ? (
+                             <div className={styles.item_game_tag}>
+                               {game.categories}
+                             </div>
+                          ) : null}
+                        </div>
+
+                        <div className={styles.B_item_game_player}>
+                          <div className={styles.item_game_player_1}>
+                            <img src="clock-five.png" alt="time" />
+                            {/* Display play time */}
+                            {game.play_time_min === game.play_time_max 
+                              ? `${game.play_time_min} mins` 
+                              : `${game.play_time_min}-${game.play_time_max} mins`}
                           </div>
-                        ))
-                      ) : game.categories ? (
-                         <div className={styles.item_game_tag}>
-                           {game.categories}
-                         </div>
-                      ) : null}
-                    </div>
-
-                    <div className={styles.B_item_game_player}>
-                      <div className={styles.item_game_player_1}>
-                        <img src="clock-five.png" alt="time" />
-                        {/* Display play time */}
-                        {game.play_time_min === game.play_time_max 
-                          ? `${game.play_time_min} mins` 
-                          : `${game.play_time_min}-${game.play_time_max} mins`}
+                          <div className={styles.item_game_player_2}>
+                            <img src="users (1).png" alt="players" />
+                            {/* Display players */}
+                            {game.min_players === game.max_players
+                              ? `${game.min_players} players`
+                              : `${game.min_players}-${game.max_players} players`}
+                          </div>
+                        </div>
                       </div>
-                      <div className={styles.item_game_player_2}>
-                        <img src="users (1).png" alt="players" />
-                        {/* Display players */}
-                        {game.min_players === game.max_players
-                          ? `${game.min_players} players`
-                          : `${game.min_players}-${game.max_players} players`}
+
+                      <div>
+                        <img src={game.image_url} alt={game.title} />
                       </div>
                     </div>
-                  </div>
+                  </Link>
+                );
+              })
+            )}
+          </div>
 
-                  <div>
-                    <img src={game.image_url} alt={game.title} />
-                  </div>
-                </div>
-              );
-            })
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className={styles.pagination}>
+              <button
+                className={`${styles.pagination_btn} ${styles.pagination_prev}`}
+                onClick={goToPreviousPage}
+                disabled={currentPage === 1}
+              >
+                ← Previous
+              </button>
+
+              <div className={styles.pagination_numbers}>
+                {Array.from({ length: totalPages }, (_, index) => {
+                  const pageNumber = index + 1;
+                  return (
+                    <button
+                      key={pageNumber}
+                      className={`${styles.pagination_btn} ${
+                        styles.pagination_number
+                      } ${
+                        currentPage === pageNumber
+                          ? styles.pagination_active
+                          : ""
+                      }`}
+                      onClick={() => goToPage(pageNumber)}
+                    >
+                      {pageNumber}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <button
+                className={`${styles.pagination_btn} ${styles.pagination_next}`}
+                onClick={goToNextPage}
+                disabled={currentPage === totalPages}
+              >
+                Next →
+              </button>
+            </div>
           )}
         </div>
       </div>
@@ -574,15 +711,15 @@ function Search() {
           </div>
           <div className={styles.Footer_B1_S2}>
             <div>GURU BOARD GAME</div>
-            <a>Home</a>
-            <a>Search Game</a>
-            <a>Game</a>
+            <Link href="/">Home</Link>
+            <Link href="/Search">Search Game</Link>
+            
           </div>
           <div className={styles.Footer_B1_S3}>
             <div> ABOUT US </div>
-            <a>Line</a>
-            <a>Facebook</a>
-            <a>Instagram</a>
+            <a href="https://line.me">Line</a>
+            <a href="https://facebook.com">Facebook</a>
+             <a href="https://www.instagram.com/khaw_fang/">Instagram</a>
           </div>
         </div>
         <div className={styles.Footer_B2}>
@@ -593,6 +730,7 @@ function Search() {
           </div>
         </div>
       </div>
+      
       <LoginPopup 
         isOpen={showLoginPopup}
         onClose={() => setShowLoginPopup(false)}
