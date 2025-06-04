@@ -75,11 +75,11 @@ function Navbar() {
           {isLoggedIn ? (
             <>
               <Link href="/profile_user">
-                <div className={styles.navLink}>Profile</div>
+                <div className={styles.navLink_log_Pro}>Profile</div>
               </Link>
               <button 
                 onClick={handleLogout} 
-                className={styles.navLink} 
+                className={styles.navLink_log_Pro} 
                 style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit' }}
               >
                 Logout

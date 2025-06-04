@@ -295,6 +295,10 @@
     font-size: 18px;
     width: 180px;
   }
+  .navLink_log_Pro{
+    font-size: 18px;
+    width: 90px;
+  }
   
   .login, .sign {
     font-size: 18px;
@@ -315,6 +319,10 @@
   .navLink {
     width: 150px;
     font-size: 16px;
+  }
+  .navLink_log_Pro{
+    font-size: 16px;
+    width: 95px;
   }
   
   .login, .sign {
@@ -341,6 +349,10 @@
   .navLink {
     width: 120px;
     font-size: 15px;
+  }
+  .navLink_log_Pro{
+    font-size: 15px;
+    width: 88px;
   }
   
   .login, .sign {

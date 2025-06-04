@@ -11,8 +11,6 @@
   display: grid;
   grid-template-columns: 50% 50%;
   grid-template-rows: 100%;
-  
-  border: 1px solid red;
 }
 
 .B_main {
@@ -71,8 +69,6 @@
   width: 100%;
   padding: clamp(1rem, 4vw, 4rem);
   box-sizing: border-box;
-
-  border: 1px solid rgb(47, 0, 255);
 }
 
 .Fill_info {
@@ -94,8 +90,6 @@
   box-shadow: 0 0.9375rem 2.1875rem rgba(0, 0, 0, 0.4);
   padding: clamp(1.25rem, 3vw, 2rem);
   box-sizing: border-box;
-
-  border: 1px solid rgb(0, 255, 13);
 }
 
 .form {
@@ -157,7 +151,7 @@
 }
 
 .inputWithIcon:has(input:focus) {
-  border: 0.125rem solid #007bff;
+  
   box-shadow: 0 0 0 0.1875rem rgba(0, 123, 255, 0.25);
 }
 
