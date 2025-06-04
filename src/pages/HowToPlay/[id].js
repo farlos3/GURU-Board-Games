@@ -3,41 +3,56 @@ import styles from "/src/styles/HowToPlay.module.css";
 import Nav from "/src/pages/components/Navbar";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import games from "/src/pages/Real-data.json"; // ใช้ข้อมูลเกมหลัก
-
+import games from "/src/pages/Real-data.json"; 
 
 const HowToPlay = () => {
   const router = useRouter();
-  const { id } = router.query; // รับ ID จาก URL
+  const { id } = router.query;
   const [currentGame, setCurrentGame] = useState(null);
   const [gameHowToPlay, setGameHowToPlay] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  if (id) {
-    try {
-      const gameId = parseInt(id);
-      const game = games[gameId];
-
-      if (game) {
-        setCurrentGame(game);
-        setGameHowToPlay({
-          id: gameId,
-          name: game.name,
-          howToplay: game.howToplay || [],
-        });
+    if (id) {
+      try {
+        // Fetch game data from the database
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/boardgames/${id}`)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error(`Failed to fetch game data: ${response.status} ${response.statusText}`);
+            }
+            return response.json();
+          })
+          .then(gameData => {
+            // Find the game instructions from the JSON file
+            const gameInstructions = games.find(game => game.id === id);
+            
+            if (gameData && gameInstructions) {
+              setCurrentGame({
+                ...gameData,
+                howToplay: gameInstructions.howToplay || []
+              });
+              setGameHowToPlay({
+                id: gameData.id,
+                name: gameData.title,
+                howToplay: gameInstructions.howToplay || [],
+              });
+            }
+          })
+          .catch(error => {
+            console.error("Error loading game data:", error);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      } catch (error) {
+        console.error("Error loading game data:", error);
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Error loading game data:", error);
-    } finally {
-      setLoading(false);
     }
-  }
-}, [id]);
-
+  }, [id]);
 
   const handleBackClick = () => {
-    // ย้อนกลับไปหน้ารายละเอียดเกมที่เคยกดมา
     router.push(`/game/${id}`);
   };
 
@@ -90,29 +105,33 @@ const HowToPlay = () => {
       {/* ส่วนเนื้อหาหลัก */}
       <div className={styles.container}>
         <img
-          src={`/${currentGame.image}`} // ใช้รูปจากข้อมูลเกมหลัก
-          alt={currentGame.name}
+          src={currentGame.image_url} // ใช้ image_url จาก database
+          alt={currentGame.title}
           className={styles.headerImage}
         />
 
         <div className={styles.content}>
           <h1 className={styles.nameborad}>
-            <strong>{currentGame.name}</strong>
+            <strong>{currentGame.title}</strong>
           </h1>
 
-          <h2><br />How to play board games {currentGame.name}</h2>
+          <h2><br />How to play board games {currentGame.title}</h2>
           
           {/* แสดงข้อมูลพื้นฐานของเกม */}
           <br/>
           <div className={styles.gameBasicInfo}>
             <div className={styles.gameInfoItem}>
-              <strong>Players:</strong> {currentGame.players}
+              <strong>Players:</strong> {currentGame.min_players === currentGame.max_players 
+                ? `${currentGame.min_players} players`
+                : `${currentGame.min_players}-${currentGame.max_players} players`}
             </div>
             <div className={styles.gameInfoItem}>
-              <strong>Duration:</strong> {currentGame.duration}
+              <strong>Duration:</strong> {currentGame.play_time_min === currentGame.play_time_max
+                ? `${currentGame.play_time_min} mins`
+                : `${currentGame.play_time_min}-${currentGame.play_time_max} mins`}
             </div>
             <div className={styles.gameInfoItem}>
-              <strong>Categories:</strong> {currentGame.tags.join(", ")}
+              <strong>Categories:</strong> {currentGame.categories}
             </div>
           </div>
 

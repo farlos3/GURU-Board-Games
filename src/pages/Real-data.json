@@ -1,213 +1,1548 @@
 [
   {
-    "name": "CASHFLOW",
-    "image": "cashflow.jpg",
-    "tags": ["Strategy", "Luck-based"],
-    "duration": "60-120 min",
-    "players": "2-6 players",
-     "description":"CASHFLOW is a strategic board game designed by Robert Kiyosaki, the author of Rich Dad Poor Dad. The game simulates financial scenarios to teach concepts of money management, investing, and generating passive income. Players learn how to manage income and expenses, invest in real estate, stocks, and businesses in order to escape the “rat race” and enter the “fast track to wealth.” The game emphasizes smart decision-making and effective financial planning as key tools for achieving financial independence."
-  },
+  "id": "2",
+  "name": "CASHFLOW",
+  "image": "cashflow_board.png",
+  "tags": ["Economic", "Educational", "Strategy"],
+  "duration": "90-180 min",
+  "players": "2-6 players",
+  "description": "CASHFLOW is a financial board game that simulates money management, investing, and generating passive income. Players must manage their income, expenses, debts, and assets to escape the 'Rat Race' and enter the 'Fast Track' to achieve their financial dreams.",
+  "howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "Generate passive income greater than your expenses to exit the inner circle (Rat Race).",
+        "Achieve your 'financial dream' on the Fast Track to win the game."
+      ]
+    },
+    {
+      "title": "Game Setup",
+      "steps": [
+        "Choose a profession (character sheet) and receive starting cash, along with assigned income, expenses, assets, and liabilities.",
+        "Distribute an Income Statement sheet to each player to track their finances.",
+        "Place each player's token on the START space in the Rat Race circle."
+      ]
+    },
+    {
+      "title": "Playing in the Rat Race (Inner Circle)",
+      "steps": [
+        "Roll 1 die and move forward based on the result.",
+        "Follow the instructions on the space you land on, such as drawing an opportunity card, receiving your paycheck, or facing an event.",
+        "Purchase assets that generate passive income, such as real estate, stocks, or businesses."
+      ]
+    },
+    {
+      "title": "Generating Passive Income",
+      "steps": [
+        "Invest in income-generating assets like rental properties, dividend-paying stocks, or businesses.",
+        "When your passive income exceeds your total expenses, you can leave the Rat Race."
+      ]
+    },
+    {
+      "title": "Playing in the Fast Track (Outer Circle)",
+      "steps": [
+        "Choose a 'Dream' (life goal), such as owning a private island or starting a foundation.",
+        "Roll 2 dice to move on the Fast Track, making investments or managing finances to reach your dream.",
+        "Purchase your chosen 'Dream' when you have enough money to win the game."
+      ]
+    },
+    {
+      "title": "Tips for Playing",
+      "steps": [
+        "Invest in opportunities that provide positive cash flow.",
+        "Don't be afraid of debt if it helps generate income.",
+        "Manage your expenses wisely and use money intelligently."
+      ]
+    }
+  ]
+}
+,
+  
   {
+     "id": "3",
     "name": "Exploding Kittens",
-    "image": "exploding_kittens.jpg",
+    "image": "Group 77.png",
     "tags": ["Luck-based", "Bluffing"],
     "duration": "15 min",
     "players": "2-5 players",
     "description":"Exploding Kittens is a card game full of humor and excitement. Players take turns drawing cards from the deck, hoping not to draw an “Exploding Kitten” card, which causes them to be eliminated from the game instantly. However, there are special cards that help players avoid or defuse the explosion, such as the “Laser Pointer” or “Shuffle” cards. This game is suitable for all ages and guarantees laughter every time it’s played."
+    ,"howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "Avoid drawing an Exploding Kitten card.",
+        "Be the last player remaining in the game."
+      ]
+    },
+    {
+      "title": "What is a Defuse Card?",
+      "steps": [
+        "A Defuse card allows you to cancel the effect of an Exploding Kitten.",
+        "If you draw an Exploding Kitten and use a Defuse, you place the kitten card back into the draw pile secretly—anywhere you like.",
+        "If you don’t have a Defuse, you're immediately eliminated from the game."
+      ]
+    },
+    {
+      "title": "Game Setup",
+      "steps": [
+        "Give each player 7 random cards plus 1 Defuse card.",
+        "Remove excess Defuse cards from the deck, keeping only one per player.",
+        "Add Exploding Kitten cards (one less than the number of players) into the draw pile.",
+        "Shuffle all cards and place the draw pile in the center."
+      ]
+    },
+    {
+      "title": "Turn Structure",
+      "steps": [
+        "On your turn, you may play as many cards as you like (or none at all).",
+        "End your turn by drawing 1 card from the draw pile.",
+        "If you draw an Exploding Kitten:",
+        "- Use a Defuse card to cancel it and put the kitten back into the deck secretly.",
+        "- If you don’t have a Defuse, you're eliminated."
+      ]
+    },
+    {
+      "title": "Common Action Cards",
+      "steps": [
+        "Skip – End your turn without drawing a card.",
+        "Attack – End your turn and make the next player take 2 turns in a row.",
+        "Favor – Choose a player to give you 1 card of their choice.",
+        "Shuffle – Shuffle the draw pile.",
+        "See the Future – Look at the top 3 cards of the draw pile.",
+        "Nope – Cancel another player’s action card (can be played anytime)."
+      ]
+    },
+    {
+      "title": "Winning the Game",
+      "steps": [
+        "Continue playing until all other players are eliminated by Exploding Kittens.",
+        "The last remaining player wins the game."
+      ]
+    }
+  ]
   },
   {
+    "id": "4",
     "name": "Ultimate Werewolf Deluxe",
-    "image": "ultimate_werewolf.jpg",
+    "image": "Group 74.png",
     "tags": ["Bluffing", "Cooperative", "Puzzle"],
     "duration": "30-90 min",
     "players": "5-30 players",
     "description":"Ultimate Werewolf is a social deduction game where players are assigned secret roles such as werewolves, villagers, or other special characters. The game progresses through alternating night and day phases. During the night, the werewolves secretly choose a victim, and during the day, players discuss and vote to eliminate a suspected werewolf. The game emphasizes communication, deception, and analyzing other players’ behavior. It's ideal for large groups and adds a lot of excitement to parties."
+    ,"howToplay": [
+  {
+    "title": "Game Objective",
+    "steps": [
+      "Werewolf team: Eliminate other players until the number of werewolves is equal to or greater than the remaining players.",
+      "Villager team and special roles: Identify and vote out all werewolves before getting eliminated."
+    ]
   },
   {
+    "title": "Game Setup",
+    "steps": [
+      "Number of players: 6 or more (the more, the better).",
+      "Prepare role cards according to the number of players, including Werewolves, Villagers, and Special Roles.",
+      "Choose 1 Game Master (GM) who will control the game without participating as a player."
+    ]
+  },
+  {
+    "title": "Role Assignment",
+    "steps": [
+      "Distribute role cards randomly to each player without revealing them to others.",
+      "Players must remember their roles and must not reveal them during the game."
+    ]
+  },
+  {
+    "title": "First Night Phase (Eyes Closed)",
+    "steps": [
+      "GM asks everyone to close their eyes.",
+      "GM calls on the Werewolves to open their eyes and choose a victim.",
+      "GM calls on the Doctor to open their eyes and select one player to protect from being killed.",
+      "GM calls on the Seer to open their eyes and check one player’s role to see if they are a werewolf.",
+      "GM asks everyone to close their eyes again and remembers the choices made by each role."
+    ]
+  },
+  {
+    "title": "Day Phase",
+    "steps": [
+      "GM announces who (if anyone) was killed during the night.",
+      "All players open their eyes and begin discussing, accusing, defending, and trying to identify the werewolves.",
+      "All players vote to eliminate one player from the game.",
+      "The eliminated player must reveal their role and leave the game immediately."
+    ]
+  },
+  {
+    "title": "Night–Day Cycle",
+    "steps": [
+      "Return to the night phase: All players close their eyes and the special roles perform their actions.",
+      "In the morning, GM announces the results and starts the next discussion and voting round.",
+      "Repeat until a win condition is met."
+    ]
+  },
+  {
+    "title": "Winning Conditions",
+    "steps": [
+      "Villagers win when all werewolves are eliminated.",
+      "Werewolves win when their number is equal to or greater than the remaining players."
+    ]
+  },
+  {
+    "title": "Suggested Special Roles (Optional for added fun)",
+    "steps": [
+      "Doctor: Each night, selects one player to protect from being killed.",
+      "Seer: Each night, selects one player to check if they are a werewolf.",
+      "Hunter: If eliminated, can choose one player to die with them.",
+      "Lovers: If one dies, the other dies automatically.",
+      "Gunslinger: If voted out, can shoot and eliminate one player before leaving the game."
+    ]
+  }
+]
+  },
+  {
+    "id": "5",
     "name": "Catan",
-    "image": "catan.jpg",
+    "image": "CATAN.png",
     "tags": ["Strategy", "Adventure"],
     "duration": "60-120 min",
     "players": "3-6 players",
     "description":"Catan is a strategy game where players take on the role of settlers on the island of Catan. They must gather resources such as wood, brick, wheat, sheep, and ore to build roads, settlements, and cities. The game emphasizes resource trading with other players, long-term planning, and adapting strategies based on changing situations, making each game unique and challenging."
+    ,"howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "Be the first player to reach 10 Victory Points (VP) by building settlements, cities, and gaining achievements."
+      ]
+    },
+    {
+      "title": "Game Setup",
+      "steps": [
+        "Assemble the hexagonal board with terrain tiles and place number tokens (except on the desert).",
+        "Each player chooses a color and receives 5 settlements, 4 cities, and 15 roads.",
+        "Players take turns placing 2 settlements and 2 roads on the board.",
+        "Players collect starting resources based on the location of their second settlement."
+      ]
+    },
+    {
+      "title": "Gameplay Turn",
+      "steps": [
+        "Roll 2 dice to determine resource production for all players.",
+        "Players collect resources from tiles adjacent to their settlements or cities with the rolled number.",
+        "Take any number of actions: build roads/settlements/cities, trade, buy development cards.",
+        "End your turn."
+      ]
+    },
+    {
+      "title": "Trading",
+      "steps": [
+        "Trade with other players by making deals.",
+        "Trade with the bank at 4:1 ratio of the same resource.",
+        "Trade with harbors for better rates (e.g., 3:1 or 2:1 if you have access)."
+      ]
+    },
+    {
+      "title": "Robber Rule",
+      "steps": [
+        "If a 7 is rolled, players with more than 7 resource cards must discard half.",
+        "Move the Robber to any tile. That tile no longer produces resources.",
+        "Steal 1 resource card from a player with a settlement/city next to that tile."
+      ]
+    },
+    {
+      "title": "Victory Points",
+      "steps": [
+        "Settlement = 1 VP",
+        "City = 2 VP",
+        "Certain development cards = 1 VP",
+        "Longest Road (5+ connected roads) = 2 VP",
+        "Largest Army (3+ knight cards) = 2 VP"
+      ]
+    }
+  ]
+
   },
   {
+    "id": "6",
     "name": "The Resistance: Avalon",
-    "image": "avalon.jpg",
+    "image": "AVALON.png",
     "tags": ["Bluffing", "Cooperative"],
     "duration": "30-60 min",
     "players": "5-10 players",
     "description":"The Resistance: Avalon is a social deduction game set in the era of King Arthur. Players are secretly assigned roles as either members of the loyal servants of Arthur or the minions of Mordred. Special characters, such as Merlin, know the identities of the evil players but must avoid being discovered. The game emphasizes strategic planning, communication, and deception, as players work to either ensure the success or failure of missions based on their secret roles."
+    ,"howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "Good team (Arthur's loyal servants): Successfully complete 3 missions.",
+        "Evil team (Minions of Mordred): Cause 3 missions to fail or assassinate Merlin after the third successful mission."
+      ]
+    },
+    {
+      "title": "Game Setup",
+      "steps": [
+        "Gather 5–10 players and assign roles secretly (including Merlin, Minions, and optional roles like Percival and Morgana).",
+        "Use the role guide to determine which characters to include based on the number of players.",
+        "Everyone closes their eyes while the narrator gives prompts to allow specific roles to identify others."
+      ]
+    },
+    {
+      "title": "Each Game Round",
+      "steps": [
+        "A leader is assigned and proposes a team to go on the mission.",
+        "All players vote to approve or reject the proposed team.",
+        "If the majority approves, the mission proceeds. Otherwise, leadership passes to the next player.",
+        "If 5 teams are rejected in a row, the evil team automatically wins."
+      ]
+    },
+    {
+      "title": "Mission Phase",
+      "steps": [
+        "Selected mission members secretly submit a 'Pass' or 'Fail' card.",
+        "Good players must always choose 'Pass'.",
+        "Evil players may choose either 'Pass' or 'Fail'.",
+        "Cards are shuffled and revealed: if even one 'Fail' is present (except in some rounds), the mission fails.",
+        "The fourth mission may require two 'Fail' cards to fail, depending on player count."
+      ]
+    },
+    {
+      "title": "Endgame: Assassination of Merlin",
+      "steps": [
+        "If the good team completes 3 missions, the evil team gets one final chance.",
+        "They discuss and nominate one player as Merlin.",
+        "If correct, the evil team wins. If incorrect, the good team wins."
+      ]
+    },
+    {
+      "title": "Tips and Strategies",
+      "steps": [
+        "Good players should analyze voting and speech patterns to detect evil.",
+        "Evil players should blend in, avoid revealing each other, and mislead the good team.",
+        "Merlin must avoid being too obvious to prevent being targeted by the assassin.",
+        "Percival should protect Merlin's identity by drawing attention away."
+      ]
+    }
+  ]
   },
   {
+    "id": "7",
     "name": "Coup",
     "image": "coup.jpg",
     "tags": ["Bluffing", "Luck-based"],
     "duration": "15 min",
     "players": "2-6 players",
     "description":"Coup is a fast-paced bluffing game where each player has hidden roles and powers. Players can claim any role they want to perform actions like stealing coins or blocking attacks—but others can challenge them. If caught bluffing, a player loses influence. Coup is all about outwitting and out-bluffing your opponents, with quick turns and rising tension leading to a single survivor."
+    ,"howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "Be the last player with any Influence (face-down character cards) remaining."
+      ]
+    },
+    {
+      "title": "Game Setup",
+      "steps": [
+        "Use a 15-card deck with 3 copies of each role: Duke, Assassin, Captain, Ambassador, and Contessa.",
+        "Shuffle the deck and deal 2 face-down character cards to each player.",
+        "Give each player 2 coins from the treasury.",
+        "Place the rest of the coins in the center as the bank."
+      ]
+    },
+    {
+      "title": "Turn Actions",
+      "steps": [
+        "On your turn, take one action. You may:",
+        "Income – Take 1 coin (unblockable).",
+        "Foreign Aid – Take 2 coins (can be blocked by Duke).",
+        "Coup – Pay 7 coins to force a player to lose 1 influence (unblockable, mandatory if you have 10+ coins).",
+        "Claim a character ability (even if you don't have it)."
+      ]
+    },
+    {
+      "title": "Character Abilities (Claimable Actions)",
+      "steps": [
+        "Duke – Tax: Take 3 coins. Can block Foreign Aid.",
+        "Assassin – Assassinate: Pay 3 coins to eliminate a character. Can be blocked by Contessa.",
+        "Captain – Steal: Take 2 coins from another player. Can be blocked by Captain or Ambassador.",
+        "Ambassador – Exchange: Draw 2 cards from the deck, choose 2 to keep, and return 2."
+      ]
+    },
+    {
+      "title": "Challenging and Blocking",
+      "steps": [
+        "Any player may Challenge a claimed role.",
+        "If the claim is true: challenger loses a character.",
+        "If the claim is false: claimant loses a character.",
+        "Some actions can be Blocked:",
+        "Foreign Aid → by Duke",
+        "Assassinate → by Contessa",
+        "Steal → by Captain or Ambassador"
+      ]
+    },
+    {
+      "title": "Losing Influence",
+      "steps": [
+        "When you lose an influence (from Coup or Assassination), choose and reveal one of your face-down cards. It is now out of play.",
+        "Lose both cards = eliminated from the game."
+      ]
+    },
+    {
+      "title": "Winning the Game",
+      "steps": [
+        "The last player remaining with at least one influence wins the game."
+      ]
+    }
+  ]
   },
   {
+    "id": "8",
     "name": "Splendor",
     "image": "splendor.jpg",
     "tags": ["Strategy"],
     "duration": "25-40 min",
     "players": "2-4 players",
     "description":"In Splendor, players act as Renaissance-era gem merchants trying to collect development cards and attract noble patrons. By managing resources and building their gem engine, players race to accumulate prestige points. The game is a balance of tactical decision-making, long-term planning, and careful observation of opponents. With elegant mechanics and beautiful components, it’s both accessible and strategically deep."
+    ,"howToplay": [
+    {
+      "title": "Objective",
+      "steps": [
+        "Collect 15 prestige points before other players by purchasing development cards and attracting noble tiles."
+      ]
+    },
+    {
+      "title": "Game Setup",
+      "steps": [
+        "Provide 7 tokens of each gem color (diamond, sapphire, emerald, onyx, ruby) and 5 gold tokens (Jokers) for 4 players.",
+        "Shuffle development cards into 3 separate decks by level and reveal 4 cards from each level.",
+        "Randomly place noble tiles equal to the number of players plus one (e.g., 4 tiles for 3 players)."
+      ]
+    },
+    {
+      "title": "Turn Overview",
+      "steps": [
+        "On your turn, choose one of the following actions:"
+      ]
+    },
+    {
+      "title": "1. Take Tokens",
+      "steps": [
+        "Take 3 tokens of different colors.",
+        "Or take 2 tokens of the same color (only if there are at least 4 of that color in the supply).",
+        "You cannot have more than 10 tokens in total at the end of your turn."
+      ]
+    },
+    {
+      "title": "2. Reserve a Card",
+      "steps": [
+        "Reserve one face-up card from the table or draw a hidden card from one of the decks.",
+        "Gain 1 gold token (if any are left).",
+        "You can later purchase reserved cards on your turn."
+      ]
+    },
+    {
+      "title": "3. Purchase a Card",
+      "steps": [
+        "Pay the required tokens as indicated on the card.",
+        "You may use bonuses from your owned development cards to reduce the token cost.",
+        "The purchased card provides a permanent gem bonus and may give prestige points."
+      ]
+    },
+    {
+      "title": "Noble Visit",
+      "steps": [
+        "At the end of your turn, if your permanent gem bonuses match a noble's requirement, that noble visits you automatically.",
+        "Take the noble tile and gain 3 prestige points."
+      ]
+    },
+    {
+      "title": "End of the Game",
+      "steps": [
+        "When a player reaches 15 prestige points at the end of their turn, the round continues until all players have had an equal number of turns.",
+        "The player with the highest prestige points wins.",
+        "If there is a tie, the player who purchased the fewest cards wins."
+      ]
+    }
+  ]
   },
   {
+    "id": "9",
     "name": "Dixit",
     "image": "dixit.jpg",
     "tags": ["Luck-based", "Puzzle"],
     "duration": "20-40 min",
     "players": "3-6 players",
     "description":"Dixit is a creative storytelling game featuring surreal, dreamlike illustrations. On each turn, a player (the storyteller) gives a clue—such as a phrase, sound, or story—that relates to one of their cards. The other players select cards from their hand that could match the clue. Everyone then guesses which card was the original. Success requires creativity, intuition, and understanding how others think, making it a deeply artistic and social experience."
+    ,"howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "Score the most points by correctly guessing the storyteller’s card and getting others to vote for your card."
+      ]
+    },
+    {
+      "title": "Game Setup",
+      "steps": [
+        "Each player receives 6 image cards.",
+        "Each player chooses a colored rabbit token and places it on the starting space of the scoreboard.",
+        "Give each player a set of voting tokens (numbered tokens).",
+        "Randomly choose the first storyteller."
+      ]
+    },
+    {
+      "title": "Turn Sequence",
+      "steps": [
+        "The storyteller chooses one card from their hand and gives a clue (word, phrase, sound, or sentence) related to it.",
+        "Other players each choose one card from their hand that they think fits the clue and give it face down to the storyteller.",
+        "The storyteller shuffles all selected cards (including their own) and lays them face up with a number assigned to each.",
+        "All players (except the storyteller) secretly vote on which card they believe is the storyteller’s card using their numbered voting tokens."
+      ]
+    },
+    {
+      "title": "Scoring",
+      "steps": [
+        "If all players or no one guesses the storyteller’s card: storyteller gets 0 points, others get 2 points each.",
+        "If some (but not all) players guess correctly: storyteller and correct guessers get 3 points each.",
+        "Each player also receives 1 point for each vote their own card receives (excluding the storyteller)."
+      ]
+    },
+    {
+      "title": "Winning the Game",
+      "steps": [
+        "The game ends when the draw pile is empty or a player reaches the end of the scoring track.",
+        "The player with the highest score wins."
+      ]
+    }
+  ]
   },
   {
+    "id": "10",
     "name": "Taboo",
     "image": "taboo.jpg",
     "tags": ["Puzzle", "Cooperative"],
     "duration": "45-90 min",
     "players": "4-6 players",
     "description":"Taboo is a social party game created by the YouTube channel “Thep Leela.” Each player is secretly assigned a “forbidden word” and must stick the card with that word on their forehead without knowing what it says. The goal is to engage in conversation, ask clever questions, and guide others into accidentally saying their own forbidden word—without saying yours first. The game emphasizes communication skills, wit, and strategic thinking. It's perfect for groups of friends and guarantees lots of laughter throughout the game."
+    ,"howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "The game focuses on strategic thinking and communication. Players aim to trick others into saying the secret word placed on their own forehead."
+      ]
+    },
+    {
+      "title": "Setup",
+      "steps": [
+        "Each player receives a card with a secret word written on it.",
+        "Players must not look at their own word.",
+        "Place or hold the card on your forehead so others can see it."
+      ]
+    },
+    {
+      "title": "Gameplay",
+      "steps": [
+        "Players take turns or speak freely to trick others into saying the word placed on their forehead.",
+        "Conversations are used as a tool to bait or mislead other players."
+      ]
+    },
+    {
+      "title": "Losing Conditions",
+      "steps": [
+        "A player loses if they accidentally say the word on their own forehead.",
+        "A player also loses if they fail to respond within the set time limit."
+      ]
+    },
+    {
+      "title": "Winning the Game",
+      "steps": [
+        "The first player to make others say their own words the required number of times wins.",
+        "Alternatively, the player with the highest score at the end of the game wins."
+      ]
+    }
+  ]
   },
   {
+    "id": "11",
     "name": "Sheriff of Nottingham",
     "image": "sheriff_of_nottingham.jpg",
     "tags": ["Bluffing", "Strategy"],
     "duration": "45-60 min",
     "players": "3-6 players",
     "description":"In Sheriff of Nottingham, players take turns playing as merchants who try to bring goods into the city—and as the Sheriff who inspects them. Merchants must declare the goods in their bag, but can choose to lie about illegal goods to earn more coins. The Sheriff must decide whether to inspect or trust them. Players can bluff, bribe, and negotiate their way to victory in this mix of deduction and deception."
+    ,"howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "Collect the most coins by successfully selling legal and illegal goods while avoiding fines."
+      ]
+    },
+    {
+      "title": "Game Setup",
+      "steps": [
+        "Shuffle the goods cards and place them face down as a draw pile.",
+        "Give each player a set amount of starting coins.",
+        "Decide the first Sheriff randomly.",
+        "Each player receives merchant tokens or markers."
+      ]
+    },
+    {
+      "title": "Description: What is a Sheriff ?",
+      "steps": [
+        "The Sheriff, or inspector, is the player who takes turns checking the merchants' bags each round to see whether they contain only legal goods or if illegal goods are being smuggled in. The Sheriff has the authority to inspect the bags or let them pass at their discretion."
+      ]
+    },
+    {
+      "title": "Game Setup",
+      "steps": [
+        "Shuffle the goods cards and place them face down as a draw pile.",
+        "Give each player a set amount of starting coins.",
+        "Decide the first Sheriff randomly.",
+        "Each player receives merchant tokens or markers."
+      ]
+    },
+    {
+      "title": "Roles",
+      "steps": [
+        "Players take turns being the Sheriff.",
+        "The other players act as merchants during that round."
+      ]
+    },
+    {
+      "title": "Turn Sequence",
+      "steps": [
+        "Merchants select up to 5 goods cards to place in their bag (legal goods only or attempt to sneak illegal goods).",
+        "Merchants declare to the Sheriff what goods are in their bag (usually only legal goods, may lie about illegal goods).",
+        "Merchants hand their bags to the Sheriff.",
+        "The Sheriff decides which bags to inspect or to let pass.",
+        "If inspected and illegal goods are found, merchants pay fines and lose those goods.",
+        "If inspected and no illegal goods are found, the Sheriff pays compensation to the merchant.",
+        "If not inspected, goods are placed in the merchant's market without issue."
+      ]
+    },
+    {
+      "title": "Additional Rules",
+      "steps": [
+        "Merchants may bluff but risk being caught if inspected.",
+        "Sheriffs must manage coins to balance fines and compensation.",
+        "Merchants can negotiate or bribe the Sheriff to avoid inspection."
+      ]
+    },
+    {
+      "title": "Game End and Winning",
+      "steps": [
+        "The game ends after every player has been the Sheriff for 3-4 rounds.",
+        "The player with the highest total of coins and market goods value wins."
+      ]
+    }
+  ]
   },
   {
+    "id": "12",
     "name": "Salem",
-    "image": "salem.jpg",
+    "image": "SALEM.png",
     "tags": ["Bluffing", "Puzzle"],
     "duration": "30-60 min",
     "players": "4-12 players",
     "description":"This is a party board game to play with friends that focuses on analysis and discussion. If you have played mystery-hunting games like Werewolf or Mafia before, you will definitely enjoy this game. You need to play cards you draw to accuse players you don’t trust and try to protect those you believe are on your side. Be careful—when the evil intentions arise, the witch will begin to spread her curse. The people you trust may no longer be trustworthy. During the night phase, the witch comes out to eliminate unfortunate villagers one by one…"
+    ,"howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "Townsfolk aim to find and eliminate all witches.",
+        "Witches aim to survive until the end of the game."
+      ]
+    },
+    {
+      "title": "Game Setup",
+      "steps": [
+        "Randomly deal role cards to each player (e.g. Townsfolk, Witch, Doctor).",
+        "Keep roles secret from other players."
+      ]
+    },
+    {
+      "title": "Gameplay - Each Round",
+      "steps": [
+        "Players receive action cards at the start of the round.",
+        "Players use action cards to investigate, protect, attack, or gather information.",
+        "Players discuss and vote to accuse a suspect of being a witch.",
+        "The player with the most votes is arrested and reveals their role.",
+        "If the arrested player is a witch, they are eliminated from the game.",
+        "If the arrested player is not a witch, they may receive a penalty according to the rules."
+      ]
+    },
+    {
+      "title": "Additional Rules",
+      "steps": [
+        "Players may bluff, deceive, or persuade others.",
+        "Action cards have limitations and must be used strategically.",
+        "The game involves high uncertainty and requires careful observation of other players' behavior."
+      ]
+    },
+    {
+      "title": "Game End and Winning",
+      "steps": [
+        "The game ends when all witches are eliminated or witches survive until the end.",
+        "Townsfolk win if all witches are caught.",
+        "Witches win if they survive until the game ends."
+      ]
+    }
+  ]
   },
   {
+    "id": "13",
     "name": "I'm the Boss",
     "image": "im_the_boss.jpg",
     "tags": ["Strategy", "Luck-based"],
     "duration": "45-60 min",
     "players": "3-6 players",
     "description":"In this game, you take on the role of one of six expert investment team leaders. Each investor specializes in a different field—whether it’s media, technology, politics, finance, law, or scientific research—and aims to gain stakes in various deals. Your goal is to become the ultimate “big boss,” controlling and wielding power to close mega-project deals and maximize profits. Since all investors share the same objective, you must be ready to use cunning strategies and creatively leverage your special expertise when necessary. Negotiate, intervene, and secure as many deals as possible to keep everything under your control and prove yourself as the true “boss”!"
+    , "howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "Accumulate the most money by successfully participating in profitable deals through negotiation and bidding."
+      ]
+    },
+    {
+      "title": "Game Components",
+      "steps": [
+        "Deal cards representing business opportunities.",
+        "Role cards including the Boss and potential partners.",
+        "Money tokens representing earnings from deals.",
+        "Player tokens or markers."
+      ]
+    },
+    {
+      "title": "Roles and Turn Order",
+      "steps": [
+        "Players take turns being the Boss.",
+        "The Boss initiates the deal and tries to form agreements with other players."
+      ]
+    },
+    {
+      "title": "Turn Sequence",
+      "steps": [
+        "Reveal a new deal card with requirements and rewards.",
+        "The Boss decides which players to include in the deal.",
+        "Negotiation begins – players may offer money, cards, or other promises.",
+        "If a deal is agreed upon, involved players receive their shares and the deal is completed.",
+        "If the deal fails, the next player becomes the Boss."
+      ]
+    },
+    {
+      "title": "Special Rules",
+      "steps": [
+        "Players may use action cards to disrupt, delay, or take over deals.",
+        "Negotiations can include bluffing, alliances, or betrayals.",
+        "There are no fixed rules for how deals must be split – it’s up to the players."
+      ]
+    },
+    {
+      "title": "Winning the Game",
+      "steps": [
+        "The game ends after all deal cards have been played.",
+        "The player with the most money wins the game."
+      ]
+    }
+  ]
   },
   {
+    "id": "14",
     "name": "Secret Hitler",
     "image": "secret_hitler.jpg",
     "tags": ["Bluffing", "Cooperative"],
     "duration": "45 min",
     "players": "5-10 players",
     "description":"Secret Hitler is a social deduction game where players are divided into two teams: Liberals and Fascists, with “Hitler” being a secret Fascist player. Players must use strategy, persuasion, and deception to uncover who Hitler is or to support their own team. The Liberals win by passing Liberal policies, while the Fascists aim to pass Fascist policies and protect Hitler. This game is perfect for those who enjoy political challenges and the tension of finding “enemies” within their group of friends."
+    ,"howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "Liberals win by enacting 5 Liberal policies or assassinating Hitler.",
+        "Fascists win by enacting 6 Fascist policies or electing Hitler as Chancellor after 3 Fascist policies have been enacted."
+      ]
+    },
+    {
+      "title": "Setup",
+      "steps": [
+        "Assign roles secretly based on the number of players (e.g., 5 players = 3 Liberals, 1 Fascist, 1 Hitler).",
+        "Distribute role cards secretly to each player.",
+        "Perform the night phase so Fascists know each other (Hitler may or may not know depending on player count)."
+      ]
+    },
+    {
+      "title": "Turn Sequence",
+      "steps": [
+        "The current President nominates a player to be Chancellor.",
+        "All players vote 'Yes' or 'No' on the proposed government.",
+        "If the vote passes, proceed to policy enactment. If it fails, the next player becomes President.",
+        "If three governments in a row are rejected, a random policy is enacted."
+      ]
+    },
+    {
+      "title": "Policy Enactment",
+      "steps": [
+        "President draws 3 policy cards, discards 1 face-down, and passes 2 to the Chancellor.",
+        "Chancellor chooses 1 to enact and discards the other face-down.",
+        "Reveal the enacted policy (Liberal or Fascist)."
+      ]
+    },
+    {
+      "title": "Executive Powers (after certain number of Fascist policies)",
+      "steps": [
+        "Investigate a player’s loyalty.",
+        "Call a special election.",
+        "Peek at the top 3 policy cards.",
+        "Assassinate a player."
+      ]
+    },
+    {
+      "title": "Assassination",
+      "steps": [
+        "If assassination power is triggered, the President chooses a player to eliminate.",
+        "If Hitler is assassinated, Liberals win instantly.",
+        "If any other player is killed, the game continues."
+      ]
+    },
+    {
+      "title": "Winning the Game",
+      "steps": [
+        "Liberals win by passing 5 Liberal policies or killing Hitler.",
+        "Fascists win by passing 6 Fascist policies or electing Hitler as Chancellor after 3 Fascist policies have passed."
+      ]
+    }
+  ]
   },
   {
+    "id": "15",
     "name": "Mogel Motte",
     "image": "mogel_motte.jpg",
     "tags": ["Luck-based", "Bluffing"],
     "duration": "15-25 min",
     "players": "3-5 players",
     "description":"Mogel Motte is a party game that focuses on memory and playful deception. Players must match cards in the correct way while trying to trick others into choosing the wrong ones. The game creates a fun and exciting atmosphere, making it perfect for groups of friends or families looking for lighthearted humor and simple, competitive gameplay."
+    ,"howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "Get rid of all cards in your hand before the other players. Cheating is allowed—and even required—for certain cards!"
+      ]
+    },
+    {
+      "title": "Setup",
+      "steps": [
+        "Shuffle the deck and deal 8 cards to each player.",
+        "Place one card face up in the center to start the play pile.",
+        "Choose one player to be the Guard Bug, who watches for cheating."
+      ]
+    },
+    {
+      "title": "Turn Overview",
+      "steps": [
+        "Players take turns playing a card that is one number higher or lower than the top card on the pile.",
+        "If a player cannot play a valid card, they must draw one from the deck.",
+        "Special action cards may be played to affect gameplay (e.g., skip, reverse, force a draw)."
+      ]
+    },
+    {
+      "title": "Cheating Rules",
+      "steps": [
+        "Mogel Motte cards (Cheating Moth) cannot be played normally.",
+        "Players must secretly get rid of Mogel Motte cards by cheating: dropping them, hiding them, or other sneaky methods.",
+        "If caught cheating by the Guard Bug, the player takes the card back and becomes the next Guard Bug."
+      ]
+    },
+    {
+      "title": "Guard Bug Role",
+      "steps": [
+        "The Guard Bug is not allowed to cheat.",
+        "Their role is to catch others in the act of cheating.",
+        "If they catch someone, they switch roles with that player."
+      ]
+    },
+    {
+      "title": "Winning the Game",
+      "steps": [
+        "The round ends when a player has no cards left in hand.",
+        "That player wins the round. You may keep score and play multiple rounds if desired."
+      ]
+    }
+  ]
   },
   {
+    "id": "16",
     "name": "Deception: Murder in Hong Kong",
     "image": "deception.jpg",
     "tags": ["Puzzle", "Cooperative"],
     "duration": "20-30 min",
     "players": "4-12 players",
     "description":"Deception: Murder in Hong Kong is a deduction-based investigation game where players take on roles such as investigators, forensic scientists, or the murderer. The “forensic scientist” provides clues based on evidence left behind by the murderer, and players must communicate and interpret these clues to identify the culprit. The game emphasizes limited communication and detailed analytical thinking, making it ideal for those who enjoy cooperative detective-style games."
+    ,"howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "Identify the murderer by analyzing clues provided by the Forensic Scientist.",
+        "If you are the murderer, deceive others and avoid getting caught."
+      ]
+    },
+    {
+      "title": "Game Setup",
+      "steps": [
+        "Assign roles secretly: 1 Forensic Scientist, 1 Murderer, and Investigators. Add Accomplice or Witness for more players.",
+        "Each player receives 4 Clue Cards and 4 Means Cards, placed face-up in front of them.",
+        "The Forensic Scientist reveals their role and remains silent for the entire game."
+      ]
+    },
+    {
+      "title": "Night Phase (Role Revelation)",
+      "steps": [
+        "All players close their eyes.",
+        "The Forensic Scientist asks the Murderer (and Accomplice, if present) to open their eyes.",
+        "The Murderer silently points to one Clue Card and one Means Card.",
+        "If there's a Witness, they open their eyes after the Murderer and Accomplice close theirs to see who the criminals are."
+      ]
+    },
+    {
+      "title": "Gameplay Loop",
+      "steps": [
+        "All players open their eyes.",
+        "The Forensic Scientist reveals Scene Tiles (e.g., Location of Crime, Cause of Death) and places bullets to indicate clues.",
+        "Players discuss the evidence, share theories, and try to deduce the murderer.",
+        "The Forensic Scientist may change one Scene Tile per round to give new clues.",
+        "Each player can make only one formal accusation during the game."
+      ]
+    },
+    {
+      "title": "Making an Accusation",
+      "steps": [
+        "A player points to a suspect and selects the Clue and Means cards they believe were used.",
+        "If correct, the Investigators win.",
+        "If incorrect, that player cannot accuse again, but can still join discussions."
+      ]
+    },
+    {
+      "title": "Game End",
+      "steps": [
+        "The game ends when a correct accusation is made (Investigators win), or if no one guesses correctly after all rounds (Murderer wins).",
+        "In games with a Witness, the Murderer and Accomplice can still win by identifying and eliminating the Witness if they’re discovered."
+      ]
+    }
+  ]
   },
   {
+    "id": "17",
     "name": "Survive: Escape from Atlantis!",
     "image": "survive.jpg",
     "tags": ["Adventure", "Luck-based"],
     "duration": "45 min",
     "players": "2-4 players",
     "description":"Survive: Escape from Atlantis! is a survival game where players must escape from the sinking island of Atlantis. Players move across the island using boats and smaller land tiles while avoiding various disasters such as sharks, tsunamis, and volcanic eruptions. The game focuses on strategic planning and risk management, with the goal of being the last one standing."
+    , "howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "Rescue your Meeple from the sinking island of Atlantis by moving them to safe islands while avoiding dangerous sea creatures.",
+        "Each Meeple has a hidden score; the goal is to save those with the highest total points."
+      ]
+    },
+    {
+      "title": "Game Setup",
+      "steps": [
+        "Build the island by placing hex tiles in a circle (beach, forest, and mountain layers).",
+        "Each player selects a color and places their Meeple randomly on the island.",
+        "Meeple have hidden numbers (1-6 points) on their underside.",
+        "Place 3 boats around the island and randomly add sea creatures (shark, whale, sea serpent) around the map."
+      ]
+    },
+    {
+      "title": "Turn Sequence",
+      "steps": [
+        "Each player takes turns in clockwise order, following 4 phases:"
+      ]
+    },
+    {
+      "title": "1. Play Action Card (Optional)",
+      "steps": [
+        "If the player has a special action card, they may play it now to cause effects like moving sea creatures or triggering events."
+      ]
+    },
+    {
+      "title": "2. Move Meeple (Up to 3 Moves Total)",
+      "steps": [
+        "Move any number of your Meeple up to 3 spaces total.",
+        "Meeple can walk on land, board boats, swim in water, or disembark boats.",
+        "Swimming: 1 move per space. Boats: can carry up to 3 Meeple and move faster."
+      ]
+    },
+    {
+      "title": "3. Move Boat or Sea Creature (1 Move)",
+      "steps": [
+        "Choose to move one boat (if you control it) or one sea creature (shark, whale, or sea serpent).",
+        "Sea Serpent: eats swimmers and destroys boats.",
+        "Shark: eats swimmers.",
+        "Whale: destroys boats but not swimmers."
+      ]
+    },
+    {
+      "title": "4. Sink a Tile",
+      "steps": [
+        "Sink one island tile, starting with beach tiles, then forest, then mountain.",
+        "Reveal the underside of the tile—it might spawn sea creatures or trigger special effects."
+      ]
+    },
+    {
+      "title": "Strategy Tips",
+      "steps": [
+        "Remember which Meeple have high points and prioritize rescuing them.",
+        "Bluff your opponents by pretending low-point Meeple are important.",
+        "Use sea creatures to block or destroy opponent’s boats.",
+        "Share boats with opponents strategically—sometimes it’s necessary!"
+      ]
+    },
+    {
+      "title": "End of Game",
+      "steps": [
+        "The game ends when the last island tile is sunk.",
+        "Count points only from Meeple who reached the safe islands.",
+        "The player with the highest total score wins."
+      ]
+    }
+  ]
   },
   {
+    "id": "18",
     "name": "Spyfall",
     "image": "spyfall.jpg",
     "tags": ["Puzzle"],
     "duration": "15 min",
     "players": "3-8 players",
     "description":"Spyfall is a social deduction game where one player takes on the role of a “spy” who doesn’t know the location everyone else is at, while the other players do. Players take turns asking each other questions to figure out who the spy is, while the spy tries to guess the location without revealing their identity. The game emphasizes communication and behavioral analysis, making it both fun and challenging."
+    ,"howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "Players try to identify who the Spy is.",
+        "If you are the Spy, try to guess the location where other players are."
+      ]
+    },
+    {
+      "title": "Game Setup",
+      "steps": [
+        "Deal location cards to all players; all have the same location except one who gets the Spy card.",
+        "Players look at their cards secretly.",
+        "Do not reveal your card to others, including the Spy."
+      ]
+    },
+    {
+      "title": "Turn Sequence",
+      "steps": [
+        "One player starts by asking any other player a question about the location.",
+        "The questioned player answers with clues related to the location without revealing too much.",
+        "The questioned player then asks another player a question.",
+        "The questioning continues in a circle."
+      ]
+    },
+    {
+      "title": "Spy Role",
+      "steps": [
+        "The Spy listens to questions and answers to guess the location.",
+        "The Spy must answer vaguely to avoid detection.",
+        "When confident, the Spy can call to stop the game and guess the location once."
+      ]
+    },
+    {
+      "title": "End of Game",
+      "steps": [
+        "The game ends when someone accuses a player as the Spy and everyone votes.",
+        "If the accusation is correct, the Spy loses.",
+        "If the Spy guesses the location correctly, the Spy wins.",
+        "If time runs out with no conclusion, the Spy wins."
+      ]
+    },
+    {
+      "title": "Tips",
+      "steps": [
+        "Do not answer questions too directly to avoid helping the Spy.",
+        "If you are the Spy, answer ambiguously but not suspiciously.",
+        "Listen carefully to all questions and answers."
+      ]
+    }
+  ]
   },
   {
+    "id": "19",
     "name": "Codenames Pictures",
     "image": "codenames_pictures.jpg",
     "tags": ["Puzzle", "Cooperative"],
     "duration": "15-30 min",
     "players": "2-8 players",
     "description":"Codenames: Pictures is a word-guessing game that uses images instead of words. Players are divided into two teams, and each team must use clever clues to help their teammates identify the correct picture symbols on the board—while avoiding the opposing team’s images and the deadly “assassin” image. The game emphasizes creative communication and analytical thinking, making it ideal for playing with large groups."
+    ,"howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "Give clues so your team can guess their own images while avoiding the other team's images and the assassin image."
+      ]
+    },
+    {
+      "title": "Game Setup",
+      "steps": [
+        "Divide players into two teams: Red and Blue.",
+        "Each team selects one player as the Spymaster.",
+        "The rest of the players are Guessers.",
+        "Place 25 picture cards in a 5x5 grid.",
+        "Spymasters receive a key card showing which images belong to each team, neutral images, and the assassin."
+      ]
+    },
+    {
+      "title": "Turn Sequence",
+      "steps": [
+        "The Spymaster gives a one-word clue and a number indicating how many images relate to that clue.",
+        "Guessers discuss and select images they think match the clue.",
+        "If a guessed image belongs to their team, place their team’s agent card on it and continue guessing.",
+        "If the image belongs to the opposing team or is neutral, place the corresponding card and end the turn.",
+        "If the assassin image is guessed, the guessing team immediately loses."
+      ]
+    },
+    {
+      "title": "Additional Rules",
+      "steps": [
+        "Clues must be a single word and not directly name any images.",
+        "No gestures, sounds, or additional hints allowed.",
+        "Spymasters cannot indicate or give extra information besides the clue and number."
+      ]
+    },
+    {
+      "title": "Winning the Game",
+      "steps": [
+        "The first team to correctly guess all their images wins.",
+        "If a team guesses the assassin image, they lose immediately."
+      ]
+    }
+  ]
   },
   {
+    "id": "20",
     "name": "Citadels Classic(TH)",
     "image": "citadels.jpg",
     "tags": ["Strategy", "Luck-based"],
     "duration": "30-60 min",
     "players": "2-8 players",
     "description":"This is a bluffing and strategy card game that’s fun whether you're playing for laughs or taking it seriously. Players compete to build the most impressive city and become the ultimate city-builder, using the unique abilities of character cards to sabotage opponents and gain an advantage."
+    ,"howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "Build the most prosperous city by constructing District cards with high points.",
+        "The player with the highest total points after building the required number of districts wins."
+      ]
+    },
+    {
+      "title": "Game Setup",
+      "steps": [
+        "Shuffle the Character cards and prepare District cards and Gold coins.",
+        "Each player will receive a role card at the start of each round."
+      ]
+    },
+    {
+      "title": "Role Selection",
+      "steps": [
+        "Deal Character cards randomly to players (some are hidden).",
+        "Players take turns choosing a role card according to seating order."
+      ]
+    },
+    {
+      "title": "Turn Sequence",
+      "steps": [
+        "Players take turns based on role number order (e.g., Assassin is 1, Thief is 2, Merchant is 3, King is 4, etc.).",
+        "On a player’s turn, they can either:",
+        "- Take 2 Gold coins, or",
+        "- Draw 2 District cards, keep 1 and discard 1."
+      ]
+    },
+    {
+      "title": "Building Districts",
+      "steps": [
+        "Players may spend Gold coins to build District cards from their hand onto their city.",
+        "Each District card has a Gold cost that must be paid."
+      ]
+    },
+    {
+      "title": "Special Abilities",
+      "steps": [
+        "Each role has special abilities, for example:",
+        "- Assassin can choose a player to skip their turn.",
+        "- Thief can steal Gold from another player.",
+        "- King gains extra Gold and chooses the first player for the next round."
+      ]
+    },
+    {
+      "title": "Game End and Winning",
+      "steps": [
+        "The game ends when a player builds 8 Districts (or the predetermined number).",
+        "Players count their total points from built Districts and bonuses.",
+        "The player with the highest score wins the game."
+      ]
+    }
+  ]
   },
   {
+    "id": "21",
     "name": "Geistes Blitz",
     "image": "geistes_blitz.jpg",
     "tags": ["Puzzle"],
     "duration": "20 min",
     "players": "2-8 players",
     "description":"Geistes Blitz is a fast-paced matching and reaction game where players must grab the correct object based on the revealed card. The game trains quick thinking and sharp observation skills, making it perfect for families or groups of friends looking for a fun, easy-to-learn game that doesn’t take too long to play."
+    ,"howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "Collect points by grabbing the correct objects according to the rules in each round as fast as possible."
+      ]
+    },
+    {
+      "title": "Game Setup",
+      "steps": [
+        "Place 5 objects (house, lantern, chair, cat, and mouse) in the center of the table.",
+        "Deal picture cards evenly to each player."
+      ]
+    },
+    {
+      "title": "Gameplay",
+      "steps": [
+        "Flip the top card from the central deck.",
+        "All players race to grab the correct object based on the card rules."
+      ]
+    },
+    {
+      "title": "Rules for Grabbing Objects",
+      "steps": [
+        "If the card shows an object with a matching color and shape on the table, grab that object.",
+        "If no object on the table matches the card's color and shape, grab the object that is NOT shown on the card.",
+        "The player who grabs the correct object fastest wins the card."
+      ]
+    },
+    {
+      "title": "Scoring",
+      "steps": [
+        "Each card collected is worth 1 point."
+      ]
+    },
+    {
+      "title": "Game End and Winning",
+      "steps": [
+        "The game ends when the central deck runs out of cards.",
+        "The player with the most cards (points) wins."
+      ]
+    }
+  ]
   },
   {
+    "id": "22",
     "name": "Chinatown",
-    "image": "chinatown.jpg",
+    "image": "CHINA_TOWN.png",
     "tags": ["Strategy"],
     "duration": "60 min",
     "players": "3-5 players",
     "description":"Chinatown is a strategy and negotiation game where players buy and trade properties in New York’s Chinatown to build businesses and increase their income. The game focuses on player-to-player negotiation and smart resource management, making it ideal for those who enjoy highly interactive strategy games."
+    ,"howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "Build businesses and accumulate the most money within the given time by negotiating land trades and setting up businesses in Chinatown."
+      ]
+    },
+    {
+      "title": "Game Setup",
+      "steps": [
+        "Each player is given starting land and money.",
+        "Players place their land and businesses on the table."
+      ]
+    },
+    {
+      "title": "Negotiating Land Trades",
+      "steps": [
+        "Players can propose buying or selling land with others by negotiating prices.",
+        "Transactions require agreement from both parties."
+      ]
+    },
+    {
+      "title": "Setting Up Businesses",
+      "steps": [
+        "Players place businesses on lands they own.",
+        "Each business type has different values and income potential."
+      ]
+    },
+    {
+      "title": "Collecting Income",
+      "steps": [
+        "At the start of each round, players collect income from their businesses.",
+        "Income depends on the number and type of businesses."
+      ]
+    },
+    {
+      "title": "Negotiation and Cooperation",
+      "steps": [
+        "Players can cooperate by trading land or businesses for mutual benefit.",
+        "Negotiation is a key part of the game."
+      ]
+    },
+    {
+      "title": "Game End",
+      "steps": [
+        "The game ends after a set number of rounds.",
+        "The player with the most money wins."
+      ]
+    }
+  ]
   },
   {
+    "id": "23",
     "name": "Sitting Ducks Gallery",
     "image": "sitting_ducks.jpg",
     "tags": ["Luck-based"],
     "duration": "20-30 min",
     "players": "3-6 players",
     "description": "This is a game where every player must do whatever it takes—negotiating, teaming up, or even betraying one another—to ensure their duck is the last one standing in the pond.\nYou’ll need to use every trick in the book, whether it’s hiding behind another duck to dodge bullets, shifting the aim to a nearby duck, or playing a special card to bring your duck back to life.\nBut remember: in this pond, there are no true friends or permanent enemies!\n\nInspired by the classic Famicom game, this hilarious party board game brings laughter and excitement to your gatherings.\nWith a game mechanic that lets you stay in play for revenge even after getting knocked out, Duck Shooting guarantees fun every time you play."
+    ,"howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "Shoot as many ducks as possible to score points."
+      ]
+    },
+    {
+      "title": "Game Components",
+      "steps": [
+        "A board with multiple duck targets.",
+        "Balls or simulated ammo for shooting.",
+        "Player tokens."
+      ]
+    },
+    {
+      "title": "Setup",
+      "steps": [
+        "Place the duck board in the center of the table.",
+        "Ducks have different point values based on position and color."
+      ]
+    },
+    {
+      "title": "Gameplay",
+      "steps": [
+        "Players take turns shooting balls at the duck targets.",
+        "If a ball hits a duck, the player earns points equal to that duck's value.",
+        "Hit ducks are removed from the board or marked as hit.",
+        "The game continues until all ducks are hit or a set number of rounds are completed."
+      ]
+    },
+    {
+      "title": "Scoring and Winning",
+      "steps": [
+        "Add up points from all ducks hit.",
+        "The player with the highest score wins."
+      ]
+    }
+  ]
   },
   {
+    "id": "24",
     "name": "Friday",
     "image": "friday.jpg",
     "tags": ["Strategy", "Luck-based"],
     "duration": "25 min",
     "players": "1 player",
     "description":"In this game, you take on the role of Friday, a wild man living on a deserted island. One day, someone washes ashore — Robinson. You must try to help Robinson grow stronger and survive on the island, overcoming various dangerous situations to gain experience and get him off the island as quickly as possible, so you can happily be alone on the island."
+    ,"howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "You play as Robinson Crusoe stranded on an island and must help him survive by overcoming various hazards."
+      ]
+    },
+    {
+      "title": "Game Components",
+      "steps": [
+        "Hazard cards",
+        "Skill cards",
+        "Aid cards",
+        "Event cards",
+        "Various cards to help overcome obstacles"
+      ]
+    },
+    {
+      "title": "Setup",
+      "steps": [
+        "Place the hazard cards in a deck in the center.",
+        "Prepare skill and aid cards for use.",
+        "Robinson starts with a set amount of life points."
+      ]
+    },
+    {
+      "title": "Gameplay",
+      "steps": [
+        "Each round, draw one hazard card.",
+        "Use skill cards in your hand to overcome the hazard.",
+        "If you fail to overcome the hazard, lose life points as specified.",
+        "Use aid cards when necessary.",
+        "Continue until all hazards are overcome or Robinson runs out of life points."
+      ]
+    },
+    {
+      "title": "Winning the Game",
+      "steps": [
+        "The game ends when all hazards are overcome successfully and Robinson survives.",
+        "If Robinson loses all life points before overcoming all hazards, the game is lost."
+      ]
+    }
+  ]
   },
   {
+    "id": "25",
     "name": "The Haunted Glass",
     "image": "haunted_glass.jpg",
     "tags": ["Puzzle", "Cooperative"],
     "duration": "30-60 min",
     "players": "2-6 players",
     "description":"A game of testing courage, where players attempt to communicate with a deceased friend through a Ouija board. Little do they know, this seemingly fun session will lead to unexpected events, because one of the friends sitting together is the real murderer! This night will end either with the spirit finding peace or the murderer’s cunning causing more victims."
+    ,"howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "Players act as ghost hunters trying to identify the real ghost hidden in the haunted house using the haunted glass."
+      ]
+    },
+    {
+      "title": "Game Setup",
+      "steps": [
+        "Place the haunted glass in the center of the table.",
+        "Distribute ghost character cards to each player, including fake ghosts.",
+        "Distribute secret role cards to each player.",
+        "Each player receives a secret role such as ghost hunter or ghost."
+      ]
+    },
+    {
+      "title": "Turn Sequence",
+      "steps": [
+        "Players take turns using the haunted glass to inspect ghost cards on the table.",
+        "Players use the information from the glass to guess which ghost is real.",
+        "Players may discuss or share opinions about which ghost they think is real during their turn.",
+        "At the appropriate time, players must select the ghost they believe is the real one."
+      ]
+    },
+    {
+      "title": "Winning the Game",
+      "steps": [
+        "If players correctly identify the real ghost, they win.",
+        "If the ghost manages to deceive players and avoid being caught, the ghost wins."
+      ]
+    }
+  ]
   },
   {
+    "id": "26",
     "name": "MicroMacro: Crime City",
     "image": "micromacro.jpg",
     "tags": ["Puzzle", "Cooperative"],
     "duration": "15-45 min",
     "players": "1-4 players",
     "description":"Micromacro: Crime City is an investigative game where players must search for clues on a large city map and connect various events to solve the case. The game emphasizes keen observation and detailed analysis, making it perfect for those who enjoy picture-based detective work."
+    ,"howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "Work together to investigate various crime cases by finding clues and connecting events on the large Crime City map."
+      ]
+    },
+    {
+      "title": "Game Setup",
+      "steps": [
+        "Unfold the large city map on the table.",
+        "Select the case set to play (each case has question and answer cards).",
+        "Distribute question cards to the players."
+      ]
+    },
+    {
+      "title": "Gameplay",
+      "steps": [
+        "Players read the selected case question together.",
+        "Search for clues or events on the large map by observing details such as characters, vehicles, and crime scene locations.",
+        "Use observation to connect events or paths related to the case.",
+        "When a clue or answer is found, players point to the location on the map and announce their answer."
+      ]
+    },
+    {
+      "title": "Answer Verification",
+      "steps": [
+        "Check the answer against the case answer card.",
+        "If correct, proceed to the next question.",
+        "If incorrect, continue searching for the correct clue."
+      ]
+    },
+    {
+      "title": "Game End",
+      "steps": [
+        "The game ends when all case questions are answered correctly.",
+        "Players win by solving and clarifying all cases completely."
+      ]
+    }
+  ]
   },
   {
+    "id": "27",
     "name": "Monopoly",
     "image": "monopoly.jpg",
     "tags": ["Strategy", "Luck-based"],
     "duration": "60-180 min",
     "players": "2-8 players",
     "description":"Monopoly is a strategy and money management game where players buy and sell properties and collect rent from others to accumulate wealth and bankrupt their opponents. This game is suitable for players of all ages who enjoy strategic gameplay and financial competition."
+    ,"howToplay": [
+    {
+      "title": "Objective",
+      "steps": [
+        "Be the player with the most assets and cash to bankrupt other players."
+      ]
+    },
+    {
+      "title": "Game Setup",
+      "steps": [
+        "Place the Monopoly board on the table.",
+        "Give each player starting money (usually 1500 Monopoly dollars).",
+        "Each player chooses a token to represent them on the board."
+      ]
+    },
+    {
+      "title": "Gameplay",
+      "steps": [
+        "Players take turns rolling the dice and move their token accordingly.",
+        "If a player lands on an unowned property, they may buy it.",
+        "If they land on another player’s property, they must pay rent.",
+        "Players can buy houses or hotels on properties they own to increase rent.",
+        "Follow instructions when landing on special spaces like Chance, Community Chest, Jail, or Taxes."
+      ]
+    },
+    {
+      "title": "Money Management",
+      "steps": [
+        "Manage cash to pay rent, fines, or to buy properties.",
+        "If low on cash, players can sell or mortgage properties to raise money."
+      ]
+    },
+    {
+      "title": "Jail",
+      "steps": [
+        "Players sent to Jail must wait 3 turns or pay to get out.",
+        "While in Jail, players can still collect rent from their properties."
+      ]
+    },
+    {
+      "title": "Winning the Game",
+      "steps": [
+        "The game ends when all other players are bankrupt.",
+        "The player with the most assets and cash wins."
+      ]
+    }
+  ]
   },
   {
+    "id": "28",
     "name": "Mansions of Madness",
     "image": "mansions_of_madness.jpg",
     "tags": ["Adventure", "Puzzle", "Cooperative"],
@@ -216,35 +1551,202 @@
     "description":"Mansion of Madness is a detective investigation game set in a haunted house where players must find the murderer and uncover the secrets of the mansion. The game has a mysterious atmosphere filled with puzzles, making it perfect for those who enjoy investigative games and thrilling experiences."
   },
   {
+    "id": "29",
     "name": "Zombie Kidz Evolution",
     "image": "zombie_kidz.jpg",
     "tags": ["Adventure", "Cooperative"],
     "duration": "15-20 min",
     "players": "2-4 players",
     "description":"Zombie Kidz Evolution is a cooperative game where players must work together to eliminate invading zombies and survive. The game focuses on strategic planning and team coordination, making it ideal for players who enjoy cooperative gameplay and excitement."
+    ,"howToplay": [
+    {
+      "title": "Objective",
+      "steps": [
+        "Players cooperate to solve mysteries and overcome obstacles in a haunted mansion filled with monsters and strange events.",
+        "Players must find clues, complete objectives, and survive until the end of each scenario."
+      ]
+    },
+    {
+      "title": "Components",
+      "steps": [
+        "Scenario-based board tiles.",
+        "Player characters with unique abilities and items.",
+        "Item cards, event cards, and skill cards.",
+        "Dice.",
+        "Mobile app that runs the game and controls enemies.",
+        "Monster miniatures and other board pieces."
+      ]
+    },
+    {
+      "title": "Player Roles",
+      "steps": [
+        "All players cooperate as investigators or survivors.",
+        "The mobile app controls enemies and events."
+      ]
+    },
+    {
+      "title": "Gameplay Steps",
+      "steps": [
+        "Start the game by selecting a scenario on the app, which sets up the board, enemies, and events.",
+        "Each player chooses a character, learns their special abilities, and starts with basic items.",
+        "Each round, players can perform 2 actions such as moving, investigating, fighting, using items, or helping teammates.",
+        "The app handles enemy movements and attacks based on the scenario.",
+        "Players must cooperate to solve puzzles and fight enemies.",
+        "The game ends when players complete the scenario objectives or fail due to certain conditions."
+      ]
+    },
+    {
+      "title": "Winning and Losing",
+      "steps": [
+        "Win by completing the scenario objectives as defined by the app.",
+        "Lose if all players die or fail the mission."
+      ]
+    }
+  ]
   },
   {
+    "id": "30",
     "name": "Zombicide (2nd Edition)",
     "image": "zombicide.jpg",
     "tags": ["Adventure", "Cooperative"],
     "duration": "60-120 min",
     "players": "1-6 players",
     "description":"Zombicide 2nd Edition is a survival and investigation game set in a world overrun by zombies. Players must gather weapons and equipment while planning strategies to deal with the overwhelming number of zombies. The game emphasizes cooperation, tactical planning, and intense combat, making it perfect for those who enjoy action-packed games and teamwork."
+    ,"howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "Players cooperate to survive waves of zombies by completing the objectives specified in each mission."
+      ]
+    },
+    {
+      "title": "Game Setup",
+      "steps": [
+        "Choose a mission from the rulebook and set up the board according to the map.",
+        "Each player selects a Survivor character with a status board and starting items.",
+        "Place all Survivors at the designated starting point.",
+        "Prepare item cards, zombie miniatures, and other components.",
+        "Place Objectives, Doors, Spawn Zones, and Exit points as specified in the mission."
+      ]
+    },
+    {
+      "title": "Turn Sequence",
+      "steps": [
+        "1. Survivor Phase: Each player performs 3 actions, such as moving, searching, attacking, opening doors, or trading items.",
+        "2. Zombie Phase: Zombies attack nearby players or move toward them if not adjacent.",
+        "3. End Phase: Increase experience points and handle special conditions like noise or fire."
+      ]
+    },
+    {
+      "title": "Level & Difficulty System",
+      "steps": [
+        "Players earn experience points (XP) by defeating zombies or completing objectives.",
+        "As a player's XP increases into higher color levels (Yellow, Orange, Red), the game difficulty increases due to stronger zombie spawns."
+      ]
+    },
+    {
+      "title": "Winning the Game",
+      "steps": [
+        "Players win when they successfully complete the mission objectives."
+      ]
+    },
+    {
+      "title": "Losing the Game",
+      "steps": [
+        "Players lose if all Survivors die or a mission failure condition is triggered."
+      ]
+    }
+  ]
   },
   {
+    "id": "31",
     "name": "I'm Stuck in the Lift",
     "image": "stuck_in_lift.jpg",
     "tags": ["Puzzle", "Bluffing"],
     "duration": "30-45 min",
     "players": "3-6 players",
     "description":"This is a party game where players must cooperate to resolve situations when trapped in an elevator. Players need to answer questions or complete various tasks to find a way out. The game focuses on teamwork, communication, and having fun with friends."
+    ,"howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "Players aim to have the elevator stop at their secretly chosen target floors to earn points. The player with the highest score when the game ends wins."
+      ]
+    },
+    {
+      "title": "Setup",
+      "steps": [
+        "Each player receives a set of cards with identical backs, including two target cards and three movement cards.",
+        "Each player also gets a whiteboard marker.",
+        "Arrange the floor cards as shown in the rulebook.",
+        "Place the elevator on the Ground Floor (G).",
+        "Place the score marker (traffic cone) nearby for use during the game."
+      ]
+    },
+    {
+      "title": "Gameplay",
+      "steps": [
+        "Each player secretly writes their desired target floors on their one-point and two-point target cards.",
+        "All players simultaneously play one movement card.",
+        "Move the elevator to the floor indicated by the played cards.",
+        "If the elevator stops at a player's target floor, they reveal the corresponding target card and earn points as indicated by the stars on the card.",
+        "After scoring, players erase their target cards and secretly write new target floors (they may choose the same floors as before).",
+        "All players retrieve their movement cards.",
+        "Advance the traffic cone marker down one level. If it reaches the bottom, flip the elevator card to indicate downward movement and adjust the floor count accordingly.",
+        "If the elevator stops at the floor with the traffic cone, players who had that floor as their target do not score points but may write new target floors on both target cards.",
+        "If a player writes G (Ground Floor) or 40 as their target floor, they earn double points upon successful scoring."
+      ]
+    },
+    {
+      "title": "Winning the Game",
+      "steps": [
+        "The game ends when the traffic cone marker reaches the Ground Floor (G).",
+        "The player with the highest total score at the end of the game is declared the winner."
+      ]
+    }
+  ]
   },
   {
+    "id": "32",
     "name": "Cat and the Tower",
     "image": "cat_and_tower.jpg",
     "tags": ["Puzzle", "Strategy"],
     "duration": "20-30 min",
     "players": "1-5 players",
     "description":"Cat and the Tower is a strategy game where players help a cat climb a tower to survive obstacles and wild animals. The game is cute and challenging, requiring thoughtful decision-making. It is suitable for players of all ages who enjoy games with adorable themes and fun gameplay mechanics."
+    , "howToplay": [
+    {
+      "title": "Game Objective",
+      "steps": [
+        "Work together to help Toto the cat climb a precarious tower to reach the stars, where he believes his mother awaits."
+      ]
+    },
+    {
+      "title": "Setup",
+      "steps": [
+        "Place the 1st floor tile on the table and position Toto on the paw token.",
+        "Sort the wall tiles and keep them nearby along with the 2nd through 24th floor tiles.",
+        "Place two starting action cards face up on the table and shuffle the rest to form the action card deck.",
+        "Randomly select one goal card and place it on the table."
+      ]
+    },
+    {
+      "title": "Gameplay",
+      "steps": [
+        "On your turn, choose one of the two available action cards and perform the action, such as placing a floor tile or adding a feline friend.",
+        "Floor tiles must be placed in numerical order.",
+        "Use one or both hands to place tiles, adjusting as needed during placement.",
+        "After performing the action, discard the used action card and draw a new one to replace it.",
+        "Check if any mission card has been fulfilled; if so, move Toto up the number of floors indicated and replace the mission card."
+      ]
+    },
+    {
+      "title": "Winning the Game",
+      "steps": [
+        "The game ends when Toto reaches the 10th floor and the tower remains stable for 5 seconds; all players win.",
+        "Alternatively, players lose if five or more wall tiles have fallen off the tower during the game."
+      ]
+    }
+  ]
   }
 ]

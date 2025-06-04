@@ -1,366 +1,703 @@
-.container {
-  /* font-family: 'sans-serif'; */
-  color: #222;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  position: relative;
-}
 
-.headerImage {
-  width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 8px;
-}
-
-.content {
-  margin-top: 24px;
-}
-
-.htp {
-  list-style: decimal;
-  margin-top: 10px;
-  padding-left: 30px;
-}
-
-.nameborad {
-  margin-top: 50px;
-  font-size: 25px;
-}
-
-/* ปรับปรุงการจัดวางปุ่มย้อนกลับ */
-.backButtonContainer {
-  margin: 20px 0 10px 0; /* เปลี่ยนจาก absolute positioning */
-  display: flex;
-  justify-content: flex-start;
-  padding: 0 20px; /* เพิ่ม padding เพื่อให้สอดคล้องกับ container */
-}
-
-.backButton {
-  background: linear-gradient(135deg, #6c757d, #495057);
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  text-decoration: none;
-  position: relative;
-  overflow: hidden;
-  white-space: nowrap;
-  min-width: 44px;
-  min-height: 44px;
-  justify-content: center;
-}
-
-.backButton::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-  transition: left 0.6s ease;
-}
-
-.backButton:hover::before {
-  left: 100%;
-}
-
-.backButton:hover {
-  transform: translateY(-1px) scale(1.02);
-  box-shadow: 0 3px 12px rgba(108, 117, 125, 0.4);
-  background: linear-gradient(135deg, #5a6268, #343a40);
-}
-
-.backButton:active {
-  transform: translateY(0px) scale(0.98);
-  transition: all 0.1s ease;
-}
-
-.backIcon {
-  width: 16px;
-  height: 16px;
-  transition: transform 0.3s ease;
-  stroke-width: 2.5;
-  flex-shrink: 0;
-}
-
-.backButton:hover .backIcon {
-  transform: translateX(-1px);
-}
-
-/* Mobile First - Extra Small devices (สำหรับมือถือขนาดเล็ก) */
-@media (max-width: 375px) {
-  .backButtonContainer {
-    margin: 15px 0 10px 0;
-    padding: 0 15px;
-  }
-  
-  .backButton {
-    padding: 8px 12px;
-    font-size: 12px;
-    border-radius: 16px;
-    min-width: 40px;
-    min-height: 40px;
-  }
-  
-  .backIcon {
-    width: 14px;
-    height: 14px;
-  }
-  
-  .container {
-    padding: 15px;
-  }
-}
-
-/* Small devices (มือถือ) */
-@media (min-width: 376px) and (max-width: 575px) {
-  .backButtonContainer {
-    margin: 15px 0 10px 0;
-    padding: 0 20px;
-  }
-  
-  .backButton {
-    padding: 8px 14px;
-    font-size: 13px;
-    border-radius: 18px;
-  }
-  
-  .backIcon {
-    width: 15px;
-    height: 15px;
-  }
-  
-  .container {
+   .container {
+    color: #222;
+    max-width: 800px;
+    margin: 0 auto;
     padding: 20px;
+    position: relative;
   }
-}
-
-/* Medium devices (แท็บเล็ต) */
-@media (min-width: 576px) and (max-width: 767px) {
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideInFromLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes bounceIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.3) rotate(-10deg);
+    }
+    50% {
+      transform: scale(1.05) rotate(3deg);
+    }
+    70% {
+      transform: scale(0.95) rotate(-1deg);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+  }
+  
+  @keyframes shimmer {
+    0% {
+      background-position: -200px 0;
+    }
+    100% {
+      background-position: calc(200px + 100%) 0;
+    }
+  }
+  
+  /* Header Image */
+  .headerImage {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .headerImage::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.8s ease;
+  }
+  
+  .headerImage:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+  }
+  
+  .headerImage:hover::before {
+    left: 100%;
+  }
+  
+  /* Content Section */
+  .content {
+    margin-top: 24px;
+  }
+  
+  /* Game Title */
+  .nameborad {
+    margin-top: 50px;
+    font-size: 25px;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #495057, #6c757d, #343a40);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 200%;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+  
+  .nameborad::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #495057, #6c757d);
+    border-radius: 2px;
+  }
+  
+  @keyframes gradientShift {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+  
+  @keyframes expandWidth {
+    from {
+      width: 0;
+    }
+    to {
+      width: 60px;
+    }
+  }
+  
+  /* Game Basic Info */
+  .gameBasicInfo {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    padding: 25px;
+    border-radius: 16px;
+    margin: 20px 0;
+    border-left: 4px solid #495057;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .gameBasicInfo::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(-45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+    background-size: 200% 200%;
+    pointer-events: none;
+  }
+  
+  .gameBasicInfo:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+  }
+  
+  @keyframes shimmerMove {
+    0% {
+      background-position: -200% -200%;
+    }
+    100% {
+      background-position: 200% 200%;
+    }
+  }
+  
+  .gameInfoItem {
+    margin-bottom: 12px;
+    font-size: 16px;
+    position: relative;
+    padding-left: 20px;
+  }
+  
+  .gameInfoItem::before {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+  
+  .gameInfoItem:nth-child(1) { --item-index: 1; }
+  .gameInfoItem:nth-child(2) { --item-index: 2; }
+  .gameInfoItem:nth-child(3) { --item-index: 3; }
+  
+  .gameInfoItem:last-child {
+    margin-bottom: 0;
+  }
+  
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-4px);
+    }
+    60% {
+      transform: translateY(-2px);
+    }
+  }
+  
+  /* How to Play List */
+  .htp {
+    list-style: none;
+    margin-top: 15px;
+    padding-left: 0;
+    line-height: 1.8;
+    counter-reset: step-counter;
+  }
+  
+  .htp li {
+    margin-bottom: 15px;
+    padding: 15px 20px 15px 40px;
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    border-radius: 12px;
+    border-left: 4px solid #28a745;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    position: relative;
+    counter-increment: step-counter;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .htp li::before {
+    content: counter(step-counter) ".";
+    position: absolute;
+    left: 15px;
+    top: 15px;
+    color: #28a745;
+    font-weight: bold;
+    font-size: 18px;
+  }
+  
+  .htp li:hover {
+    transform: translateX(8px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    border-left-color: #20c997;
+  }
+  
+  .htp li:hover::before {
+    color: #20c997;
+    transform: scale(1.1);
+  }
+  
+  /* 設定每個 li 的動畫延遲 */
+  .htp li:nth-child(1) { --step-index: 1; }
+  .htp li:nth-child(2) { --step-index: 2; }
+  .htp li:nth-child(3) { --step-index: 3; }
+  .htp li:nth-child(4) { --step-index: 4; }
+  .htp li:nth-child(5) { --step-index: 5; }
+  .htp li:nth-child(6) { --step-index: 6; }
+  .htp li:nth-child(7) { --step-index: 7; }
+  .htp li:nth-child(8) { --step-index: 8; }
+  
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+  
+  /* No Instructions Message */
+  .noInstructions {
+    background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+    border: 2px solid #ffc107;
+    border-radius: 16px;
+    padding: 30px;
+    text-align: center;
+    margin: 20px 0;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(255, 193, 7, 0.2);
+  }
+  
+  .noInstructions::before {
+    content: '🔄';
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 24px;
+  }
+  
+  .noInstructions::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  }
+  
+  .noInstructions p {
+    margin-bottom: 15px;
+    color: #856404;
+    font-weight: 500;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .noInstructions p:last-child {
+    margin-bottom: 0;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* ==========================================================================
+     BACK BUTTON
+     ========================================================================== */
+  
   .backButtonContainer {
-    margin: 20px 0 15px 0;
+    margin: 20px 0 10px 0;
+    display: flex;
+    justify-content: flex-start;
     padding: 0 20px;
   }
   
   .backButton {
+    background: linear-gradient(135deg, #6c757d, #495057);
+    color: white;
+    border: none;
     padding: 10px 16px;
-    font-size: 14px;
     border-radius: 20px;
-    gap: 5px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    min-width: 44px;
+    min-height: 44px;
+    justify-content: center;
+  }
+  
+  .backButton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.6s ease;
+  }
+  
+  .backButton:hover::before {
+    left: 100%;
+  }
+  
+  .backButton:hover {
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 0 3px 12px rgba(108, 117, 125, 0.4);
+    background: linear-gradient(135deg, #5a6268, #343a40);
+  }
+  
+  .backButton:active {
+    transform: translateY(0px) scale(0.98);
+    transition: all 0.1s ease;
   }
   
   .backIcon {
     width: 16px;
     height: 16px;
+    transition: transform 0.3s ease;
+    stroke-width: 2.5;
+    flex-shrink: 0;
   }
   
-  .container {
-    padding: 20px;
-  }
-}
-
-/* Large devices (แท็บเล็ตใหญ่และเดสก์ท็อปเล็ก) */
-@media (min-width: 768px) and (max-width: 991px) {
-  .backButtonContainer {
-    margin: 20px 0 15px 0;
-    padding: 0 20px;
+  .backButton:hover .backIcon {
+    transform: translateX(-1px);
   }
   
-  .backButton {
-    padding: 12px 18px;
-    font-size: 14px;
-    border-radius: 22px;
-    gap: 6px;
-  }
+  /* ==========================================================================
+     FOOTER
+     ========================================================================== */
   
-  .backIcon {
-    width: 17px;
-    height: 17px;
-  }
-  
-  .container {
-    padding: 20px;
-  }
-}
-
-/* Extra large devices (เดสก์ท็อป) */
-@media (min-width: 992px) {
-  .backButtonContainer {
-    margin: 25px 0 20px 0;
-    padding: 0 20px;
-  }
-  
-  .backButton {
-    padding: 12px 20px;
-    font-size: 15px;
-    border-radius: 24px;
-    gap: 7px;
-  }
-  
-  .backIcon {
-    width: 18px;
-    height: 18px;
-  }
-  
-  .container {
-    padding: 20px;
-  }
-}
-
-/* สำหรับหน้าจอที่มีความสูงน้อย (landscape mode บนมือถือ) */
-@media (max-height: 500px) {
-  .backButtonContainer {
-    margin: 10px 0 5px 0;
-  }
-  
-  .backButton {
-    padding: 6px 10px;
-    font-size: 11px;
-    min-height: 36px;
-  }
-  
-  .backIcon {
-    width: 12px;
-    height: 12px;
-  }
-}
-
-/* สำหรับ high-DPI screens */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-  .backButton {
-    border: 0.5px solid rgba(255, 255, 255, 0.1);
-  }
-}
-
-/* Footer */
-.Footer {
-  background-color: #333;
-  width: full;
-  margin: 100px 0px 0px 0px;
-}
-
-.Footer_B1 {
-  display: grid;
-  grid-template-columns: 45% 25% 25%;
-  padding: 40px;
-}
-
-.Footer_B1_S1 {
-  text-align: center;
-  font-weight: bold;
-  font-size: 40px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-family: "Lilita One", sans-serif;
-  align-self: center;
-}
-
-.Footer_B1_S2 {
-  display: flex;
-  font-size: 18px;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  align-self: center;
-}
-
-.Footer_B1_S2 div {
-  font-weight: bold;
-  padding: 5px;
-}
-
-.Footer_B1_S2 a {
-  padding: 5px;
-  color: rgba(255, 255, 255, 0.61);
-}
-
-.Footer_B1_S3 {
-  display: flex;
-  font-size: 18px;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  align-self: center;
-}
-
-.Footer_B1_S3 a {
-  padding: 5px;
-  color: rgba(255, 255, 255, 0.61);
-}
-
-.Footer_B1_S3 div {
-  font-weight: bold;
-  padding: 5px;
-}
-
-.Footer_B2 {
-  padding: 10px;
-}
-
-.Footer_B2_box {
-  background-color: rgba(255, 255, 255, 0.61);
-  margin: 0px 10px;
-  width: full;
-  height: 4px;
-}
-
-.Footer_B2_text {
-  padding: 10px 5px 0px 10px;
-  margin: 0px 10px;
-  font-size: 18px;
-  display: flex;
-  flex-direction: row-reverse;
-  color: rgba(255, 255, 255, 0.61);
-}
-
-.Footer_B2_text div {
-  margin: 0px 10px;
-}
-
-/* Responsive adjustments */
-@media (max-width: 1024px) {
-  .B_Search_all {
-    grid-template-columns: 1fr 2fr;
+  .Footer {
+    background-color: #333;
+    width: 100%;
+    margin: 100px 0 0 0;
+    color: white;
   }
   
   .Footer_B1 {
-    grid-template-columns: 1fr 1fr 1fr;
+    display: grid;
+    grid-template-columns: 45% 25% 25%;
+    padding: 40px;
     gap: 20px;
   }
-}
-
-@media (max-width: 768px) {
-  .B_Search_all {
-    grid-template-columns: 1fr;
+  
+  .Footer_B1_S1 {
+    text-align: center;
+    font-weight: bold;
+    font-size: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: "Lilita One", sans-serif;
+    align-self: center;
+    color: white;
   }
   
-  .B_item_all {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  .Footer_B1_S2 {
+    display: flex;
+    font-size: 18px;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    align-self: center;
   }
   
-  .Footer_B1 {
-    grid-template-columns: 1fr;
-    gap: 30px;
+  .Footer_B1_S2 div {
+    font-weight: bold;
+    padding: 5px;
+    color: white;
+  }
+  
+  .Footer_B1_S2 a {
+    padding: 5px;
+    color: rgba(255, 255, 255, 0.61);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .Footer_B1_S2 a:hover {
+    color: white;
+  }
+  
+  .Footer_B1_S3 {
+    display: flex;
+    font-size: 18px;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    align-self: center;
+  }
+  
+  .Footer_B1_S3 div {
+    font-weight: bold;
+    padding: 5px;
+    color: white;
+  }
+  
+  .Footer_B1_S3 a {
+    padding: 5px;
+    color: rgba(255, 255, 255, 0.61);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  .Footer_B1_S3 a:hover {
+    color: white;
+  }
+  
+  .Footer_B2 {
+    padding: 10px;
+  }
+  
+  .Footer_B2_box {
+    background-color: rgba(255, 255, 255, 0.61);
+    margin: 0 10px;
+    width: calc(100% - 20px);
+    height: 4px;
   }
   
   .Footer_B2_text {
-    flex-direction: column;
-    align-items: center;
+    padding: 10px 5px 0 10px;
+    margin: 0 10px;
+    font-size: 18px;
+    display: flex;
+    flex-direction: row-reverse;
+    color: rgba(255, 255, 255, 0.61);
   }
   
   .Footer_B2_text div {
-    margin: 5px 0;
+    margin: 0 10px;
   }
-}
+  
+  /* ==========================================================================
+     RESPONSIVE DESIGN
+     ========================================================================== */
+  
+  /* Mobile First - Extra Small devices (สำหรับมือถือขนาดเล็ก) */
+  @media (max-width: 375px) {
+    .container {
+      padding: 15px;
+    }
+    
+    .backButtonContainer {
+      margin: 15px 0 10px 0;
+      padding: 0 15px;
+    }
+    
+    .backButton {
+      padding: 8px 12px;
+      font-size: 12px;
+      border-radius: 16px;
+      min-width: 40px;
+      min-height: 40px;
+    }
+    
+    .backIcon {
+      width: 14px;
+      height: 14px;
+    }
+    
+    .nameborad {
+      font-size: 20px;
+      margin-top: 30px;
+    }
+    
+    .gameBasicInfo {
+      padding: 15px;
+    }
+    
+    .gameInfoItem {
+      font-size: 14px;
+    }
+    
+    .Footer_B1 {
+      grid-template-columns: 1fr;
+      padding: 20px;
+      gap: 20px;
+    }
+    
+    .Footer_B1_S1 {
+      font-size: 28px;
+    }
+    
+    .Footer_B1_S2,
+    .Footer_B1_S3 {
+      font-size: 16px;
+    }
+  }
+  
+  /* Small devices (มือถือ) */
+  @media (min-width: 376px) and (max-width: 575px) {
+    .container {
+      padding: 20px;
+    }
+    
+    .backButtonContainer {
+      margin: 15px 0 10px 0;
+      padding: 0 20px;
+    }
+    
+    .backButton {
+      padding: 8px 14px;
+      font-size: 13px;
+      border-radius: 18px;
+    }
+    
+    .backIcon {
+      width: 15px;
+      height: 15px;
+    }
+    
+    .nameborad {
+      font-size: 22px;
+      margin-top: 35px;
+    }
+    
+    .Footer_B1 {
+      grid-template-columns: 1fr;
+      gap: 25px;
+    }
+    
+    .Footer_B1_S1 {
+      font-size: 32px;
+    }
+  }
+  
+  /* Medium devices (แท็บเล็ต) */
+  @media (min-width: 576px) and (max-width: 767px) {
+    .backButtonContainer {
+      margin: 20px 0 15px 0;
+      padding: 0 20px;
+    }
+    
+    .backButton {
+      padding: 10px 16px;
+      font-size: 14px;
+      border-radius: 20px;
+      gap: 5px;
+    }
+    
+    .backIcon {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .Footer_B1 {
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+    }
+    
+    .Footer_B2_text {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .Footer_B2_text div {
+      margin: 5px 0;
+    }
+  }
+  
+  /* Large devices (แท็บเล็ตใหญ่และเดสก์ท็อปเล็ก) */
+  @media (min-width: 768px) and (max-width: 991px) {
+    .backButtonContainer {
+      margin: 20px 0 15px 0;
+      padding: 0 20px;
+    }
+    
+    .backButton {
+      padding: 12px 18px;
+      font-size: 14px;
+      border-radius: 22px;
+      gap: 6px;
+    }
+    
+    .backIcon {
+      width: 17px;
+      height: 17px;
+    }
+    
+    .Footer_B1 {
+      grid-template-columns: 45% 25% 25%;
+    }
+  }
+  
+  /* Extra large devices (เดสก์ท็อป) */
+  @media (min-width: 992px) {
+    .backButtonContainer {
+      margin: 25px 0 20px 0;
+      padding: 0 20px;
+    }
+    
+    .backButton {
+      padding: 12px 20px;
+      font-size: 15px;
+      border-radius: 24px;
+      gap: 7px;
+    }
+    
+    .backIcon {
+      width: 18px;
+      height: 18px;
+    }
+  }
+  
+  /* สำหรับหน้าจอที่มีความสูงน้อย (landscape mode บนมือถือ) */
+  @media (max-height: 500px) {
+    .backButtonContainer {
+      margin: 10px 0 5px 0;
+    }
+    
+    .backButton {
+      padding: 6px 10px;
+      font-size: 11px;
+      min-height: 36px;
+    }
+    
+    .backIcon {
+      width: 12px;
+      height: 12px;
+    }
+    
+    .nameborad {
+      margin-top: 20px;
+      font-size: 20px;
+    }
+  }
+  
+  /* สำหรับ high-DPI screens */
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .backButton {
+      border: 0.5px solid rgba(255, 255, 255, 0.1);
+    }
+  }
