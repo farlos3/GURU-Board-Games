@@ -409,7 +409,7 @@ function GameCard() {
         </a>
       </div>
       
-      <div className={styles.text_board_game}>BOARD GAME</div>
+      <div className={styles.text_board_game}>Recommended for you</div>
       
       {isLoading ? (
         <div className={styles.loading}>Loading popular games...</div>
