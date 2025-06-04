@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation';
 function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token'); // assuming the token is stored as 'token'
@@ -19,11 +20,20 @@ function Navbar() {
   }, []);
 
   const handleLogout = () => {
+    setShowLogoutConfirm(true);
+  };
+
+  const confirmLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setIsLoggedIn(false);
-    setIsMobileMenuOpen(false); // Close menu after logout
-    window.location.reload(); // Refresh the current page
+    setShowLogoutConfirm(false);
+    setIsMobileMenuOpen(false);
+    window.location.reload();
+  };
+
+  const cancelLogout = () => {
+    setShowLogoutConfirm(false);
   };
 
   const toggleMobileMenu = () => {
@@ -149,6 +159,90 @@ function Navbar() {
           )}
         </div>
       </div>
+
+      {/* Custom Logout Confirmation Pop-up (Copied from profile_user.js with minor adjustments) */}
+      {showLogoutConfirm && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1002,
+          padding: '20px'
+        }} onClick={cancelLogout}
+        >
+          <div style={{
+            backgroundColor: 'white',
+            padding: '24px',
+            borderRadius: '8px',
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+            textAlign: 'center',
+            maxWidth: '400px',
+            width: '100%',
+            margin: '0 auto'
+          }} onClick={(e) => e.stopPropagation()}
+          >
+            <h3 style={{ 
+              marginBottom: '16px', 
+              fontSize: '20px', 
+              color: '#333' 
+            }}>
+              Confirm Logout
+            </h3>
+            <p style={{ 
+              marginBottom: '24px', 
+              color: '#666',
+              fontSize: '16px'
+            }}>
+              Are you sure you want to log out?
+            </p>
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'center', 
+              gap: '12px',
+              flexDirection: 'row'
+            }}>
+              <button
+                style={{
+                  padding: '10px 20px',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  backgroundColor: '#dc2626',
+                  color: 'white',
+                  width: 'auto'
+                }}
+                onClick={confirmLogout}
+              >
+                Confirm Logout
+              </button>
+              <button
+                style={{
+                  padding: '10px 20px',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  backgroundColor: '#6b7280',
+                  color: 'white',
+                  width: 'auto'
+                }}
+                onClick={cancelLogout}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
