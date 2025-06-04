@@ -36,14 +36,14 @@ function GameCard() {
     try {
       const token = localStorage.getItem('token');
       const savedStates = localStorage.getItem('gameStates');
-      
+
       // ถ้าไม่มี token (ไม่ได้ login) ให้ล้างค่า states ทั้งหมด
       if (!token) {
         localStorage.removeItem('gameStates');
         localStorage.removeItem('favoriteGames');
         return {};
       }
-      
+
       if (savedStates) {
         return JSON.parse(savedStates);
       }
@@ -160,10 +160,10 @@ function GameCard() {
           userRating: savedStates[game.id]?.userRating || 0,
         };
       });
-      
+
       setGameStates(initialStates);
       updateFavoritesList(initialStates);
-      
+
     } catch (error) {
       console.error('Error fetching popular games:', error);
       setError('Failed to load popular games. Please try again later.');
@@ -271,8 +271,8 @@ function GameCard() {
                     clipPath: isFullStar
                       ? "inset(0 0 0 0)"
                       : isHalfStar
-                      ? "inset(0 50% 0 0)"
-                      : "inset(0 100% 0 0)",
+                        ? "inset(0 50% 0 0)"
+                        : "inset(0 100% 0 0)",
                   }}
                 >
                   ★
@@ -294,7 +294,7 @@ function GameCard() {
   return (
     <>
       <Nav />
-      
+
       <div className={styles.slider_container}>
         <Swiper
           slidesPerView={1.8}
@@ -381,36 +381,36 @@ function GameCard() {
           <div className="swiper-pagination"></div>
         </Swiper>
       </div>
-      
+
       <div className={styles.type_game_B}>
-        <a className={styles.type_game}>
+        <Link href="/Search?category=Cooperative" className={styles.type_game}>
           <img src="marisa.jpg" />
           <div className={styles.overlay}>Cooperative</div>
-        </a>
-        <a className={styles.type_game}>
+        </Link>
+        <Link href="/Search?category=Adventure" className={styles.type_game}>
           <img src="Adventure.png" />
           <div className={styles.overlay}>Adventure</div>
-        </a>
-        <a className={styles.type_game}>
+        </Link>
+        <Link href="/Search?category=Luck-based" className={styles.type_game}>
           <img src="surface-X1GZqv-F7Tw-unsplash.jpg" />
           <div className={styles.overlay}>Luck-based</div>
-        </a>
-        <a className={styles.type_game}>
+        </Link>
+        <Link href="/Search?category=Strategy" className={styles.type_game}>
           <img src="ross.jpg" />
           <div className={styles.overlay}>Strategy</div>
-        </a>
-        <a className={styles.type_game}>
+        </Link>
+        <Link href="/Search?category=Bluffing" className={styles.type_game}>
           <img src="defraud.png" />
           <div className={styles.overlay}>Bluffing</div>
-        </a>
-        <a className={styles.type_game}>
+        </Link>
+        <Link href="/Search?category=Puzzle" className={styles.type_game}>
           <img src="olav-ahrens.jpg" />
           <div className={styles.overlay}>Puzzle</div>
-        </a>
+        </Link>
       </div>
-      
+
       <div className={styles.text_board_game}>Recommended for you</div>
-      
+
       {isLoading ? (
         <div className={styles.loading}>Loading popular games...</div>
       ) : error ? (
@@ -423,7 +423,7 @@ function GameCard() {
         <div className={styles.show_game_all}>
           {displayedGames.map((game) => {
             const gameId = game.id;
-            
+
             return (
               <Link
                 key={gameId}
@@ -436,9 +436,8 @@ function GameCard() {
 
                   <div className={styles.rating_buttons}>
                     <button
-                      className={`${styles.heart_button} ${
-                        gameStates[gameId]?.isLiked ? styles.heart_active : ""
-                      }`}
+                      className={`${styles.heart_button} ${gameStates[gameId]?.isLiked ? styles.heart_active : ""
+                        }`}
                       onClick={(e) => toggleHeart(gameId, e)}
                       title={gameStates[gameId]?.isLiked ? "Unlike" : "Like"}
                     >
@@ -446,9 +445,8 @@ function GameCard() {
                     </button>
 
                     <button
-                      className={`${styles.favorite_button} ${
-                        gameStates[gameId]?.isFavorite ? styles.favorite_active : ""
-                      }`}
+                      className={`${styles.favorite_button} ${gameStates[gameId]?.isFavorite ? styles.favorite_active : ""
+                        }`}
                       onClick={(e) => toggleFavorite(gameId, e)}
                       title={
                         gameStates[gameId]?.isFavorite
@@ -487,8 +485,8 @@ function GameCard() {
                     <div className={styles.item_game_player_1}>
                       <img src="clock-five.png" />
                       {/* Display play time from API */}
-                      {game.play_time_min === game.play_time_max 
-                        ? `${game.play_time_min} mins` 
+                      {game.play_time_min === game.play_time_max
+                        ? `${game.play_time_min} mins`
                         : `${game.play_time_min}-${game.play_time_max} mins`}
                     </div>
                     <div className={styles.item_game_player_2}>
@@ -509,7 +507,7 @@ function GameCard() {
           })}
         </div>
       )}
-      
+
       <div className={styles.Footer}>
         <div className={styles.Footer_B1}>
           <div className={styles.Footer_B1_S1}>
@@ -540,7 +538,7 @@ function GameCard() {
         </div>
       </div>
 
-      <LoginPopup 
+      <LoginPopup
         isOpen={showLoginPopup}
         onClose={() => setShowLoginPopup(false)}
         message={loginMessage}
