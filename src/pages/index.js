@@ -23,7 +23,8 @@ const staticImages = [
 ];
 
 function GameCard() {
-  const [games, setGames] = useState([]);
+  const [gridGames, setGridGames] = useState([]);
+  const [swiperGames, setSwiperGames] = useState([]);
   const [gameStates, setGameStates] = useState({});
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [loginMessage, setLoginMessage] = useState('');
@@ -68,7 +69,7 @@ function GameCard() {
   // ฟังก์ชันสำหรับอัพเดตรายการ favorites ใน localStorage
   const updateFavoritesList = (newStates) => {
     try {
-      const favoriteGames = games.filter((game) => {
+      const favoriteGames = gridGames.filter((game) => {
         return newStates[game.id]?.isFavorite;
       }).map(game => ({
         ...game
@@ -84,23 +85,75 @@ function GameCard() {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/recommendations/popular`);
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch popular games');
-      }
-      
-      const data = await response.json();
-      console.log('Fetched popular games data:', data);
-      
-      const fetchedGames = data.boardgames || [];
-      setGames(fetchedGames);
 
-      // Initialize game states for fetched games
+      // Fetch popular games for the Swiper (always top 5)
+      const popularApiUrl = `${process.env.NEXT_PUBLIC_API_URL}/recommendations/popular`;
+      console.log('Fetching popular games for swiper:', popularApiUrl);
+      const popularResponse = await fetch(popularApiUrl);
+
+      if (!popularResponse.ok) {
+        throw new Error(`Failed to fetch popular games: ${popularResponse.statusText}`);
+      }
+
+      const popularData = await popularResponse.json();
+      console.log('Fetched popular games data:', popularData);
+      const popularGames = popularData.boardgames || [];
+      setSwiperGames(popularGames.slice(0, 5)); // Take top 5 for swiper
+
+      // Fetch games for the Grid based on login status
+      const token = localStorage.getItem('token');
+      const user = token ? JSON.parse(atob(token.split('.')[1])) : null; // Decode user from token payload
+
+      let gridApiUrl;
+      let fetchedGridGames = [];
+
+      if (user && user.id) { // User is logged in and has an ID
+        gridApiUrl = `${process.env.NEXT_PUBLIC_API_URL}/recommendations/behavior/${user.id}?limit=10`;
+        console.log(`Fetching personalized recommendations for user ${user.id}:`, gridApiUrl);
+        const gridResponse = await fetch(gridApiUrl);
+
+        if (!gridResponse.ok) {
+          throw new Error(`Failed to fetch personalized recommendations: ${gridResponse.statusText}`);
+        }
+
+        const gridData = await gridResponse.json();
+        console.log('Fetched personalized recommendations data:', gridData);
+        fetchedGridGames = gridData.boardgames || [];
+
+      } else { // User is not logged in
+        gridApiUrl = `${process.env.NEXT_PUBLIC_API_URL}/recommendations/all-boardgames`;
+        console.log('Fetching all boardgames for guest user:', gridApiUrl);
+        const gridResponse = await fetch(gridApiUrl);
+
+        if (!gridResponse.ok) {
+          throw new Error(`Failed to fetch all boardgames: ${gridResponse.statusText}`);
+        }
+
+        const gridData = await gridResponse.json();
+        console.log('Fetched all boardgames data:', gridData);
+
+        // Shuffle
+        const allGames = gridData.boardgames || [];
+
+        // Simple shuffle function
+        for (let i = allGames.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [allGames[i], allGames[j]] = [allGames[j], allGames[i]]; // Swap
+        }
+
+        fetchedGridGames = allGames;
+      }
+
+      // Always display only the first 6 games in the grid
+      const gamesToDisplayInGrid = fetchedGridGames.slice(0, 6);
+
+      setGridGames(gamesToDisplayInGrid);
+
+      // Initialize game states for fetched games (should be based on gridGames)
       const savedStates = loadGameStatesFromStorage();
       const initialStates = {};
-      
-      fetchedGames.forEach(game => {
+
+      gamesToDisplayInGrid.forEach(game => {
         initialStates[game.id] = {
           isFavorite: savedStates[game.id]?.isFavorite || false,
           isLiked: savedStates[game.id]?.isLiked || false,
@@ -236,7 +289,7 @@ function GameCard() {
   };
 
   // จำกัดเกมที่จะแสดงเป็น 12 อันแรก
-  const displayedGames = games.slice(0, 12);
+  const displayedGames = gridGames.slice(0, 12);
 
   return (
     <>
@@ -297,8 +350,8 @@ function GameCard() {
           }}
         >
           {/* ใช้ static images หรือจากข้อมูล API */}
-          {games.length > 0 ? (
-            games.slice(0, 6).map((game) => (
+          {swiperGames.length > 0 ? (
+            swiperGames.slice(0, 6).map((game) => (
               <SwiperSlide key={game.id}>
                 <Link href={`/game/${game.id}`}>
                   <img
@@ -362,7 +415,7 @@ function GameCard() {
         <div className={styles.loading}>Loading popular games...</div>
       ) : error ? (
         <div className={styles.error}>{error}</div>
-      ) : games.length === 0 ? (
+      ) : gridGames.length === 0 ? (
         <div className={styles.no_results}>
           <h3>No popular games found at the moment.</h3>
         </div>
