@@ -190,7 +190,7 @@ function Search() {
       setError(null);
 
       const searchParams = {
-        query,
+        searchQuery: query,
         ...buildFilters()
       };
 
@@ -239,7 +239,8 @@ function Search() {
     Object.entries(params).forEach(([key, value]) => {
       if (value !== null && value !== undefined) {
         if (Array.isArray(value)) {
-          urlParams.append(key, JSON.stringify(value));
+          // Join array values with comma without extra brackets
+          urlParams.append(key, value.join(','));
         } else {
           urlParams.append(key, value.toString());
         }
