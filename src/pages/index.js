@@ -300,12 +300,14 @@ function GameCard() {
           {games.length > 0 ? (
             games.slice(0, 6).map((game) => (
               <SwiperSlide key={game.id}>
-                <img
-                  src={game.image_url}
-                  className={styles.slide_image}
-                  alt={game.title}
-                  loading="lazy"
-                />
+                <Link href={`/game/${game.id}`}>
+                  <img
+                    src={game.image_url}
+                    className={styles.slide_image}
+                    alt={game.title}
+                    loading="lazy"
+                  />
+                </Link>
               </SwiperSlide>
             ))
           ) : (
