@@ -6,6 +6,8 @@ import { trackGameSearch, trackGameFilter } from '../utils/userActivity';
 import LoginPopup from './components/LoginPopup';
 import AOS from 'aos';
 
+
+
 // Debounce function
 const debounce = (func, wait) => {
   let timeout;
@@ -54,7 +56,8 @@ function Search() {
       once: true,
     });
 
-    fetchAllBoardgames();
+    // เรียกฟังก์ชันใหม่ที่จะโหลดหมวดหมู่ทั้งหมดก่อน
+    fetchAllCategoriesFirst();
 
     // Check URL parameters for initial category filter
     const urlParams = new URLSearchParams(window.location.search);
@@ -74,6 +77,29 @@ function Search() {
       }
     };
   }, []);
+
+  const fetchAllCategoriesFirst = async () => {
+    try {
+      // เรียก API เพื่อดึงเกมทั้งหมดโดยไม่มีการกรอง
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/search`);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      const allGames = processSearchResults(data);
+
+      // ดึงหมวดหมู่ทั้งหมดจากเกมทั้งหมด
+      extractCategories(allGames);
+
+      // จากนั้นค่อยโหลดเกมตามฟิลเตอร์
+      fetchAllBoardgames();
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      // หากเกิดข้อผิดพลาด ให้โหลดเกมปกติ
+      fetchAllBoardgames();
+    }
+  };
 
   // Initialize game states when games are loaded
   useEffect(() => {
@@ -147,115 +173,134 @@ function Search() {
     try {
       setIsLoading(true);
       setError(null);
-
+  
       const searchParams = {
-        query: '',  // Empty query to get all games
-        ...buildFilters()
+        query: '',
+        ...buildFilters() // เรียกใช้ regular function
       };
-
+  
+      console.log('Fetch all params:', searchParams); // Debug log
+  
       const apiUrl = buildApiUrl('/api/search', searchParams);
-      
-      console.log('Fetching boardgames with filters:', searchParams);
-      console.log('API URL:', apiUrl);
-
+      console.log('Fetch all URL:', apiUrl); // Debug log
+  
       const response = await fetch(apiUrl);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      const fetchedGames = processSearchResults(data);
       
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Fetch all error:', errorText); // Debug log
+        throw new Error(`Failed to fetch: ${response.status} - ${errorText}`);
+      }
+  
+      const data = await response.json();
+      console.log('Fetch all response:', data); // Debug log
+  
+      const fetchedGames = processSearchResults(data);
+  
       setGames(fetchedGames);
       setFilteredGames(fetchedGames);
       setCurrentPage(1);
-
-      // Extract categories
-      extractCategories(fetchedGames);
-
+  
       console.log(`Loaded ${fetchedGames.length} games`);
-
+  
     } catch (error) {
       console.error('Error fetching boardgames:', error);
-      setError('Failed to load boardgames. Please try again later.');
+      setError(`Failed to load boardgames: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
   }, [playerCount, playTime, selectedCategories]);
 
-  // Perform fuzzy search
   const performFuzzySearch = useCallback(async (query) => {
     try {
       setIsLoading(true);
       setError(null);
-
+  
       const searchParams = {
-        searchQuery: query,
-        ...buildFilters()
+        SearchQuery: query,
+        ...buildFilters() // เรียกใช้ regular function
       };
-
+  
+      console.log('Search params:', searchParams); // Debug log
+  
       const apiUrl = buildApiUrl('/api/search', searchParams);
-      
-      console.log('Performing search:', searchParams);
-      console.log('Search API URL:', apiUrl);
-
+      console.log('Calling API URL:', apiUrl); // Debug log
+  
       const response = await fetch(apiUrl);
-      const data = await response.json();
-
-      const searchResults = processSearchResults(data);
       
+      console.log('Response status:', response.status); // Debug log
+  
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('API Error Response:', errorText); // Debug log
+        throw new Error(`API Error: ${response.status} - ${errorText}`);
+      }
+  
+      const data = await response.json();
+      console.log('API Response data:', data); // Debug log
+  
+      const searchResults = processSearchResults(data);
+  
       setGames(searchResults);
       setFilteredGames(searchResults);
       setCurrentPage(1);
-
+  
       // Track search activity
       if (typeof trackGameSearch === 'function') {
         trackGameSearch(query, searchResults.length);
       }
-
+  
       console.log(`Search completed: ${searchResults.length} results`);
-
+  
     } catch (error) {
-      console.error('Search error:', error);
-      setError('Failed to search boardgames. Please try again later.');
+      console.error('Search error details:', error); // Debug log
+      setError(`Failed to search boardgames: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
   }, [playerCount, playTime, selectedCategories]);
 
-  // Build filters object
-  const buildFilters = useCallback(() => {
+  function buildFilters() {
     return {
       playerCount: playerCount > 0 ? playerCount : null,
       playTime: playTime > 0 ? playTime : null,
       categories: selectedCategories.length > 0 ? selectedCategories : null
     };
-  }, [playerCount, playTime, selectedCategories]);
+  }  
 
-  // Build API URL with parameters
+  // Build filters object
   const buildApiUrl = (endpoint, params) => {
     const urlParams = new URLSearchParams();
-    
+  
+    console.log('Building API URL with params:', params); // Debug log
+  
     Object.entries(params).forEach(([key, value]) => {
       if (value !== null && value !== undefined) {
+        let paramName = key;
+        if (key === 'searchQuery' || key === 'query') {
+          paramName = 'SearchQuery';
+        }
+  
         if (Array.isArray(value)) {
-          // Join array values with comma without extra brackets
-          urlParams.append(key, value.join(','));
+          urlParams.append(paramName, value.join(','));
         } else {
-          urlParams.append(key, value.toString());
+          urlParams.append(paramName, value.toString());
         }
       }
     });
-
+  
     const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}${endpoint}`;
     const queryString = urlParams.toString();
-    return queryString ? `${baseUrl}?${queryString}` : baseUrl;
+    const finalUrl = queryString ? `${baseUrl}?${queryString}` : baseUrl;
+    
+    console.log('Final API URL:', finalUrl); // Debug log
+    return finalUrl;
   };
 
   // Process search results from different API response formats
   const processSearchResults = (data) => {
     let searchResults = [];
-
+  
     if (Array.isArray(data)) {
       searchResults = data.map(item => {
         if (item._source) return item._source;
@@ -267,7 +312,7 @@ function Search() {
     } else if (data.boardgames && Array.isArray(data.boardgames)) {
       searchResults = data.boardgames.filter(game => game && game.id);
     }
-
+  
     return searchResults;
   };
 
@@ -282,16 +327,19 @@ function Search() {
             : (game.categories ? game.categories.split(',').map(cat => cat.trim()) : [])
         )
     )].sort();
-    
+
     setAllCategories(categories);
   };
 
   // Debounced search handler
   const debouncedSearch = useCallback(
     debounce((query) => {
+      console.log('Debounced search executed with query:', query);
       if (query.trim()) {
+        console.log('Calling performFuzzySearch with:', query);
         performFuzzySearch(query);
       } else {
+        console.log('Empty query, calling fetchAllBoardgames');
         fetchAllBoardgames();
       }
     }, 500),
@@ -301,6 +349,7 @@ function Search() {
   // Handle search input change
   const handleSearchChange = (e) => {
     const value = e.target.value;
+    console.log('Search input value:', value);
     setSearchQuery(value);
     debouncedSearch(value);
   };
@@ -324,7 +373,7 @@ function Search() {
       const newCategories = isSelected
         ? prev.filter(c => c !== category)
         : [...prev, category];
-      
+
       trackFilter('category', category, !isSelected);
       return newCategories;
     });
@@ -520,7 +569,7 @@ function Search() {
       <div className={styles.game_Text}>
         <div>BOARDGAMES</div>
       </div>
-      
+
       <div className={styles.B_Search_all}>
         {/* Filters Section */}
         <div className={styles.B_B_Search}>
@@ -630,9 +679,8 @@ function Search() {
 
                         <div className={styles.rating_buttons}>
                           <button
-                            className={`${styles.heart_button} ${
-                              currentGameState.isLiked ? styles.heart_active : ""
-                            }`}
+                            className={`${styles.heart_button} ${currentGameState.isLiked ? styles.heart_active : ""
+                              }`}
                             onClick={(e) => toggleHeart(game.id, e)}
                             title={currentGameState.isLiked ? "Unlike" : "Like"}
                           >
@@ -640,9 +688,8 @@ function Search() {
                           </button>
 
                           <button
-                            className={`${styles.favorite_button} ${
-                              currentGameState.isFavorite ? styles.favorite_active : ""
-                            }`}
+                            className={`${styles.favorite_button} ${currentGameState.isFavorite ? styles.favorite_active : ""
+                              }`}
                             onClick={(e) => toggleFavorite(game.id, e)}
                             title={
                               currentGameState.isFavorite
@@ -721,9 +768,8 @@ function Search() {
                   return (
                     <button
                       key={pageNumber}
-                      className={`${styles.pagination_btn} ${styles.pagination_number} ${
-                        currentPage === pageNumber ? styles.pagination_active : ""
-                      }`}
+                      className={`${styles.pagination_btn} ${styles.pagination_number} ${currentPage === pageNumber ? styles.pagination_active : ""
+                        }`}
                       onClick={() => goToPage(pageNumber)}
                     >
                       {pageNumber}
