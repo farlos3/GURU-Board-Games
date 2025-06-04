@@ -174,26 +174,48 @@ function Search() {
       setIsLoading(true);
       setError(null);
   
+      // If no filters are applied, use the recommendations route
+      if (!playerCount && !playTime && selectedCategories.length === 0 && !searchQuery) {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/recommendations/all-boardgames`);
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Fetch all error:', errorText);
+          throw new Error(`Failed to fetch: ${response.status} - ${errorText}`);
+        }
+
+        const data = await response.json();
+        console.log('Fetch all response:', data);
+
+        const fetchedGames = processSearchResults(data);
+        setGames(fetchedGames);
+        setFilteredGames(fetchedGames);
+        setCurrentPage(1);
+        console.log(`Loaded ${fetchedGames.length} games`);
+        return;
+      }
+
+      // If filters are applied, use the search route
       const searchParams = {
         query: '',
-        ...buildFilters() // เรียกใช้ regular function
+        ...buildFilters()
       };
   
-      console.log('Fetch all params:', searchParams); // Debug log
+      console.log('Fetch all params:', searchParams);
   
       const apiUrl = buildApiUrl('/api/search', searchParams);
-      console.log('Fetch all URL:', apiUrl); // Debug log
+      console.log('Fetch all URL:', apiUrl);
   
       const response = await fetch(apiUrl);
       
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('Fetch all error:', errorText); // Debug log
+        console.error('Fetch all error:', errorText);
         throw new Error(`Failed to fetch: ${response.status} - ${errorText}`);
       }
   
       const data = await response.json();
-      console.log('Fetch all response:', data); // Debug log
+      console.log('Fetch all response:', data);
   
       const fetchedGames = processSearchResults(data);
   
@@ -209,7 +231,7 @@ function Search() {
     } finally {
       setIsLoading(false);
     }
-  }, [playerCount, playTime, selectedCategories]);
+  }, [playerCount, playTime, selectedCategories, searchQuery]);
 
   const performFuzzySearch = useCallback(async (query) => {
     try {
